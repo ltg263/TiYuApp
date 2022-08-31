@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_toolbar"
+    style="@style/Toolbar"
+    android:background="@color/color_text_theme"
+    android:elevation="0dp">
+
+    <TextView
+        android:id="@+id/toolbar_title"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="标题"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_xz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_10"
+        android:gravity="center"
+        android:layout_gravity="end"
+        android:drawablePadding="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_10"
+        android:textSize="@dimen/sp_14"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        android:drawableEnd="@mipmap/ic_xuanzhuan"
+        android:text="" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_10"
+        android:gravity="center"
+        android:layout_gravity="end"
+        android:visibility="gone"
+        android:drawablePadding="@dimen/dp_10"
+        android:layout_marginEnd="@dimen/dp_10"
+        android:textSize="@dimen/sp_14"
+        android:textColor="@color/white"
+        android:text="导出记录" />
+
+
+
+</androidx.appcompat.widget.Toolbar>

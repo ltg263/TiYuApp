@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv"
+        android:layout_marginTop="-30dp"
+        android:background="@drawable/shape_radius_fff_xx"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="60dp"
+            android:paddingBottom="20dp"
+            android:text="所有课程已完成！\n请断开连接，成绩将自动上传！"
+            android:textColor="@color/color_text_theme"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+
+        <Button
+            android:id="@+id/btn_kaishishangke"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="20dp"
+            android:background="@drawable/btn_shape_theme"
+            android:text="断开连接"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_dialog_suoyouwancheng" />
+
+    <ImageView
+        android:id="@+id/iv_quxiao"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/ll"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="30dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_close" />
+</RelativeLayout>

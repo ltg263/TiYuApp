@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <RelativeLayout
+        android:id="@+id/ll"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv"
+        android:layout_marginTop="-10dp"
+        android:background="@drawable/shape_radius_fff_xx"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_type"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="10dp"
+            android:text="课节"
+            android:textColor="#2A2D36"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:layout_toEndOf="@id/tv_type"
+            android:paddingBottom="10dp"
+            android:paddingStart="20dp"
+            android:text="默认使用20个光电球，6块光电地板"
+            android:textColor="@color/color_text_theme"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/iv_line"
+            android:layout_width="1dp"
+            android:layout_height="35dp"
+            android:layout_alignEnd="@id/tv_type"
+            android:layout_alignBottom="@id/tv_type"
+            android:scaleType="center"
+            android:src="@drawable/ic_line_stroke" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_list"
+            android:layout_below="@id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+
+        <Button
+            android:id="@+id/btn_kaishishangke"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/rv_list"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="20dp"
+            android:background="@drawable/btn_shape_theme"
+            android:text="开始上课"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_dialog_kssk" />
+
+    <ImageView
+        android:id="@+id/iv_quxiao"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/ll"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="30dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_close" />
+</RelativeLayout>
