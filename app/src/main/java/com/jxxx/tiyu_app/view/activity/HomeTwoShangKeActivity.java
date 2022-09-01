@@ -24,6 +24,7 @@ import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
+import com.jxxx.tiyu_app.bean.PostStudentResults;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
@@ -331,6 +332,9 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                     DialogUtils.showDialogHint(this, "请将WIFI连接到ESP8266", false, new DialogUtils.ErrorDialogInterface() {
                         @Override
                         public void btnConfirm() {
+                            if(!isAddClassRecord){
+                                postSchoolClassRecord();
+                            }
                             Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
@@ -342,6 +346,51 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 break;
         }
     }
+
+    boolean isAddClassRecord = false;//是否已经添加过上课记录
+    private void postSchoolClassRecord() {
+        String courseId = null,smallCourseId = null;
+        if(isSmallCourse){
+            smallCourseId = ConstValues.mSchoolCourseInfoBeanSmall.getId();
+        }else{
+            courseId = ConstValues.mSchoolCourseInfoBean.getId();
+        }
+        PostStudentResults mPostStudentResults = new PostStudentResults(
+                StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss"),
+                ConstValues.mSchoolClassInfoBean.getId(),"1",
+                SharedUtils.singleton().get(ConstValues.TEACHER_ID,""),courseId,smallCourseId);
+
+        RetrofitUtil.getInstance().apiService()
+                .postSchoolClassRecord(mPostStudentResults)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Result>() {
+
+
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Result result) {
+                        if(isResultOk(result)) {
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        hideLoading();
+                    }
+                });
+    }
+
 
     @Override
     public void onBackPressed() {

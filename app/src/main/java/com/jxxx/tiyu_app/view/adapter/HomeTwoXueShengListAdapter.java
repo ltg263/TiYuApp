@@ -19,9 +19,9 @@ public class HomeTwoXueShengListAdapter extends BaseQuickAdapter<SchoolStudentBe
 
     @Override
     protected void convert(BaseViewHolder helper, SchoolStudentBean item) {
-        GlideImgLoader.loadImageViewRadiusNoCenter(mContext, "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png", helper.getView(R.id.iv_img));
+        GlideImgLoader.loadImageViewRadiusNoCenter(mContext, item.getImgUrl(), helper.getView(R.id.iv_img));
         helper.setText(R.id.tv_studentNo,"学号："+item.getStudentNo()).setText(R.id.tv_studentName,"姓名："+item.getStudentName())
-                .setText(R.id.tv_age,"年纪："+item.getAge()+"岁").setText(R.id.tv_chaoshi,"性别："+(Integer.parseInt(item.getGender())==1?"男":"女"));
+                .setText(R.id.tv_age,"年纪："+item.getAge()+"岁").setText(R.id.tv_chaoshi,"性别："+(Integer.parseInt(item.getGender())==0?"男":"女"));
     }
 }
 

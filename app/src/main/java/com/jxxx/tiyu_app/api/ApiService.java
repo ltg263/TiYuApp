@@ -3,8 +3,10 @@ package com.jxxx.tiyu_app.api;
 
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.AuthLoginBean;
+import com.jxxx.tiyu_app.bean.DictDataTypeBean;
 import com.jxxx.tiyu_app.bean.PostStudentResults;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
+import com.jxxx.tiyu_app.bean.SchoolClassRecordBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
@@ -44,6 +46,13 @@ public interface ApiService {
     Observable<Result> postResultsBatchAdd(@Body List<PostStudentResults> mPostStudentResults);
 
     /**
+     * 新增上课记录
+     * @return
+     */
+    @POST("school/classRecord")
+    Observable<Result> postSchoolClassRecord(@Body PostStudentResults mPostStudentResult);
+
+    /**
      * 登出方法
      * @return
      */
@@ -63,7 +72,11 @@ public interface ApiService {
      * @return
      */
     @GET("school/course/list")
-    Observable<Result<List<SchoolCourseBean>>> getSchoolCourseList(@Query("courseName") String courseName,@Query("pageNum") int pageNum,@Query("pageSize") int pageSize);
+    Observable<Result<List<SchoolCourseBean>>> getSchoolCourseList(@Query("courseName") String courseName,
+                                                                   @Query("ageRange") String ageRange,
+                                                                   @Query("trainType") String trainType,
+                                                                   @Query("trainPart") String trainPart,
+                                                                   @Query("pageNum") int pageNum,@Query("pageSize") int pageSize);
 
     /**
      * 查询班级列表
@@ -94,6 +107,20 @@ public interface ApiService {
     Observable<Result<SchoolCourseBean>> getSchoolCourseDetail(@Path("id") String id);
 
     /**
+     * 查询上课记录列表
+     * @return
+     */
+    @GET("school/classRecord/list")
+    Observable<Result<List<SchoolClassRecordBean>>> getSchoolClassRecordList(@Query("teacherId") String teacherId, @Query("classId") String classId);
+
+    /**
+     * 获取上课记录详细信息
+     * @return
+     */
+    @GET("school/classRecord/{id}")
+    Observable<Result<SchoolClassRecordBean>> getSchoolClassRecord(@Path("id") String id);
+
+    /**
      * 查询小课程详情
      * @return
      */
@@ -106,13 +133,17 @@ public interface ApiService {
      * @return
      */
     @GET("school/smallCourse/list")
-    Observable<Result<List<SchoolCourseBeanSmall>>> getSchoolCourseListSmall(@Query("courseName") String courseName,@Query("pageNum") int pageNum,@Query("pageSize") int pageSize);
+    Observable<Result<List<SchoolCourseBeanSmall>>> getSchoolCourseListSmall(@Query("courseName") String courseName,
+                                                                             @Query("ageRange") String ageRange,
+                                                                             @Query("trainType") String trainType,
+                                                                             @Query("trainPart") String trainPart,
+                                                                             @Query("pageNum") int pageNum,@Query("pageSize") int pageSize);
 
     /**
-     * 个人信息
+     * 当前登陆教师
      */
-    @GET("system/user/profile")
-    Observable<Result<UserInfoProfileBean>> getSystemUserProfile();
+    @GET("school/teacher/current")
+    Observable<Result<UserInfoProfileBean>> getSchoolTeacherCurrent();
 
 
     /**
@@ -120,6 +151,13 @@ public interface ApiService {
      */
     @GET("api/v1/version/getLast")
     Observable<Result<VersionResponse>> getLast(@Query("clientType") String clientType);
+
+
+    /**
+     * 用户设备
+     */
+    @GET("system/dict/data/type/{dictType}")
+    Observable<Result<List<DictDataTypeBean>>> getDictDataType(@Path("dictType") String dictType);
 
     /**
      * 上传文件

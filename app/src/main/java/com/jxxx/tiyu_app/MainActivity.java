@@ -17,6 +17,7 @@ import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.app.MainApplication;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
+import com.jxxx.tiyu_app.bean.DictDataTypeBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.VersionResponse;
 import com.jxxx.tiyu_app.utils.StringUtil;
@@ -27,6 +28,10 @@ import com.jxxx.tiyu_app.view.activity.LoginActivity;
 import com.jxxx.tiyu_app.view.fragment.HomeOneFragment;
 import com.jxxx.tiyu_app.view.fragment.HomeThreeFragment;
 import com.jxxx.tiyu_app.view.fragment.HomeTwoFragment;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import io.reactivex.Observer;
@@ -46,7 +51,7 @@ public class MainActivity extends BaseActivity {
     private HomeOneFragment mHomeOneFragment;
     private HomeThreeFragment mHomeThreeFragment;
     public static int indexPos = 0;
-
+    public static Map<String,List<DictDataTypeBean>> mDictDataTypeBeans;
 
     @Override
     public int intiLayout() {
@@ -58,7 +63,10 @@ public class MainActivity extends BaseActivity {
     public static final int PERMISSION_CAMERA = 110;
     @Override
     public void initView() {
-
+        mDictDataTypeBeans = new HashMap<>();
+        getDictDataType("sys_age_range");//年龄
+        getDictDataType("sys_train_type");//类型
+        getDictDataType("sys_train_part");//训练部位
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//保持屏幕唤醒
         MainApplication.addActivity(this);
@@ -277,5 +285,37 @@ public class MainActivity extends BaseActivity {
         lastClickTime = time;
 
         return false;
+    }
+
+    /**
+     * 获取筛选的条件
+     */
+    private void getDictDataType(String dictType) {
+        RetrofitUtil.getInstance().apiService()
+                .getDictDataType(dictType)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Result<List<DictDataTypeBean>>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Result<List<DictDataTypeBean>> result) {
+                        if(isResultOk(result)){
+                            mDictDataTypeBeans.put(dictType,result.getData());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
     }
 }

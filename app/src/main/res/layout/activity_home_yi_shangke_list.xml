@@ -42,6 +42,13 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_not_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@color/color_999999"
+        android:text="暂无数据"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_list"
         android:layout_width="match_parent"

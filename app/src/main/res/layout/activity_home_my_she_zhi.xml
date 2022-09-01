@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/quan_ju_top_title"
             android:gravity="center"
-            android:text="已上课"
+            android:text="设置"
             android:textColor="@color/color_ffffff"
             android:textSize="16sp" />
 
@@ -56,7 +56,8 @@
                 android:textColor="@color/color_000000"
                 android:textSize="@dimen/sp_14" />
 
-            <EditText
+            <TextView
+                android:id="@+id/tv_userName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -89,6 +90,7 @@
                 android:textSize="@dimen/sp_14" />
 
             <TextView
+                android:id="@+id/tv_phonenumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -121,6 +123,7 @@
                 android:textSize="@dimen/sp_14" />
 
             <TextView
+                android:id="@+id/tv_sex"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -149,11 +152,12 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
-                android:text="生日"
+                android:text="年龄"
                 android:textColor="@color/color_000000"
                 android:textSize="@dimen/sp_14" />
 
             <TextView
+                android:id="@+id/tv_age"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -277,14 +281,17 @@
         android:layout_marginTop="-45dp">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/iv_head"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_launcher_background" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:visibility="invisible"
             android:layout_alignParentBottom="true"
             android:src="@drawable/ic_" />
 

@@ -5,110 +5,203 @@ import java.util.List;
 public class UserInfoProfileBean {
 
     /**
-     * postGroup : 董事长
-     * user : {"searchValue":null,"createBy":"admin","createTime":"2022-03-03 10:59:14","updateBy":null,"updateTime":null,"params":{},"userId":1,"deptId":103,"userName":"admin","nickName":"疯狂的狮子Li","userType":"sys_user","email":"crazyLionLi@163.com","phonenumber":"15888888888","sex":"1","avatar":"","status":"0","delFlag":"0","loginIp":"127.0.0.1","loginDate":"2022-03-03 10:59:14","remark":"管理员","dept":{"searchValue":null,"createBy":null,"createTime":null,"updateBy":null,"updateTime":null,"params":{},"parentName":null,"parentId":101,"children":[],"deptId":103,"deptName":"研发部门","orderNum":1,"leader":"若依","phone":null,"email":null,"status":"0","delFlag":null,"ancestors":null},"roles":[{"searchValue":null,"createBy":null,"createTime":null,"updateBy":null,"updateTime":null,"params":{},"roleId":1,"roleName":"超级管理员","roleKey":"admin","roleSort":"1","dataScope":"1","menuCheckStrictly":false,"deptCheckStrictly":false,"status":"0","delFlag":null,"remark":null,"flag":false,"menuIds":null,"deptIds":null,"admin":true}],"roleIds":null,"postIds":null,"roleId":null,"admin":true}
-     * roleGroup : 超级管理员
+     * age : 0
+     * classList : [{"classGroupList":[{"classId":0,"id":0,"studentIds":""}],"className":"","classSchedule":"","classTimes":"","createTime":"","grade":"","id":0,"queueNum":0,"queuePersonNum":0,"schoolId":0,"schoolName":"","studentNum":0,"teacherId":0,"teacherName":""}]
+     * classNames :
+     * createTime :
+     * gender : 0
+     * id : 0
+     * mobile :
+     * schoolId : 0
+     * schoolName :
+     * status : 0
+     * teacherName :
+     * userId : 0
+     * userName :
      */
 
-    private String postGroup;
-    private UserBean user;
-    private String roleGroup;
+    private int age;
+    private String avatar;
+    private String classNames;
+    private String createTime;
+    private int gender;
+    private int id;
+    private String mobile;
+    private int schoolId;
+    private String schoolName;
+    private int status;
+    private String teacherName;
+    private int userId;
+    private String userName;
+    private List<ClassListBean> classList;
 
-    public String getPostGroup() {
-        return postGroup;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
-    public void setPostGroup(String postGroup) {
-        this.postGroup = postGroup;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public UserBean getUser() {
-        return user;
+    public int getAge() {
+        return age;
     }
 
-    public void setUser(UserBean user) {
-        this.user = user;
+    public void setAge(int age) {
+        this.age = age;
     }
 
-    public String getRoleGroup() {
-        return roleGroup;
+    public String getClassNames() {
+        return classNames;
     }
 
-    public void setRoleGroup(String roleGroup) {
-        this.roleGroup = roleGroup;
+    public void setClassNames(String classNames) {
+        this.classNames = classNames;
     }
 
-    public static class UserBean {
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public int getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(int schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public List<ClassListBean> getClassList() {
+        return classList;
+    }
+
+    public void setClassList(List<ClassListBean> classList) {
+        this.classList = classList;
+    }
+
+    public static class ClassListBean {
         /**
-         * searchValue : null
-         * createBy : admin
-         * createTime : 2022-03-03 10:59:14
-         * updateBy : null
-         * updateTime : null
-         * params : {}
-         * userId : 1
-         * deptId : 103
-         * userName : admin
-         * nickName : 疯狂的狮子Li
-         * userType : sys_user
-         * email : crazyLionLi@163.com
-         * phonenumber : 15888888888
-         * sex : 1
-         * avatar :
-         * status : 0
-         * delFlag : 0
-         * loginIp : 127.0.0.1
-         * loginDate : 2022-03-03 10:59:14
-         * remark : 管理员
-         * dept : {"searchValue":null,"createBy":null,"createTime":null,"updateBy":null,"updateTime":null,"params":{},"parentName":null,"parentId":101,"children":[],"deptId":103,"deptName":"研发部门","orderNum":1,"leader":"若依","phone":null,"email":null,"status":"0","delFlag":null,"ancestors":null}
-         * roles : [{"searchValue":null,"createBy":null,"createTime":null,"updateBy":null,"updateTime":null,"params":{},"roleId":1,"roleName":"超级管理员","roleKey":"admin","roleSort":"1","dataScope":"1","menuCheckStrictly":false,"deptCheckStrictly":false,"status":"0","delFlag":null,"remark":null,"flag":false,"menuIds":null,"deptIds":null,"admin":true}]
-         * roleIds : null
-         * postIds : null
-         * roleId : null
-         * admin : true
+         * classGroupList : [{"classId":0,"id":0,"studentIds":""}]
+         * className :
+         * classSchedule :
+         * classTimes :
+         * createTime :
+         * grade :
+         * id : 0
+         * queueNum : 0
+         * queuePersonNum : 0
+         * schoolId : 0
+         * schoolName :
+         * studentNum : 0
+         * teacherId : 0
+         * teacherName :
          */
 
-        private Object searchValue;
-        private String createBy;
+        private String className;
+        private String classSchedule;
+        private String classTimes;
         private String createTime;
-        private Object updateBy;
-        private Object updateTime;
-        private ParamsBean params;
-        private String userId;
-        private String deptId;
-        private String userName;
-        private String nickName;
-        private String userType;
-        private String email;
-        private String phonenumber;
-        private String sex;
-        private String avatar;
-        private String status;
-        private String delFlag;
-        private String loginIp;
-        private String loginDate;
-        private String remark;
-        private DeptBean dept;
-        private Object roleIds;
-        private Object postIds;
-        private Object roleId;
-        private boolean admin;
-        private List<RolesBean> roles;
+        private String grade;
+        private int id;
+        private int queueNum;
+        private int queuePersonNum;
+        private int schoolId;
+        private String schoolName;
+        private int studentNum;
+        private int teacherId;
+        private String teacherName;
+        private List<ClassGroupListBean> classGroupList;
 
-        public Object getSearchValue() {
-            return searchValue;
+        public String getClassName() {
+            return className;
         }
 
-        public void setSearchValue(Object searchValue) {
-            this.searchValue = searchValue;
+        public void setClassName(String className) {
+            this.className = className;
         }
 
-        public String getCreateBy() {
-            return createBy;
+        public String getClassSchedule() {
+            return classSchedule;
         }
 
-        public void setCreateBy(String createBy) {
-            this.createBy = createBy;
+        public void setClassSchedule(String classSchedule) {
+            this.classSchedule = classSchedule;
+        }
+
+        public String getClassTimes() {
+            return classTimes;
+        }
+
+        public void setClassTimes(String classTimes) {
+            this.classTimes = classTimes;
         }
 
         public String getCreateTime() {
@@ -119,588 +212,119 @@ public class UserInfoProfileBean {
             this.createTime = createTime;
         }
 
-        public Object getUpdateBy() {
-            return updateBy;
+        public String getGrade() {
+            return grade;
         }
 
-        public void setUpdateBy(Object updateBy) {
-            this.updateBy = updateBy;
+        public void setGrade(String grade) {
+            this.grade = grade;
         }
 
-        public Object getUpdateTime() {
-            return updateTime;
+        public int getId() {
+            return id;
         }
 
-        public void setUpdateTime(Object updateTime) {
-            this.updateTime = updateTime;
+        public void setId(int id) {
+            this.id = id;
         }
 
-        public ParamsBean getParams() {
-            return params;
+        public int getQueueNum() {
+            return queueNum;
         }
 
-        public void setParams(ParamsBean params) {
-            this.params = params;
+        public void setQueueNum(int queueNum) {
+            this.queueNum = queueNum;
         }
 
-        public String getUserId() {
-            return userId;
+        public int getQueuePersonNum() {
+            return queuePersonNum;
         }
 
-        public void setUserId(String userId) {
-            this.userId = userId;
+        public void setQueuePersonNum(int queuePersonNum) {
+            this.queuePersonNum = queuePersonNum;
         }
 
-        public String getDeptId() {
-            return deptId;
+        public int getSchoolId() {
+            return schoolId;
         }
 
-        public void setDeptId(String deptId) {
-            this.deptId = deptId;
+        public void setSchoolId(int schoolId) {
+            this.schoolId = schoolId;
         }
 
-        public String getUserName() {
-            return userName;
+        public String getSchoolName() {
+            return schoolName;
         }
 
-        public void setUserName(String userName) {
-            this.userName = userName;
+        public void setSchoolName(String schoolName) {
+            this.schoolName = schoolName;
         }
 
-        public String getNickName() {
-            return nickName;
+        public int getStudentNum() {
+            return studentNum;
         }
 
-        public void setNickName(String nickName) {
-            this.nickName = nickName;
+        public void setStudentNum(int studentNum) {
+            this.studentNum = studentNum;
         }
 
-        public String getUserType() {
-            return userType;
+        public int getTeacherId() {
+            return teacherId;
         }
 
-        public void setUserType(String userType) {
-            this.userType = userType;
+        public void setTeacherId(int teacherId) {
+            this.teacherId = teacherId;
         }
 
-        public String getEmail() {
-            return email;
+        public String getTeacherName() {
+            return teacherName;
         }
 
-        public void setEmail(String email) {
-            this.email = email;
+        public void setTeacherName(String teacherName) {
+            this.teacherName = teacherName;
         }
 
-        public String getPhonenumber() {
-            return phonenumber;
+        public List<ClassGroupListBean> getClassGroupList() {
+            return classGroupList;
         }
 
-        public void setPhonenumber(String phonenumber) {
-            this.phonenumber = phonenumber;
+        public void setClassGroupList(List<ClassGroupListBean> classGroupList) {
+            this.classGroupList = classGroupList;
         }
 
-        public String getSex() {
-            return sex;
-        }
-
-        public void setSex(String sex) {
-            this.sex = sex;
-        }
-
-        public String getAvatar() {
-            return avatar;
-        }
-
-        public void setAvatar(String avatar) {
-            this.avatar = avatar;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
-        }
-
-        public String getDelFlag() {
-            return delFlag;
-        }
-
-        public void setDelFlag(String delFlag) {
-            this.delFlag = delFlag;
-        }
-
-        public String getLoginIp() {
-            return loginIp;
-        }
-
-        public void setLoginIp(String loginIp) {
-            this.loginIp = loginIp;
-        }
-
-        public String getLoginDate() {
-            return loginDate;
-        }
-
-        public void setLoginDate(String loginDate) {
-            this.loginDate = loginDate;
-        }
-
-        public String getRemark() {
-            return remark;
-        }
-
-        public void setRemark(String remark) {
-            this.remark = remark;
-        }
-
-        public DeptBean getDept() {
-            return dept;
-        }
-
-        public void setDept(DeptBean dept) {
-            this.dept = dept;
-        }
-
-        public Object getRoleIds() {
-            return roleIds;
-        }
-
-        public void setRoleIds(Object roleIds) {
-            this.roleIds = roleIds;
-        }
-
-        public Object getPostIds() {
-            return postIds;
-        }
-
-        public void setPostIds(Object postIds) {
-            this.postIds = postIds;
-        }
-
-        public Object getRoleId() {
-            return roleId;
-        }
-
-        public void setRoleId(Object roleId) {
-            this.roleId = roleId;
-        }
-
-        public boolean isAdmin() {
-            return admin;
-        }
-
-        public void setAdmin(boolean admin) {
-            this.admin = admin;
-        }
-
-        public List<RolesBean> getRoles() {
-            return roles;
-        }
-
-        public void setRoles(List<RolesBean> roles) {
-            this.roles = roles;
-        }
-
-        public static class ParamsBean {
-        }
-
-        public static class DeptBean {
+        public static class ClassGroupListBean {
             /**
-             * searchValue : null
-             * createBy : null
-             * createTime : null
-             * updateBy : null
-             * updateTime : null
-             * params : {}
-             * parentName : null
-             * parentId : 101
-             * children : []
-             * deptId : 103
-             * deptName : 研发部门
-             * orderNum : 1
-             * leader : 若依
-             * phone : null
-             * email : null
-             * status : 0
-             * delFlag : null
-             * ancestors : null
+             * classId : 0
+             * id : 0
+             * studentIds :
              */
 
-            private Object searchValue;
-            private Object createBy;
-            private Object createTime;
-            private Object updateBy;
-            private Object updateTime;
-            private ParamsBeanX params;
-            private Object parentName;
-            private String parentId;
-            private String deptId;
-            private String deptName;
-            private String orderNum;
-            private String leader;
-            private Object phone;
-            private Object email;
-            private String status;
-            private Object delFlag;
-            private Object ancestors;
-            private List<?> children;
+            private int classId;
+            private int id;
+            private String studentIds;
 
-            public Object getSearchValue() {
-                return searchValue;
+            public int getClassId() {
+                return classId;
             }
 
-            public void setSearchValue(Object searchValue) {
-                this.searchValue = searchValue;
+            public void setClassId(int classId) {
+                this.classId = classId;
             }
 
-            public Object getCreateBy() {
-                return createBy;
+            public int getId() {
+                return id;
             }
 
-            public void setCreateBy(Object createBy) {
-                this.createBy = createBy;
+            public void setId(int id) {
+                this.id = id;
             }
 
-            public Object getCreateTime() {
-                return createTime;
+            public String getStudentIds() {
+                return studentIds;
             }
 
-            public void setCreateTime(Object createTime) {
-                this.createTime = createTime;
-            }
-
-            public Object getUpdateBy() {
-                return updateBy;
-            }
-
-            public void setUpdateBy(Object updateBy) {
-                this.updateBy = updateBy;
-            }
-
-            public Object getUpdateTime() {
-                return updateTime;
-            }
-
-            public void setUpdateTime(Object updateTime) {
-                this.updateTime = updateTime;
-            }
-
-            public ParamsBeanX getParams() {
-                return params;
-            }
-
-            public void setParams(ParamsBeanX params) {
-                this.params = params;
-            }
-
-            public Object getParentName() {
-                return parentName;
-            }
-
-            public void setParentName(Object parentName) {
-                this.parentName = parentName;
-            }
-
-            public String getParentId() {
-                return parentId;
-            }
-
-            public void setParentId(String parentId) {
-                this.parentId = parentId;
-            }
-
-            public String getDeptId() {
-                return deptId;
-            }
-
-            public void setDeptId(String deptId) {
-                this.deptId = deptId;
-            }
-
-            public String getDeptName() {
-                return deptName;
-            }
-
-            public void setDeptName(String deptName) {
-                this.deptName = deptName;
-            }
-
-            public String getOrderNum() {
-                return orderNum;
-            }
-
-            public void setOrderNum(String orderNum) {
-                this.orderNum = orderNum;
-            }
-
-            public String getLeader() {
-                return leader;
-            }
-
-            public void setLeader(String leader) {
-                this.leader = leader;
-            }
-
-            public Object getPhone() {
-                return phone;
-            }
-
-            public void setPhone(Object phone) {
-                this.phone = phone;
-            }
-
-            public Object getEmail() {
-                return email;
-            }
-
-            public void setEmail(Object email) {
-                this.email = email;
-            }
-
-            public String getStatus() {
-                return status;
-            }
-
-            public void setStatus(String status) {
-                this.status = status;
-            }
-
-            public Object getDelFlag() {
-                return delFlag;
-            }
-
-            public void setDelFlag(Object delFlag) {
-                this.delFlag = delFlag;
-            }
-
-            public Object getAncestors() {
-                return ancestors;
-            }
-
-            public void setAncestors(Object ancestors) {
-                this.ancestors = ancestors;
-            }
-
-            public List<?> getChildren() {
-                return children;
-            }
-
-            public void setChildren(List<?> children) {
-                this.children = children;
-            }
-
-            public static class ParamsBeanX {
-            }
-        }
-
-        public static class RolesBean {
-            /**
-             * searchValue : null
-             * createBy : null
-             * createTime : null
-             * updateBy : null
-             * updateTime : null
-             * params : {}
-             * roleId : 1
-             * roleName : 超级管理员
-             * roleKey : admin
-             * roleSort : 1
-             * dataScope : 1
-             * menuCheckStrictly : false
-             * deptCheckStrictly : false
-             * status : 0
-             * delFlag : null
-             * remark : null
-             * flag : false
-             * menuIds : null
-             * deptIds : null
-             * admin : true
-             */
-
-            private Object searchValue;
-            private Object createBy;
-            private Object createTime;
-            private Object updateBy;
-            private Object updateTime;
-            private ParamsBeanXX params;
-            private String roleId;
-            private String roleName;
-            private String roleKey;
-            private String roleSort;
-            private String dataScope;
-            private boolean menuCheckStrictly;
-            private boolean deptCheckStrictly;
-            private String status;
-            private Object delFlag;
-            private Object remark;
-            private boolean flag;
-            private Object menuIds;
-            private Object deptIds;
-            private boolean admin;
-
-            public Object getSearchValue() {
-                return searchValue;
-            }
-
-            public void setSearchValue(Object searchValue) {
-                this.searchValue = searchValue;
-            }
-
-            public Object getCreateBy() {
-                return createBy;
-            }
-
-            public void setCreateBy(Object createBy) {
-                this.createBy = createBy;
-            }
-
-            public Object getCreateTime() {
-                return createTime;
-            }
-
-            public void setCreateTime(Object createTime) {
-                this.createTime = createTime;
-            }
-
-            public Object getUpdateBy() {
-                return updateBy;
-            }
-
-            public void setUpdateBy(Object updateBy) {
-                this.updateBy = updateBy;
-            }
-
-            public Object getUpdateTime() {
-                return updateTime;
-            }
-
-            public void setUpdateTime(Object updateTime) {
-                this.updateTime = updateTime;
-            }
-
-            public ParamsBeanXX getParams() {
-                return params;
-            }
-
-            public void setParams(ParamsBeanXX params) {
-                this.params = params;
-            }
-
-            public String getRoleId() {
-                return roleId;
-            }
-
-            public void setRoleId(String roleId) {
-                this.roleId = roleId;
-            }
-
-            public String getRoleName() {
-                return roleName;
-            }
-
-            public void setRoleName(String roleName) {
-                this.roleName = roleName;
-            }
-
-            public String getRoleKey() {
-                return roleKey;
-            }
-
-            public void setRoleKey(String roleKey) {
-                this.roleKey = roleKey;
-            }
-
-            public String getRoleSort() {
-                return roleSort;
-            }
-
-            public void setRoleSort(String roleSort) {
-                this.roleSort = roleSort;
-            }
-
-            public String getDataScope() {
-                return dataScope;
-            }
-
-            public void setDataScope(String dataScope) {
-                this.dataScope = dataScope;
-            }
-
-            public boolean isMenuCheckStrictly() {
-                return menuCheckStrictly;
-            }
-
-            public void setMenuCheckStrictly(boolean menuCheckStrictly) {
-                this.menuCheckStrictly = menuCheckStrictly;
-            }
-
-            public boolean isDeptCheckStrictly() {
-                return deptCheckStrictly;
-            }
-
-            public void setDeptCheckStrictly(boolean deptCheckStrictly) {
-                this.deptCheckStrictly = deptCheckStrictly;
-            }
-
-            public String getStatus() {
-                return status;
-            }
-
-            public void setStatus(String status) {
-                this.status = status;
-            }
-
-            public Object getDelFlag() {
-                return delFlag;
-            }
-
-            public void setDelFlag(Object delFlag) {
-                this.delFlag = delFlag;
-            }
-
-            public Object getRemark() {
-                return remark;
-            }
-
-            public void setRemark(Object remark) {
-                this.remark = remark;
-            }
-
-            public boolean isFlag() {
-                return flag;
-            }
-
-            public void setFlag(boolean flag) {
-                this.flag = flag;
-            }
-
-            public Object getMenuIds() {
-                return menuIds;
-            }
-
-            public void setMenuIds(Object menuIds) {
-                this.menuIds = menuIds;
-            }
-
-            public Object getDeptIds() {
-                return deptIds;
-            }
-
-            public void setDeptIds(Object deptIds) {
-                this.deptIds = deptIds;
-            }
-
-            public boolean isAdmin() {
-                return admin;
-            }
-
-            public void setAdmin(boolean admin) {
-                this.admin = admin;
-            }
-
-            public static class ParamsBeanXX {
+            public void setStudentIds(String studentIds) {
+                this.studentIds = studentIds;
             }
         }
     }

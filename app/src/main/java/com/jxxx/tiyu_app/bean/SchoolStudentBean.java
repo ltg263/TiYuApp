@@ -21,8 +21,17 @@ public class SchoolStudentBean {
     private String gender;
     private String id;
     private String schoolId;
+    private String imgUrl;
     private String studentNo;
     private String studentName;
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
 
     private List<SchoolCourseBeanSmallActionInfoJson.StepsBean> steps;
     private int postWccs;

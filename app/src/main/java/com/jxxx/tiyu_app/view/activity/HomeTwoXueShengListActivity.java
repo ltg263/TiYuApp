@@ -2,6 +2,7 @@ package com.jxxx.tiyu_app.view.activity;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +29,8 @@ public class HomeTwoXueShengListActivity extends BaseActivity {
 
     @BindView(R.id.rv_list)
     RecyclerView rv_list;
+    @BindView(R.id.tv_title)
+    TextView tv_title;
     HomeTwoXueShengListAdapter mHomeTwoXueShengListAdapter;
     @Override
     public int intiLayout() {
@@ -36,6 +39,7 @@ public class HomeTwoXueShengListActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        tv_title.setText(getIntent().getStringExtra("className"));
         mHomeTwoXueShengListAdapter = new HomeTwoXueShengListAdapter(null);
         rv_list.setAdapter(mHomeTwoXueShengListAdapter);
         mHomeTwoXueShengListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {

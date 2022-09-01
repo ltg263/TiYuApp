@@ -68,18 +68,20 @@
                     android:background="@drawable/shape_radius_fff"
                     android:drawableEnd="@drawable/ic_jiantou_you_c7"
                     android:padding="10dp"
-                    android:text="设备名称"
+                    android:text="请选择链接的设备"
                     android:textColor="@color/color_text_theme"
                     android:textSize="@dimen/sp_12" />
 
-                <TextView
+                <EditText
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
-                    android:layout_weight="1"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="0.7"
+                    android:textCursorDrawable="@drawable/shape_edit_cursor"
+                    android:inputType="number"
                     android:background="@drawable/shape_radius_fff"
                     android:padding="10dp"
-                    android:text="5个"
+                    android:hint="请输入数量"
                     android:textColor="@color/color_text_theme"
                     android:textSize="@dimen/sp_12" />
 
@@ -94,13 +96,15 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14" />
 
-            <TextView
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/shape_radius_fff"
+                android:textCursorDrawable="@drawable/shape_edit_cursor"
+                android:inputType="number"
+                android:hint="请输入队列数"
                 android:padding="10dp"
-                android:text="4队"
                 android:textColor="@color/color_text_theme"
                 android:textSize="@dimen/sp_12" />
 
@@ -109,7 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="请选择随机触发模式"
+                android:text="请选择触发后的状态"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14" />
 
@@ -120,7 +124,7 @@
                 android:background="@drawable/shape_radius_fff"
                 android:drawableEnd="@drawable/ic_jiantou_you_c7"
                 android:padding="10dp"
-                android:text="按压"
+                android:hint="请选择触发后的状态"
                 android:textColor="@color/color_text_theme"
                 android:textSize="@dimen/sp_12" />
 
@@ -128,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="请选择随机个数和颜色"
+                android:text="请选择闪烁的频率和颜色"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14" />
 
@@ -144,19 +148,19 @@
                     android:background="@drawable/shape_radius_fff"
                     android:drawableEnd="@drawable/ic_jiantou_you_c7"
                     android:padding="10dp"
-                    android:text="3个"
+                    android:hint="请选择闪烁的频率"
                     android:textColor="@color/color_text_theme"
                     android:textSize="@dimen/sp_12" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
-                    android:layout_weight="1"
+                    android:layout_marginStart="15dp"
+                    android:layout_weight="0.7"
                     android:background="@drawable/shape_radius_fff"
                     android:drawableEnd="@drawable/ic_jiantou_you_c7"
                     android:padding="10dp"
-                    android:text="红色"
+                    android:hint="请选择颜色"
                     android:textColor="@color/color_text_theme"
                     android:textSize="@dimen/sp_12" />
 
@@ -166,7 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="请选择灯光模式和持续时间"
+                android:text="请选择触发方式和持续时间"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14" />
 
@@ -182,19 +186,19 @@
                     android:background="@drawable/shape_radius_fff"
                     android:drawableEnd="@drawable/ic_jiantou_you_c7"
                     android:padding="10dp"
-                    android:text="闪烁"
+                    android:hint="请选择触发方式"
                     android:textColor="@color/color_text_theme"
                     android:textSize="@dimen/sp_12" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="25dp"
-                    android:layout_weight="1"
+                    android:layout_marginStart="15dp"
+                    android:layout_weight="0.7"
                     android:background="@drawable/shape_radius_fff"
                     android:drawableEnd="@drawable/ic_jiantou_you_c7"
                     android:padding="10dp"
-                    android:text="0s"
+                    android:hint="请选择持续时间"
                     android:textColor="@color/color_text_theme"
                     android:textSize="@dimen/sp_12" />
 

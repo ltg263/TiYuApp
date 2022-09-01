@@ -40,7 +40,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.splashscreen);
-        new Handler().postDelayed(() -> getSystemUserProfile(), 2000);
+        new Handler().postDelayed(() -> getSchoolTeacherCurrent(), 2000);
     }
 
     private void startUi(boolean isLogin) {
@@ -52,13 +52,13 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
         finish();
     }
-    private void getSystemUserProfile() {
+    private void getSchoolTeacherCurrent() {
         if(StringUtil.isBlank(SharedUtils.getToken())){
             startUi(true);
             return;
         }
         RetrofitUtil.getInstance().apiService()
-                .getSystemUserProfile()
+                .getSchoolTeacherCurrent()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result<UserInfoProfileBean>>() {

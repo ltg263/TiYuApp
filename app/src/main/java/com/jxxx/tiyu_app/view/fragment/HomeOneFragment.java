@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.jxxx.tiyu_app.MainActivity;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.app.ConstValues;
@@ -34,7 +35,9 @@ import com.jxxx.tiyu_app.view.activity.HomeOneChuangJianSjActivity;
 import com.jxxx.tiyu_app.view.activity.HomeTwoShangKeActivity;
 import com.jxxx.tiyu_app.view.adapter.HomeOneAdapter;
 import com.jxxx.tiyu_app.view.adapter.HomeOneAdapterSmall;
+import com.jxxx.tiyu_app.view.adapter.HomeTwoType_SxAdapter;
 import com.jxxx.tiyu_app.view.adapter.KeChengXiangQingAdapter;
+import com.jxxx.tiyu_app.view.adapter.ShangKeBanJiAdapter;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -74,6 +77,7 @@ public class HomeOneFragment extends BaseFragment {
     HomeOneAdapterSmall mHomeOneAdapterSmall;
     int page = 0;
     String courseName = null;
+    String ageRange = null, trainType = null, trainPart = null;
     @Override
     protected int setLayoutResourceID() {
         return R.layout.fragment_home_one;
@@ -256,7 +260,19 @@ public class HomeOneFragment extends BaseFragment {
                 getSchoolCourseListSmall();
                 break;
             case R.id.ll_shaixuan:
-                showDistancePopup();
+                DialogUtils.showSelectDictType(mContext,ageRange,trainType,trainType, MainActivity.mDictDataTypeBeans, new DialogUtils.SelectDictTypeDialogInterface() {
+                    @Override
+                    public void btnConfirm(String ageRange, String trainType, String trainPart) {
+                        HomeOneFragment.this.ageRange = ageRange;
+                        HomeOneFragment.this.trainType = trainType;
+                        HomeOneFragment.this.trainType = trainPart;
+                        if(mIvDajie.getVisibility()==View.VISIBLE){
+                            getSchoolCourseList();
+                        }else{
+                            getSchoolCourseListSmall();
+                        }
+                    }
+                });
                 break;
             case R.id.ceshishuju:
                 startActivity(new Intent(mContext,CeShiShuJuAct.class));
@@ -267,7 +283,8 @@ public class HomeOneFragment extends BaseFragment {
     private void getSchoolCourseList() {
         showLoading();
         RetrofitUtil.getInstance().apiService()
-                .getSchoolCourseList(courseName,page,ConstValues.PAGE_SIZE)
+                .getSchoolCourseList(courseName,ageRange,trainType,trainPart,
+                        page,ConstValues.PAGE_SIZE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result<List<SchoolCourseBean>>>() {
@@ -310,7 +327,7 @@ public class HomeOneFragment extends BaseFragment {
     private void getSchoolCourseListSmall() {
         showLoading();
         RetrofitUtil.getInstance().apiService()
-                .getSchoolCourseListSmall(courseName,page,ConstValues.PAGE_SIZE)
+                .getSchoolCourseListSmall(courseName,ageRange,trainType,trainPart,page,ConstValues.PAGE_SIZE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result<List<SchoolCourseBeanSmall>>>() {

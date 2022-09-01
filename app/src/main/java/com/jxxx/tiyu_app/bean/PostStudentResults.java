@@ -15,6 +15,57 @@ public class PostStudentResults {
                 '}';
     }
 
+    public PostStudentResults() {
+
+    }
+
+    public PostStudentResults(String classDate, String classId, String classSceduleCardId, String teacherId, String courseId, String smallCourseId) {
+        this.classDate = classDate;
+        this.classId = classId;
+        this.classSceduleCardId = classSceduleCardId;
+        this.teacherId = teacherId;
+        this.courseId = courseId;
+        this.smallCourseId = smallCourseId;
+    }
+
+    public String classDate;
+    public String classId;
+    public String classSceduleCardId;
+    public String teacherId;
+
+    public void setClassDate(String classDate) {
+        this.classDate = classDate;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
+    }
+
+    public void setClassSceduleCardId(String classSceduleCardId) {
+        this.classSceduleCardId = classSceduleCardId;
+    }
+
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public String getClassDate() {
+        return classDate;
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public String getClassSceduleCardId() {
+        return classSceduleCardId;
+    }
+
+    public String getTeacherId() {
+        return teacherId;
+    }
+
+
     /**
      * courseId : 0
      * createBy :

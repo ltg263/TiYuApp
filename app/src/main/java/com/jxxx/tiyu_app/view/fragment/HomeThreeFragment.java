@@ -64,7 +64,10 @@ public class HomeThreeFragment extends BaseFragment {
         mHomeThreeListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(getActivity(), HomeTwoXueShengListActivity.class));
+                Intent mIntent = new Intent(getActivity(), HomeTwoXueShengListActivity.class);
+                mIntent.putExtra("classId",mHomeThreeListAdapter.getData().get(position).getId());
+                mIntent.putExtra("className",mHomeThreeListAdapter.getData().get(position).getClassName());
+                startActivity(mIntent);
             }
         });
     }
@@ -72,7 +75,7 @@ public class HomeThreeFragment extends BaseFragment {
     @Override
     protected void initData() {
         showLoading();
-        getSystemUserProfile();
+        getSchoolTeacherCurrent();
         getSchoolClassList();
     }
 
@@ -118,9 +121,9 @@ public class HomeThreeFragment extends BaseFragment {
                 });
     }
 
-    private void getSystemUserProfile() {
+    private void getSchoolTeacherCurrent() {
         RetrofitUtil.getInstance().apiService()
-                .getSystemUserProfile()
+                .getSchoolTeacherCurrent()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result<UserInfoProfileBean>>() {
@@ -132,11 +135,11 @@ public class HomeThreeFragment extends BaseFragment {
                     @Override
                     public void onNext(Result<UserInfoProfileBean> result) {
                         if (isResultOk(result) && result.getData() != null) {
-                            UserInfoProfileBean.UserBean userInfo = result.getData().getUser();
+                            UserInfoProfileBean userInfo = result.getData();
                             if (userInfo != null) {
                                 GlideImgLoader.loadImageViewRadiusNoCenter(mContext, userInfo.getAvatar(), mIvHead);
-                                mTvUserName.setText(userInfo.getNickName());
-                                mTvUserPhone.setText(userInfo.getPhonenumber());
+                                mTvUserName.setText(userInfo.getUserName());
+                                mTvUserPhone.setText(userInfo.getMobile());
                                 mTvBanji.setText("0");
                                 mTvXuesheng.setText("0");
                                 mTvYishangke.setText("0");

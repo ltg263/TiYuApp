@@ -76,7 +76,7 @@ public class HomeXueShengXqActivity extends BaseActivity {
                     @Override
                     public void onNext(Result<SchoolStudentBean> result) {
                         if (isResultOk(result) && result.getData() != null) {
-                            GlideImgLoader.loadImageViewRadiusNoCenter(HomeXueShengXqActivity.this, "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png", mIvHead);
+                            GlideImgLoader.loadImageViewRadiusNoCenter(HomeXueShengXqActivity.this, result.getData().getImgUrl(), mIvHead);
                             mTvUserNo.setText("学号："+result.getData().getStudentNo());
                             mTvUserName.setText("姓名："+result.getData().getStudentName());
                             mTvUserAge.setText("年纪："+result.getData().getAge()+"    超时：11次");
@@ -156,12 +156,5 @@ public class HomeXueShengXqActivity extends BaseActivity {
             fragments.add(fragment);
         }
         return fragments;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

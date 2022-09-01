@@ -16,12 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.app.ConstValues;
+import com.jxxx.tiyu_app.bean.DictDataTypeBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
 import com.jxxx.tiyu_app.bean.VersionResponse;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
+import com.jxxx.tiyu_app.view.adapter.HomeTwoType_SxAdapter;
 import com.jxxx.tiyu_app.view.adapter.KeChengXiangQingAdapter;
 import com.jxxx.tiyu_app.view.adapter.KeChengXiangQingAdapterSmall;
 
@@ -30,6 +32,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import constant.UiType;
 import listener.Md5CheckResultListener;
@@ -62,6 +65,43 @@ public class DialogUtils {
             public void onClick(View v) {
                 if(dialogConfirm!=null){
                     dialogConfirm.btnConfirm();
+                }
+                dialog5.dismiss();
+            }
+        });
+        dialog5.setCancelable(false);
+        dialog5.setContentView(view);
+        dialog5.show();
+    }
+
+    public interface SelectDictTypeDialogInterface {
+        /**
+         * 确定
+         */
+        public void btnConfirm(String ageRange,String trainType,String trainPart);
+    }
+    public static void showSelectDictType(Context context,String ageRange,String trainType,String trainPart, Map<String,List<DictDataTypeBean>> mDictDataTypeBeans, final SelectDictTypeDialogInterface dialogConfirm) {
+
+        final Dialog dialog5 = new Dialog(context, R.style.selectorDialog);
+        final View view = LayoutInflater.from(context).inflate(R.layout.dialog_select_dict_type, null);
+        TextView btn =  view.findViewById(R.id.btn);
+        RecyclerView rv_list_nl =  view.findViewById(R.id.rv_list_nl);
+        RecyclerView rv_list_lx =  view.findViewById(R.id.rv_list_lx);
+        RecyclerView rv_list_xlbw =  view.findViewById(R.id.rv_list_xlbw);
+        HomeTwoType_SxAdapter sys_age_range = new HomeTwoType_SxAdapter(mDictDataTypeBeans.get("sys_age_range"));
+        sys_age_range.setDictValue(ageRange);
+        rv_list_nl.setAdapter(sys_age_range);
+        HomeTwoType_SxAdapter sys_train_type = new HomeTwoType_SxAdapter(mDictDataTypeBeans.get("sys_train_type"));
+        sys_train_type.setDictValue(trainType);
+        rv_list_lx.setAdapter(sys_train_type);
+        HomeTwoType_SxAdapter sys_train_part = new HomeTwoType_SxAdapter(mDictDataTypeBeans.get("sys_train_part"));
+        sys_train_part.setDictValue(trainPart);
+        rv_list_xlbw.setAdapter(sys_train_part);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dialogConfirm!=null){
+                    dialogConfirm.btnConfirm(sys_age_range.getDictValue(),sys_train_type.getDictValue(),sys_train_part.getDictValue());
                 }
                 dialog5.dismiss();
             }
