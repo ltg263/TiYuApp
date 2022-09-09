@@ -155,19 +155,105 @@
                             android:textSize="16sp" />
 
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center_vertical"
-                            android:paddingTop="5dp"
-                            android:scaleType="fitStart"
-                            android:src="@drawable/ic_jiantou_xia" />
+                            android:id="@+id/iv_shanxuan"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:scaleType="center"
+                            android:layout_marginTop="7dp"
+                            android:src="@drawable/home_select_shaixuan" />
 
                     </LinearLayout>
 
 
                 </LinearLayout>
             </LinearLayout>
+            <TextView
+                android:id="@+id/ceshishuju"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:gravity="end|bottom"
+                android:layout_gravity="end"
+                android:text="测试"
+                android:textColor="@color/color_999999"
+                android:textSize="13sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
 
+                <RadioGroup
+                    android:id="@+id/mRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_home_select1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:drawableEnd="@mipmap/ic_jiantou_xia1"
+                        android:drawablePadding="5dp"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:singleLine="true"
+                        android:text="年级"
+                        android:textColor="@color/selector_color"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/rb_home_select2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:drawableEnd="@mipmap/ic_jiantou_xia1"
+                        android:drawablePadding="5dp"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:singleLine="true"
+                        android:paddingEnd="10dp"
+                        android:text="教学内容"
+                        android:textColor="@color/selector_color"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/rb_home_select3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:singleLine="true"
+                        android:drawableEnd="@mipmap/ic_jiantou_xia1"
+                        android:drawablePadding="5dp"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="大类别"
+                        android:textColor="@color/selector_color"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/rb_home_select4"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:button="@null"
+                        android:drawableEnd="@mipmap/ic_jiantou_xia1"
+                        android:drawablePadding="5dp"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="主题内容"
+                        android:textColor="@color/selector_color"
+                        android:textSize="12sp" />
+                </RadioGroup>
+            </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_one_list"
                 android:layout_width="match_parent"
@@ -180,16 +266,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-            <TextView
-                android:id="@+id/ceshishuju"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:gravity="end|bottom"
-                android:layout_gravity="end"
-                android:text="测试数据"
-                android:textColor="@color/color_999999"
-                android:textSize="13sp" />
+
         </LinearLayout>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

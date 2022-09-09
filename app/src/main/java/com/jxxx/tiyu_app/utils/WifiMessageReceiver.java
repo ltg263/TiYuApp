@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jxxx.tiyu_app.R;
+import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.app.MainApplication;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
@@ -27,11 +28,38 @@ public class WifiMessageReceiver extends BroadcastReceiver {
 
     int sbNum,dengGuang;//设备数量、灯光模式（室内|室外）
     Context mContext;
-    boolean isShowCurrentActivity;
+    boolean isShowCurrentActivity,isSuiJi=false;
+    WifiMessageReceiverInter mWifiMessageReceiverInter;
+    public interface WifiMessageReceiverInter {
+        /**
+         * 确定
+         */
+        public void messageReceiverInter();
+    }
+
+    public void setSuiJi(boolean suiJi) {
+        isSuiJi = suiJi;
+    }
+
+    public WifiMessageReceiver(){
+
+    }
     public WifiMessageReceiver(int sbNum,int dengGuang) {
         this.sbNum = sbNum;
         this.dengGuang = dengGuang;
         isShowCurrentActivity = true;
+    }
+
+    public void setWifiMessageReceiverInter(WifiMessageReceiverInter wifiMessageReceiverInter) {
+        mWifiMessageReceiverInter = wifiMessageReceiverInter;
+    }
+
+    public void onWifiMessageReceiverInter (Context mContext, int sbNum, int dengGuang, WifiMessageReceiverInter mWifiMessageReceiverInter){
+        isShowCurrentActivity = true;
+        this.mWifiMessageReceiverInter = mWifiMessageReceiverInter;
+        this.sbNum = sbNum;
+        this.dengGuang = dengGuang;
+        showDialogXunQiu(mContext,sbNum);
     }
 
     @Override
@@ -56,7 +84,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
             if(!isShowCurrentActivity){
                 return;
             }
-            showDialogXunQiu(sbNum);
+            showDialogXunQiu(mContext,sbNum);
             Toast.makeText(mContext,"连接成功",Toast.LENGTH_SHORT).show();
         }
         if(mStartBroadcastType== ConstValuesHttps.MESSAGE_GET_C0){
@@ -64,25 +92,46 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 return;
             }
             if(dialog!=null && dialog.isShowing() && btn_xunqiu.getText().toString().equals("正在寻球")){
-                int count = 0;
-                List<Byte> b2_list = new ArrayList<>();
                 for(int i = 0;i<startBroadcastData.length;i++){
-                    if(i!=0 && startBroadcastData[i]==1){
-                        b2_list.add(startBroadcastData[i-1]);
+                    if(!ConstValuesHttps.MESSAGE_ALL_TOTAL.contains(startBroadcastData[i])){
+                        ConstValuesHttps.MESSAGE_ALL_TOTAL.add(startBroadcastData[i]);
+                        String[] sortNumSet = null;
+                        if(ConstValues.mSchoolCourseInfoBean!=null
+                                && ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList()!=null
+                                && ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size()>0
+                                && StringUtil.isNotBlank(ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getSmallCourseVo().getSortNumSet())){
+                            sortNumSet = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getSmallCourseVo().getSortNumSet().split(",");
+                        }else if(ConstValues.mSchoolCourseInfoBeanSmall != null
+                                && StringUtil.isNotBlank(ConstValues.mSchoolCourseInfoBeanSmall.getSortNumSet())){
+                            sortNumSet = ConstValues.mSchoolCourseInfoBeanSmall.getSortNumSet().split(",");
+                        }
+                        if(isSuiJi){
+                            sortNumSet = new String[sbNum];
+                            for(int s=0;s<sortNumSet.length;s++){
+                                sortNumSet[s] = (s+1)+"";
+                            }
+                        }
+                        if(sortNumSet != null && sortNumSet.length>=ConstValuesHttps.MESSAGE_ALL_TOTAL.size()){
+                            ClientTcpUtils.mClientTcpUtils.sendData_B3(startBroadcastData[i],
+                                    Byte.parseByte(sortNumSet[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()-1]));
+                        }
+                    }
+                }
+                if(sbNum <= ConstValuesHttps.MESSAGE_ALL_TOTAL.size() && dialog.isShowing()){
+                    btn_xunqiu.setText("完成寻球");
+                    List<Byte> b2_list = new ArrayList<>();
+                    for(int i = 0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
+                        b2_list.add(ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i));
                         b2_list.add((byte) dengGuang);//00:亮度为室内亮度 01亮度为室外亮度
                         b2_list.add((byte) 0x00);
                         b2_list.add((byte) 0x00);
                         b2_list.add((byte) 0x00);
                         b2_list.add((byte) 0x00);
-                        count++;
                     }
-                }
-                if(sbNum <= count){
-                    btn_xunqiu.setText("完成寻球");
                     ClientTcpUtils.mClientTcpUtils.sendData_B2_dg(b2_list);
                     ClientTcpUtils.mClientTcpUtils.sendData_B0();
                 }
-                mSvN.setCurrentCount(sbNum,count,tv_bfb);
+                mSvN.setCurrentCount(sbNum,ConstValuesHttps.MESSAGE_ALL_TOTAL.size(),tv_bfb);
             }
         }
         if(mStartBroadcastType== ConstValuesHttps.MESSAGE_GET_C5){
@@ -100,7 +149,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
     StepArcView_n mSvN;
     TextView tv_bfb;
     Button btn_xunqiu;
-    private void showDialogXunQiu(int sbNum) {
+    private void showDialogXunQiu(Context mContext,int sbNum) {
         dialog = new Dialog(mContext, R.style.selectorDialog);
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_kaishixunqiu, null);
         btn_xunqiu = view.findViewById(R.id.btn_xunqiu);
@@ -122,8 +171,12 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 }
                 if(btn_xunqiu.getText().toString().equals("完成寻球")){
                     isShowCurrentActivity = false;
-                    mContext.startActivity(new Intent(mContext, HomeTwoXueShengActivity.class));
                     dialog.dismiss();
+                    if(mWifiMessageReceiverInter==null){
+                        mContext.startActivity(new Intent(mContext, HomeTwoXueShengActivity.class));
+                    }else{
+                        mWifiMessageReceiverInter.messageReceiverInter();
+                    }
                 }
             }
         });

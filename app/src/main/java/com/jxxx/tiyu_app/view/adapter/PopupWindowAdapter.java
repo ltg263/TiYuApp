@@ -18,7 +18,6 @@ public class PopupWindowAdapter extends BaseQuickAdapter<String, BaseViewHolder>
         if(helper.getLayoutPosition()==mData.size()-1){
             helper.setVisible(R.id.view,false);
         }
-
     }
 
 }

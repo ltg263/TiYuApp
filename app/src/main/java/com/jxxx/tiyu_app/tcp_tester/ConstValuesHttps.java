@@ -1,8 +1,10 @@
 package com.jxxx.tiyu_app.tcp_tester;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class ConstValuesHttps {
 
@@ -19,6 +21,13 @@ public class ConstValuesHttps {
      * 总数量
      */
     public static byte MESSAGE_NUM_TOTAL = 26;
+
+    /**
+     * 所有的球
+     */
+    public static List<Byte> MESSAGE_ALL_TOTAL = new ArrayList<>();
+
+    public static Map<Byte,Byte> MESSAGE_ALL_TOTAL_MAP = new HashMap<>();
 
     /**
      * 开头
@@ -57,6 +66,11 @@ public class ConstValuesHttps {
      * 设置亮度
      */
     public static byte MESSAGE_SEND_B2 = (byte) 0xB2;
+
+    /**
+     * 设置数码管显示光电球的球号指令功能码
+     */
+    public static byte MESSAGE_SEND_B3 = (byte) 0xB3;
 
 
     /******↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓接受向服务端的指令↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*******/

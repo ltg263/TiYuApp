@@ -78,35 +78,63 @@ public class DialogUtils {
         /**
          * 确定
          */
-        public void btnConfirm(String ageRange,String trainType,String trainPart);
+        public void btnConfirm(String ageRange,String contentType,String category,String theme,String processType,String trainType);
     }
-    public static void showSelectDictType(Context context,String ageRange,String trainType,String trainPart, Map<String,List<DictDataTypeBean>> mDictDataTypeBeans, final SelectDictTypeDialogInterface dialogConfirm) {
+    public static void showSelectDictType(Context context,String ageRange,String contentType,String category,String theme,String processType,String trainType,boolean isDaJieKe, Map<String,List<DictDataTypeBean>> mDictDataTypeBeans, final SelectDictTypeDialogInterface dialogConfirm) {
 
         final Dialog dialog5 = new Dialog(context, R.style.selectorDialog);
         final View view = LayoutInflater.from(context).inflate(R.layout.dialog_select_dict_type, null);
         TextView btn =  view.findViewById(R.id.btn);
-        RecyclerView rv_list_nl =  view.findViewById(R.id.rv_list_nl);
-        RecyclerView rv_list_lx =  view.findViewById(R.id.rv_list_lx);
-        RecyclerView rv_list_xlbw =  view.findViewById(R.id.rv_list_xlbw);
-        HomeTwoType_SxAdapter sys_age_range = new HomeTwoType_SxAdapter(mDictDataTypeBeans.get("sys_age_range"));
-        sys_age_range.setDictValue(ageRange);
-        rv_list_nl.setAdapter(sys_age_range);
+        RecyclerView rv_list_1 =  view.findViewById(R.id.rv_list_1);
+        RecyclerView rv_list_2 =  view.findViewById(R.id.rv_list_2);
+        RecyclerView rv_list_3 =  view.findViewById(R.id.rv_list_3);
+        RecyclerView rv_list_4 =  view.findViewById(R.id.rv_list_4);
+        TextView tv1 =  view.findViewById(R.id.tv_1);
+        TextView tv2 =  view.findViewById(R.id.tv_2);
+        TextView tv3 =  view.findViewById(R.id.tv_3);
+        TextView tv4 =  view.findViewById(R.id.tv_4);
+        tv1.setText("年级");
+        tv2.setText("教学内容");
+        tv3.setText("大类别");
+        tv4.setText("主题内容");
+
+        HomeTwoType_SxAdapter sys_grade = new HomeTwoType_SxAdapter(mDictDataTypeBeans.get("sys_grade"));
+        sys_grade.setDictValue(ageRange);
+        rv_list_1.setAdapter(sys_grade);
+        HomeTwoType_SxAdapter sys_content_type = new HomeTwoType_SxAdapter(mDictDataTypeBeans.get("sys_content_type"));
+        sys_content_type.setDictValue(contentType);
+        rv_list_2.setAdapter(sys_content_type);
+        HomeTwoType_SxAdapter sys_category = new HomeTwoType_SxAdapter(mDictDataTypeBeans.get("sys_category"));
+        sys_category.setDictValue(category);
+        rv_list_3.setAdapter(sys_category);
+        HomeTwoType_SxAdapter sys_theme = new HomeTwoType_SxAdapter(mDictDataTypeBeans.get("sys_theme"));
+        sys_theme.setDictValue(theme);
+        rv_list_4.setAdapter(sys_theme);
+
+        HomeTwoType_SxAdapter sys_process_type = new HomeTwoType_SxAdapter(mDictDataTypeBeans.get("sys_process_type"));
+        sys_process_type.setDictValue(processType);
+
         HomeTwoType_SxAdapter sys_train_type = new HomeTwoType_SxAdapter(mDictDataTypeBeans.get("sys_train_type"));
         sys_train_type.setDictValue(trainType);
-        rv_list_lx.setAdapter(sys_train_type);
-        HomeTwoType_SxAdapter sys_train_part = new HomeTwoType_SxAdapter(mDictDataTypeBeans.get("sys_train_part"));
-        sys_train_part.setDictValue(trainPart);
-        rv_list_xlbw.setAdapter(sys_train_part);
+        if(isDaJieKe){
+            tv3.setText("流程");
+            tv4.setText("核心指标");
+            rv_list_3.setAdapter(sys_process_type);
+            rv_list_4.setAdapter(sys_train_type);
+        }
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(dialogConfirm!=null){
-                    dialogConfirm.btnConfirm(sys_age_range.getDictValue(),sys_train_type.getDictValue(),sys_train_part.getDictValue());
+                    dialogConfirm.btnConfirm(sys_grade.getDictValue(),sys_content_type.getDictValue(),
+                            sys_category.getDictValue(),sys_theme.getDictValue(),
+                            sys_process_type.getDictValue(),sys_train_type.getDictValue());
                 }
                 dialog5.dismiss();
             }
         });
-        dialog5.setCancelable(false);
+        dialog5.setCancelable(true);
         dialog5.setContentView(view);
         dialog5.show();
     }
@@ -202,6 +230,38 @@ public class DialogUtils {
         tv_type_1.setText("每组" + mSchoolCourseBean.getGroupNum() + "人  |  共" + mSchoolCourseBean.getStepNum() + "个步骤");
         TextView tv_type_2 =view.findViewById(R.id.tv_type_2);
         tv_type_2.setText(mSchoolCourseBean.getQueueInfo());
+        btn_kaishishangke.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(dialogConfirm!=null){
+                    dialogConfirm.btnConfirm(1);
+                }
+                dialog5.dismiss();
+            }
+        });
+        btn_tiaoguo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dialogConfirm!=null){
+                    dialogConfirm.btnConfirm(0);
+                }
+                dialog5.dismiss();
+            }
+        });
+        dialog5.setCancelable(false);
+        dialog5.setContentView(view);
+        dialog5.show();
+    }
+
+    /**
+     * 开始下一节课是否要寻球
+     */
+    public static void showDialogXiaYiJieIsXunQiu(Context context, final ErrorDialogInterfaceA dialogConfirm) {
+        final Dialog dialog5 = new Dialog(context, R.style.selectorDialog);
+        final View view = LayoutInflater.from(context).inflate(R.layout.dialog_xiayijie_xunqiu, null);
+        TextView btn_kaishishangke = view.findViewById(R.id.btn_kaishishangke);
+        TextView btn_tiaoguo = view.findViewById(R.id.btn_tiaoguo);
         btn_kaishishangke.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -369,7 +429,7 @@ public class DialogUtils {
                     }
                     if(Integer.parseInt(guangqiuNum)<finalMBallNum){
                         ToastUtil.showLongStrToast(context,"光电球不能少于"+finalMBallNum+"个");
-//                        return;
+                        return;
                     }
                     if(Integer.parseInt(guangqiuNum) > ConstValues.BALL_NUM_MAX){
                         ToastUtil.showLongStrToast(context,"光电球最多"+ConstValues.BALL_NUM_MAX+"个");
@@ -377,16 +437,16 @@ public class DialogUtils {
                     }
                     if(Integer.parseInt(dianbanNum)<finalMPlateNum){
                         ToastUtil.showLongStrToast(context,"光电地板不能少于"+finalMPlateNum+"个");
-//                        return;
+                        return;
                     }
                     if(Integer.parseInt(dianbanNum) > ConstValues.PLATE_NUM_MAX){
                         ToastUtil.showLongStrToast(context,"光电地板最多"+ConstValues.PLATE_NUM_MAX+"个");
                         return;
                     }
+                    dialog5.dismiss();
                     dialogConfirm.lianJieNum(StringUtil.isNotBlank(guangqiuNum)?Integer.parseInt(guangqiuNum):finalMBallNum
                             ,StringUtil.isNotBlank(dianbanNum)?Integer.parseInt(dianbanNum):finalMPlateNum, dingguang);
                 }
-                dialog5.dismiss();
             }
         });
         iv_quxiao.setOnClickListener(new View.OnClickListener() {

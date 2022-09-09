@@ -65,7 +65,6 @@ public class HomeTwoXueShengActivity extends BaseActivity {
         }
         //班级信息
         mTvTitle.setText(ConstValues.mSchoolClassInfoBean.getClassName());
-
         rv_list.setAdapter(new HomeTwoXueShengAdapter(ConstValues.mSchoolClassInfoBean.getClassGroupList()));
     }
 

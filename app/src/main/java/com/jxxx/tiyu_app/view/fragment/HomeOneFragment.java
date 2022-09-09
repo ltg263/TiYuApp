@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
 import com.jxxx.tiyu_app.utils.CustomPopWindow;
+import com.jxxx.tiyu_app.utils.RadioGroupSelectUtils;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
@@ -55,6 +58,17 @@ import io.reactivex.schedulers.Schedulers;
 
 public class HomeOneFragment extends BaseFragment {
 
+    @BindView(R.id.rb_home_select1)
+    RadioButton mRbHomeSelect1;
+    @BindView(R.id.rb_home_select2)
+    RadioButton mRbHomeSelect2;
+    @BindView(R.id.rb_home_select3)
+    RadioButton mRbHomeSelect3;
+    @BindView(R.id.rb_home_select4)
+    RadioButton mRbHomeSelect4;
+    @BindView(R.id.mRadioGroup)
+    RadioGroup mMRadioGroup;
+
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.et_suosou)
@@ -63,6 +77,8 @@ public class HomeOneFragment extends BaseFragment {
     TextView mTvDajie;
     @BindView(R.id.iv_dajie)
     ImageView mIvDajie;
+    @BindView(R.id.iv_shanxuan)
+    ImageView iv_shanxuan;
     @BindView(R.id.tv_xiaojie)
     TextView mTvXiaojie;
     @BindView(R.id.iv_xiaojie)
@@ -77,7 +93,8 @@ public class HomeOneFragment extends BaseFragment {
     HomeOneAdapterSmall mHomeOneAdapterSmall;
     int page = 0;
     String courseName = null;
-    String ageRange = null, trainType = null, trainPart = null;
+    String ageRange = null, contentType = null, category = null,theme = null,processType=null,trainType=null;
+    RadioGroupSelectUtils mRadioGroupSelectUtils;
     @Override
     protected int setLayoutResourceID() {
         return R.layout.fragment_home_one;
@@ -85,6 +102,7 @@ public class HomeOneFragment extends BaseFragment {
 
     @Override
     protected void initView() {
+        iv_shanxuan.setSelected(false);
         refreshLayout.setRefreshHeader(new MaterialHeader(mContext).setShowBezierWave(false));
         refreshLayout.setEnableRefresh(false);
         refreshLayout.setEnableLoadMore(false);
@@ -136,6 +154,42 @@ public class HomeOneFragment extends BaseFragment {
                 return false;
             }
         });
+
+        mRadioGroupSelectUtils = new RadioGroupSelectUtils();
+        mRadioGroupSelectUtils.setDaKeJie(mIvDajie.getVisibility()==View.VISIBLE);
+        mRadioGroupSelectUtils.setOnChangeListener(getActivity(),
+                mMRadioGroup, mRbHomeSelect1, mRbHomeSelect2, mRbHomeSelect3, mRbHomeSelect4, new RadioGroupSelectUtils.DialogInterface() {
+                    @Override
+                    public void btnConfirm(String sys,String value) {
+                        switch (sys){
+                            case "sys_grade":
+                                ageRange = value;
+                                break;
+                            case "sys_content_type":
+                                contentType = value;
+                                break;
+                            case "sys_category":
+                                category = value;
+                                break;
+                            case "sys_theme":
+                                theme = value;
+                                break;
+                            case "sys_process_type":
+                                processType=value;
+                                break;
+                            case "sys_train_type":
+                                trainType=value;
+                                break;
+                        }
+                        if(mIvDajie.getVisibility()==View.VISIBLE){
+                            getSchoolCourseList();
+                        }else{
+                            getSchoolCourseListSmall();
+                        }
+                    }
+                });
+
+
     }
 
     @Override
@@ -234,7 +288,13 @@ public class HomeOneFragment extends BaseFragment {
                 }
                 break;
             case R.id.ll_dajie:
-//                page = 1;
+//              page = 1;
+                mRadioGroupSelectUtils.setDaKeJie(true);
+                initDictDataType();
+                iv_shanxuan.setSelected(false);
+                mMRadioGroup.setVisibility(View.GONE);
+                mRbHomeSelect3.setText("流程");
+                mRbHomeSelect4.setText("核心指标");
                 mTvDajie.setTextColor(getResources().getColor(R.color.white));
                 mTvXiaojie.setTextColor(getResources().getColor(R.color.white_46));
                 mTvDajie.setTextSize(16);
@@ -247,7 +307,13 @@ public class HomeOneFragment extends BaseFragment {
                 getSchoolCourseList();
                 break;
             case R.id.ll_xiaojie:
-//                page = 1;
+//              page = 1;
+                mRadioGroupSelectUtils.setDaKeJie(false);
+                initDictDataType();
+                iv_shanxuan.setSelected(false);
+                mMRadioGroup.setVisibility(View.GONE);
+                mRbHomeSelect3.setText("大类别");
+                mRbHomeSelect4.setText("主题内容");
                 mTvDajie.setTextColor(getResources().getColor(R.color.white_46));
                 mTvXiaojie.setTextColor(getResources().getColor(R.color.white));
                 mTvDajie.setTextSize(14);
@@ -260,19 +326,31 @@ public class HomeOneFragment extends BaseFragment {
                 getSchoolCourseListSmall();
                 break;
             case R.id.ll_shaixuan:
-                DialogUtils.showSelectDictType(mContext,ageRange,trainType,trainType, MainActivity.mDictDataTypeBeans, new DialogUtils.SelectDictTypeDialogInterface() {
-                    @Override
-                    public void btnConfirm(String ageRange, String trainType, String trainPart) {
-                        HomeOneFragment.this.ageRange = ageRange;
-                        HomeOneFragment.this.trainType = trainType;
-                        HomeOneFragment.this.trainType = trainPart;
-                        if(mIvDajie.getVisibility()==View.VISIBLE){
-                            getSchoolCourseList();
-                        }else{
-                            getSchoolCourseListSmall();
-                        }
-                    }
-                });
+                if(mMRadioGroup.getVisibility()==View.VISIBLE){
+                    iv_shanxuan.setSelected(false);
+                    mMRadioGroup.setVisibility(View.GONE);
+                }else{
+                    iv_shanxuan.setSelected(true);
+                    mMRadioGroup.setVisibility(View.VISIBLE);
+                }
+//                DialogUtils.showSelectDictType(mContext,ageRange,contentType,category,theme,
+//                        processType,trainType,mIvDajie.getVisibility()==View.VISIBLE,
+//                        MainActivity.mDictDataTypeBeans, new DialogUtils.SelectDictTypeDialogInterface() {
+//                    @Override
+//                    public void btnConfirm(String ageRange,String contentType,String category,String theme,String processType,String trainType) {
+//                        HomeOneFragment.this.ageRange = ageRange;
+//                        HomeOneFragment.this.contentType = contentType;
+//                        if(mIvDajie.getVisibility()==View.VISIBLE){
+//                            HomeOneFragment.this.category = category;
+//                            HomeOneFragment.this.theme = theme;
+//                            getSchoolCourseList();
+//                        }else{
+//                            HomeOneFragment.this.processType = processType;
+//                            HomeOneFragment.this.trainType = trainType;
+//                            getSchoolCourseListSmall();
+//                        }
+//                    }
+//                });
                 break;
             case R.id.ceshishuju:
                 startActivity(new Intent(mContext,CeShiShuJuAct.class));
@@ -280,10 +358,19 @@ public class HomeOneFragment extends BaseFragment {
         }
     }
 
+    private void initDictDataType() {
+        ageRange = null;
+        contentType = null;
+        category = null;
+        theme = null;
+        processType=null;
+        trainType=null;
+    }
+
     private void getSchoolCourseList() {
         showLoading();
         RetrofitUtil.getInstance().apiService()
-                .getSchoolCourseList(courseName,ageRange,trainType,trainPart,
+                .getSchoolCourseList(courseName,ageRange,contentType,category,theme,
                         page,ConstValues.PAGE_SIZE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -327,7 +414,8 @@ public class HomeOneFragment extends BaseFragment {
     private void getSchoolCourseListSmall() {
         showLoading();
         RetrofitUtil.getInstance().apiService()
-                .getSchoolCourseListSmall(courseName,ageRange,trainType,trainPart,page,ConstValues.PAGE_SIZE)
+                .getSchoolCourseListSmall(courseName,ageRange,contentType,processType,trainType,
+                        page,ConstValues.PAGE_SIZE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result<List<SchoolCourseBeanSmall>>>() {

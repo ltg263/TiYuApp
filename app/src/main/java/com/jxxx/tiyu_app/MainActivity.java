@@ -64,9 +64,23 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initView() {
         mDictDataTypeBeans = new HashMap<>();
-        getDictDataType("sys_age_range");//年龄
-        getDictDataType("sys_train_type");//类型
-        getDictDataType("sys_train_part");//训练部位
+        //大课程
+        // 'sys_grade', //年级
+        // 'sys_content_type', //教学内容
+        // 'sys_category', //大类别
+        // 'sys_theme', //主题内容
+        //小课程
+        // 'sys_grade', //年级
+        // 'sys_content_type', //教学内容
+        // 'sys_process_type', //流程
+        // 'sys_train_type', //核心指标
+        getDictDataType("sys_grade");//年级
+        getDictDataType("sys_content_type");//教学内容
+        getDictDataType("sys_category");//大类别
+        getDictDataType("sys_theme"); //主题内容
+        getDictDataType("sys_process_type"); //流程
+        getDictDataType("sys_train_type"); //核心指标
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//保持屏幕唤醒
         MainApplication.addActivity(this);
@@ -227,6 +241,10 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
+        setOnResume();
+    }
+
+    public void setOnResume() {
         switch (indexPos){
             case 0:
                 mBnvHomeNavigation.setSelectedItemId(R.id.menu_home_1);

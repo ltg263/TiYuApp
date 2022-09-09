@@ -163,7 +163,7 @@ public class ClientTcpUtils {
                 socket.close();
                 socket = null;
             }
-            connect(false);
+//            connect(false);
         } catch (IOException e) {
             Log.d(TAG,e.getMessage());
         }
@@ -173,43 +173,69 @@ public class ClientTcpUtils {
             mErrorDialogInterfac.btnConfirm("断开连接",null);
         }
     }
-
     /**
-     * 全段配置指令 单个
-     * 第一字节   表示从设备地址 表示从设备地址，从01~1A共26个可设置地址，可取其一也可以取多个甚至全部。
-     * 第二字节	颜色设置  表示颜色的设置，从0X00~0X07，分别代表7种颜色，其中0X00表示灭灯状态，0X01表示红色，0X02表示蓝色，0X03表示绿色，0X04表示紫色，0X05表示黄色，0X06表示青色，0X07表示白色。
-     * 第三字节	频闪设置  表示闪烁的频率，设置值为0X00~0X32，对应十进制0~50，表示0~5秒的频闪间隔。
-     * 第四字节	时长设置    设置灯亮的时长，设置值为0X00~0X3C，对应十进制0~60，表示0~60秒的时长，其中若设置值为0X3D，即对应十进制61，则为常亮模式。倒计时结束后发送状态返回指令（新增）。
-     * 第五字节	触发方式   表示触发的方式，其中0X00代表不触发，0X01代表按压触发，0X02代表振动触发，0x03代表按压触发并且返回状态指令，0x04代表振动触发并且返回状态指令（新增）。
-     * 第六字节	触发后的执行动作 表示触发后的状态，0X01表示触发后切换当前亮与灭状态，0X02表示触发后亮灯，随后等待2秒灯灭，0x03表示触发后保持亮灯状态，0x04表示触发后灭灯（新增）。
+     * 全段配置指令 多个A0 和 A1呼吸灯
      */
-    public void sendData_A0(byte data_1,byte data_2,byte data_3,byte data_4,byte data_5,byte data_6){
-        byte[] a0_data = {data_1,data_2,data_3,data_4,data_5,data_6};
-        sendData(ConstValuesHttps.MESSAGE_SEND_A0,a0_data);
-    }
-
-    public void sendData_A0_dg(List<Byte> sendDatas){
+    public void sendData_A0_A1_dg(byte msg,List<Byte> sendDatas){
         byte[] a0_data = new byte[sendDatas.size()];
         for(int i=0;i<sendDatas.size();i++){
-            a0_data[i] = sendDatas.get(i);
+            if(sendDatas.get(i)==null){
+                a0_data[i] = 0;
+            }else{
+                a0_data[i] = sendDatas.get(i);
+            }
         }
-        sendData(ConstValuesHttps.MESSAGE_SEND_A0,a0_data);
+        sendData(msg,a0_data);
+        sendData_B0();
+    }
+    /**
+     * 全段配置指令 单个A0 和 A1呼吸灯
+     */
+    public synchronized void sendData_A0_A1(byte msg,List<Byte> sendDatas){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                sendDatas.remove(0);
+                byte[] mData = new byte[sendDatas.size()];
+                for(int i=0;i<sendDatas.size();i++){
+                    if(sendDatas.get(i)==null){
+                        mData[i] = 0;
+                    }else{
+                        mData[i] = sendDatas.get(i);
+                    }
+                }
+                sendData(msg,mData);
+                sendData_B0();
+            }
+        }).start();
+    }
+    /**
+     * 全段配置指令 单个A0 和 A1呼吸灯
+     */
+    public void sendData_A0_A1_sj(byte msg, byte[] mData){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sendData_A0_A1_sj_syn(msg,mData);
+            }
+        }).start();
     }
 
-    /**
-     * 全段配置指令
-     * 第一字节	表示从设备地址 表示从设备地址，从01~1A共26个可设置地址，可取其一也可以取多个甚至全部。
-     * 第二字节	颜色设置    表示颜色的设置，从0X00~0X07，分别代表7种颜色，其中0X00表示灭灯状态，0X01表示红色，0X02表示蓝色，0X03表示绿色，0X04表示紫色，0X05表示黄色，0X06表示青色，0X07表示白色。
-     * 第三字节	周期设置    表示从亮到灭的这个过程的时长，设置值为0x01~0x03，代表1秒到3秒。
-     * 第四字节	间隔设置    从完全灭掉至下一次开始亮起的时间间隔，设置值为0x00~0x05，代表0~5秒。
-     * 第五字节	循环次数    整个周期+间隔的循环次数。其中循环结束后发送返回状态指令。
-     * 第六字节	NC      未定义。
-     *
-     */
-    public void sendData_A1(byte data_1,byte data_2,byte data_3,byte data_4,byte data_5){
-        byte[] a1_data = {data_1,data_2,data_3,data_4,data_5,0};
-        sendData(ConstValuesHttps.MESSAGE_SEND_A1,a1_data);
+    private synchronized void sendData_A0_A1_sj_syn(byte msg, byte[] mData) {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        sendData(msg,mData);
+        sendData_B0();
     }
+
 
     /**
      * 一键启动
@@ -218,14 +244,14 @@ public class ClientTcpUtils {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                byte[] data = new byte[ConstValuesHttps.MESSAGE_NUM_TOTAL];
-                for(int i=0;i<data.length;i++){
-                    data[i] = (byte) (i+1);
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+                byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()];
+                for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
+                    data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i);
                 }
                 sendData(ConstValuesHttps.MESSAGE_SEND_B0,ConstValuesHttps.getByteDataB0OrB1(data));
             }
@@ -236,9 +262,13 @@ public class ClientTcpUtils {
      * 一键关机
      */
     public void sendData_B1(){
-        byte[] data = new byte[ConstValuesHttps.MESSAGE_NUM_TOTAL];
-        for(int i=0;i<data.length;i++){
-            data[i] = (byte) (i+1);
+//        byte[] data = new byte[ConstValuesHttps.MESSAGE_NUM_TOTAL];
+//        for(int i=0;i<data.length;i++){
+//            data[i] = (byte) (i+1);
+//        }
+        byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()];
+        for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
+            data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i);
         }
         sendData(ConstValuesHttps.MESSAGE_SEND_B1,ConstValuesHttps.getByteDataB0OrB1(data));
     }
@@ -249,6 +279,7 @@ public class ClientTcpUtils {
     public void sendData_C0(byte[] data){
         sendData(ConstValuesHttps.MESSAGE_GET_C0,data);
     }
+
     /**
      * 设置亮度
      * @param ads:地址
@@ -258,12 +289,39 @@ public class ClientTcpUtils {
         byte[] data = new byte[]{ads, dg,0,0,0,0};
         sendData(ConstValuesHttps.MESSAGE_SEND_B2,data);
     }
+
     public void sendData_B2_dg(List<Byte> sendDatas){
         byte[] b2_data = new byte[sendDatas.size()];
         for(int i=0;i<sendDatas.size();i++){
             b2_data[i] = sendDatas.get(i);
         }
         sendData(ConstValuesHttps.MESSAGE_SEND_B2,b2_data);
+    }
+
+    /**
+     * 设置显示的球号
+     * @param ads:地址
+     * @param new_ads:新的地址
+     */
+    public void sendData_B3(byte ads,byte new_ads){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sendData_B3Syn(ads,new_ads);
+            }
+        }).start();
+    }
+
+    private synchronized void sendData_B3Syn(byte ads,byte new_ads) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.put(new_ads,ads);
+        byte[] data = new byte[]{ads, new_ads,0,0,0,0};
+        sendData(ConstValuesHttps.MESSAGE_SEND_B3,data);
+        sendData_B0();
     }
 
     public void sendData(byte msg, byte[] data){

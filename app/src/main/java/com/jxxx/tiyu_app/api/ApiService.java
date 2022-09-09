@@ -74,8 +74,9 @@ public interface ApiService {
     @GET("school/course/list")
     Observable<Result<List<SchoolCourseBean>>> getSchoolCourseList(@Query("courseName") String courseName,
                                                                    @Query("ageRange") String ageRange,
-                                                                   @Query("trainType") String trainType,
-                                                                   @Query("trainPart") String trainPart,
+                                                                   @Query("contentType") String contentType,
+                                                                   @Query("category") String category,
+                                                                   @Query("theme") String theme,
                                                                    @Query("pageNum") int pageNum,@Query("pageSize") int pageSize);
 
     /**
@@ -135,8 +136,9 @@ public interface ApiService {
     @GET("school/smallCourse/list")
     Observable<Result<List<SchoolCourseBeanSmall>>> getSchoolCourseListSmall(@Query("courseName") String courseName,
                                                                              @Query("ageRange") String ageRange,
+                                                                             @Query("contentType") String contentType,
+                                                                             @Query("processType") String processType,
                                                                              @Query("trainType") String trainType,
-                                                                             @Query("trainPart") String trainPart,
                                                                              @Query("pageNum") int pageNum,@Query("pageSize") int pageSize);
 
     /**

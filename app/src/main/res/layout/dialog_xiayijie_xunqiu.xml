@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv"
+        android:layout_marginTop="-50dp"
+        android:background="@drawable/shape_radius_fff_xx"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:paddingHorizontal="10dp"
+            android:paddingTop="60dp"
+            android:paddingBottom="10dp"
+            android:text="开始下一节课是否要寻球？"
+            android:textColor="@color/color_text_theme"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="20dp"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_tiaoguo"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                android:layout_marginEnd="15dp"
+                android:textSize="12sp"
+                android:background="@drawable/shape_radius_fcc717"
+                android:text="开始寻球"
+                android:textColor="@color/color_000000" />
+
+            <Button
+                android:id="@+id/btn_kaishishangke"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                android:layout_marginStart="15dp"
+                android:textSize="12sp"
+                android:background="@drawable/btn_shape_theme"
+                android:text="跳过寻球"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_dialog_xiayijie_xunqiu" />
+
+    <ImageView
+        android:id="@+id/iv_quxiao"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:visibility="gone"
+        android:layout_below="@id/ll"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="30dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_close" />
+</RelativeLayout>

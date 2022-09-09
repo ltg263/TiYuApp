@@ -46,7 +46,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20dp"
+            android:padding="20dp"
             android:orientation="vertical">
 
             <TextView
@@ -62,17 +62,19 @@
                 android:layout_marginTop="15dp">
 
                 <TextView
+                    android:id="@+id/tv_select_sb"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/shape_radius_fff"
                     android:drawableEnd="@drawable/ic_jiantou_you_c7"
                     android:padding="10dp"
-                    android:text="请选择链接的设备"
+                    android:hint="链接设备"
                     android:textColor="@color/color_text_theme"
                     android:textSize="@dimen/sp_12" />
 
                 <EditText
+                    android:id="@+id/et_shebei_num"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -97,6 +99,7 @@
                 android:textSize="@dimen/sp_14" />
 
             <EditText
+                android:id="@+id/et_duilie_num"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -113,11 +116,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="请选择触发后的状态"
+                android:text="请选择随机触发模式"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14" />
 
             <TextView
+                android:id="@+id/tv_chufa_fangshi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -132,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="请选择闪烁的频率和颜色"
+                android:text="请选择灯光模式和颜色"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14" />
 
@@ -142,17 +146,19 @@
                 android:layout_marginTop="15dp">
 
                 <TextView
+                    android:id="@+id/tv_dengguangmoshi"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/shape_radius_fff"
                     android:drawableEnd="@drawable/ic_jiantou_you_c7"
                     android:padding="10dp"
-                    android:hint="请选择闪烁的频率"
+                    android:hint="请选择灯光模式"
                     android:textColor="@color/color_text_theme"
                     android:textSize="@dimen/sp_12" />
 
                 <TextView
+                    android:id="@+id/tv_yanse"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
@@ -167,43 +173,88 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_sele_ssx"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="请选择触发方式和持续时间"
+                android:text="请选择持续时间、闪烁频率和循环次数"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_14" />
 
             <LinearLayout
+                android:id="@+id/ll_sele_ssx"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp">
 
                 <TextView
+                    android:id="@+id/tv_chixunsj"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/shape_radius_fff"
                     android:drawableEnd="@drawable/ic_jiantou_you_c7"
                     android:padding="10dp"
-                    android:hint="请选择触发方式"
+                    android:hint="持续时间"
                     android:textColor="@color/color_text_theme"
                     android:textSize="@dimen/sp_12" />
 
                 <TextView
+                    android:id="@+id/tv_shanshuo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:layout_weight="0.7"
+                    android:layout_weight="1"
                     android:background="@drawable/shape_radius_fff"
                     android:drawableEnd="@drawable/ic_jiantou_you_c7"
                     android:padding="10dp"
-                    android:hint="请选择持续时间"
+                    android:hint="闪烁的频率"
+                    android:textColor="@color/color_text_theme"
+                    android:textSize="@dimen/sp_12" />
+
+                <TextView
+                    android:id="@+id/tv_xunhuancishu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_radius_fff"
+                    android:drawableEnd="@drawable/ic_jiantou_you_c7"
+                    android:padding="10dp"
+                    android:hint="循环次数"
                     android:textColor="@color/color_text_theme"
                     android:textSize="@dimen/sp_12" />
 
             </LinearLayout>
 
+
+            <LinearLayout
+                android:id="@+id/ll_zhixingmingling"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="请选择执行的命令"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_14" />
+
+                <TextView
+                    android:id="@+id/tv_zhixingmingling"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/shape_radius_fff"
+                    android:drawableEnd="@drawable/ic_jiantou_you_c7"
+                    android:padding="10dp"
+                    android:hint="请选择执行的命令"
+                    android:textColor="@color/color_text_theme"
+                    android:textSize="@dimen/sp_12" />
+
+            </LinearLayout>
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -212,8 +263,10 @@
             <Button
                 android:id="@+id/btn_kaishiyundong"
                 android:layout_width="match_parent"
+                android:layout_marginTop="30dp"
                 android:layout_height="@dimen/dp_40"
-                android:layout_margin="15dp"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginBottom="15dp"
                 android:background="@drawable/shape_radius_fff"
                 android:gravity="center"
                 android:text="开始运动"

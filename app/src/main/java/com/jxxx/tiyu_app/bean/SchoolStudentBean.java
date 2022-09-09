@@ -24,7 +24,25 @@ public class SchoolStudentBean {
     private String imgUrl;
     private String studentNo;
     private String studentName;
+    private List<byte[]> lists;
 
+    public void setLists(List<byte[]> lists) {
+        this.lists = lists;
+    }
+
+    public List<byte[]> getLists() {
+        return lists;
+    }
+
+    private boolean isAskForLeave;
+
+    public void setAskForLeave(boolean askForLeave) {
+        isAskForLeave = askForLeave;
+    }
+
+    public boolean isAskForLeave() {
+        return isAskForLeave;
+    }
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }

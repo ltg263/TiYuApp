@@ -44,7 +44,16 @@ public class SchoolCourseBeanSmall {
     private String randomFlag;
     private int stepNum;
     private String actionInfo;
+    private String sortNumSet;
     private List<StepGroupsBean> stepGroups;
+
+    public void setSortNumSet(String sortNumSet) {
+        this.sortNumSet = sortNumSet;
+    }
+
+    public String getSortNumSet() {
+        return sortNumSet;
+    }
 
     public String getId() {
         return id;

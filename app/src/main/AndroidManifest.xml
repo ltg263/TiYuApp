@@ -92,6 +92,8 @@
             android:screenOrientation="portrait" />
         <activity android:name="com.jxxx.tiyu_app.tcp_tester.ClientActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".view.activity.HomeOneChuangJianSj_YdActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.jxxx.tiyu_app.MainActivity"
             android:windowSoftInputMode="adjustPan"

@@ -2,6 +2,7 @@ package com.jxxx.tiyu_app.view.fragment;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +10,9 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,6 +41,9 @@ import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.WifiMessageReceiver;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
+import com.jxxx.tiyu_app.utils.view.StepArcView_n;
+import com.jxxx.tiyu_app.view.activity.HomeTwoShangKeActivity;
+import com.jxxx.tiyu_app.view.activity.HomeTwoXueShengActivity;
 import com.jxxx.tiyu_app.view.activity.LoginActivity;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoOneListAdapter;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoTwoListAdapter;
@@ -86,7 +92,6 @@ public class HomeTwoFragment extends BaseFragment{
     List<Integer> listOkDl = new ArrayList<>();
     boolean isWanCheng = false;
 
-
     @Override
     protected int setLayoutResourceID() {
         return R.layout.fragment_home_two;
@@ -113,7 +118,6 @@ public class HomeTwoFragment extends BaseFragment{
             @Override
             public void onClick(View v) {
                 Log.w("BroadcastReceiver","完成全部课程:"+mPostStudentResults.toString());
-
                 DialogUtils.showDialogHint(mContext, "当前课程未完成\n确定要断开连接并上传吗?", false, new DialogUtils.ErrorDialogInterface() {
                     @Override
                     public void btnConfirm() {
@@ -171,11 +175,13 @@ public class HomeTwoFragment extends BaseFragment{
             mActionInfoJson = mSmallCourseVo.getActionInfo();
             //准备提交的数据
             for(int j = 0;j<ConstValues.mSchoolStudentInfoBean.size();j++){
-                PostStudentResults mPostStudentResult = new PostStudentResults();
-                mPostStudentResult.setCourseId(mCourseSectionVoList.getCourseId());
-                mPostStudentResult.setSmallCourseId(mCourseSectionVoList.getId());
-                mPostStudentResult.setStudentId(ConstValues.mSchoolStudentInfoBean.get(j).getId());
-                mPostStudentResults.add(mPostStudentResult);
+                if(!ConstValues.mSchoolStudentInfoBean.get(j).isAskForLeave()){
+                    PostStudentResults mPostStudentResult = new PostStudentResults();
+                    mPostStudentResult.setCourseId(mCourseSectionVoList.getCourseId());
+                    mPostStudentResult.setSmallCourseId(mCourseSectionVoList.getId());
+                    mPostStudentResult.setStudentId(ConstValues.mSchoolStudentInfoBean.get(j).getId());
+                    mPostStudentResults.add(mPostStudentResult);
+                }
             }
         }
         if(ConstValues.mSchoolCourseInfoBeanSmall!=null){//小课程信息
@@ -191,11 +197,13 @@ public class HomeTwoFragment extends BaseFragment{
 
             //准备提交的数据
             for(int j = 0;j<ConstValues.mSchoolStudentInfoBean.size();j++){
-                PostStudentResults mPostStudentResult = new PostStudentResults();
+                if(!ConstValues.mSchoolStudentInfoBean.get(j).isAskForLeave()){
+                    PostStudentResults mPostStudentResult = new PostStudentResults();
 //                mPostStudentResult.setCourseId(ConstValues.mSchoolCourseInfoBeanSmall.getCourseId());
-                mPostStudentResult.setSmallCourseId(ConstValues.mSchoolCourseInfoBeanSmall.getId());
-                mPostStudentResult.setStudentId(ConstValues.mSchoolStudentInfoBean.get(j).getId());
-                mPostStudentResults.add(mPostStudentResult);
+                    mPostStudentResult.setSmallCourseId(ConstValues.mSchoolCourseInfoBeanSmall.getId());
+                    mPostStudentResult.setStudentId(ConstValues.mSchoolStudentInfoBean.get(j).getId());
+                    mPostStudentResults.add(mPostStudentResult);
+                }
             }
         }
 
@@ -228,12 +236,24 @@ public class HomeTwoFragment extends BaseFragment{
                     mSchoolStudentBeans.add(mSchoolStudentBean);
                 }
             }
-            for(int j = 0;j<mSchoolCourseBeanSmallActionInfoJson.size();j++){
-                if(mSchoolStudentBeans.size()>j){
+//            for(int j = 0;j<mSchoolCourseBeanSmallActionInfoJson.size();j++){
+//                if(mSchoolStudentBeans.size()>j){
+//                    List<SchoolCourseBeanSmallActionInfoJson> json = JSON.parseArray(mActionInfoJson, SchoolCourseBeanSmallActionInfoJson.class);
+//                    mSchoolStudentBeans.get(j).setSteps(json.get(j).getSteps());
+//                }
+//            }
+            int pos = 0;
+            for(int j = 0;j<mSchoolStudentBeans.size();j++){
+                if(!mSchoolStudentBeans.get(j).isAskForLeave()){
                     List<SchoolCourseBeanSmallActionInfoJson> json = JSON.parseArray(mActionInfoJson, SchoolCourseBeanSmallActionInfoJson.class);
-                    mSchoolStudentBeans.get(j).setSteps(json.get(j).getSteps());
+                    if(json!=null && pos<=json.size()-1 && json.get(pos)!=null){
+                        mSchoolStudentBeans.get(j).setSteps(json.get(pos).getSteps());
+                        pos++;
+                    }
                 }
             }
+
+
             mAllSchoolStudentBeans.add(mSchoolStudentBeans);
         }
 
@@ -245,6 +265,7 @@ public class HomeTwoFragment extends BaseFragment{
     public void onResume() {
         super.onResume();
         if(!isWanCheng){
+            current_time = 0;
             mPostStudentResults = new ArrayList<>();
             initViewResume();
             /**
@@ -286,7 +307,7 @@ public class HomeTwoFragment extends BaseFragment{
                 postResultsBatchAdd();
             }else{
                 MainActivity.indexPos = 0;
-                ((MainActivity)mContext).onResume();
+                ((MainActivity)mContext).setOnResume();
                 isWanCheng = false;
             }
         }
@@ -313,7 +334,7 @@ public class HomeTwoFragment extends BaseFragment{
                     public void onNext(Result result) {
                         if(isResultOk(result)){
                             MainActivity.indexPos = 0;
-                            ((MainActivity)mContext).onResume();
+                            ((MainActivity)mContext).setOnResume();
                             isWanCheng = false;
                         }
                     }
@@ -416,21 +437,25 @@ public class HomeTwoFragment extends BaseFragment{
         List<Byte> sendDatas = new ArrayList<>();
         for(int i=0;i<mSchoolStudentBeansReceiver.size();i++){
             List<SchoolCourseBeanSmallActionInfoJson.StepsBean> mSteps = mSchoolStudentBeansReceiver.get(i).getSteps();
+            System.out.println("BroadcastReceiver：mSteps:"+mSteps);
             if(mSteps==null){
                 break;
             }
             //让第一队列的球亮起来
             List<List<Byte>> mSets = mSteps.get(0).getSets();
             for(int j=0;j<mSets.size();j++){
-                if(mSets.get(j).size()==6){
+                if(mSets.get(j).size()==7){
+                    mSets.get(j).set(1,ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(mSets.get(j).get(1)));
                     sendDatas.addAll(mSets.get(j));
+                    ClientTcpUtils.mClientTcpUtils.sendData_A0_A1(mSets.get(j).get(0),mSets.get(j));
                 }else{
                     ToastUtil.showShortToast(getActivity(),"有错误数据-->>"+j);
                 }
             }
         }
-        ClientTcpUtils.mClientTcpUtils.sendData_A0_dg(sendDatas);
-        ClientTcpUtils.mClientTcpUtils.sendData_B0();
+//        System.out.println("BroadcastReceiver：sendDatas:"+sendDatas);
+//        ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_dg(sendDatas);
+//        ClientTcpUtils.mClientTcpUtils.sendData_B0();
     }
 
     private int current_class_group = 0;//正在执行的学生队列
@@ -449,7 +474,7 @@ public class HomeTwoFragment extends BaseFragment{
             }
             System.out.println("BroadcastReceiver：current_time：" + current_time);
             startBroadcastData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA)[0];
-            startBroadcastData = (byte) (1+Math.random()*6);
+//            startBroadcastData = (byte) (1+Math.random()*6);
             System.out.println("BroadcastReceiver：球号：" + startBroadcastData);
             sendDatas = new ArrayList<>();
             if(mSchoolStudentBeansReceiver==null){
@@ -458,8 +483,8 @@ public class HomeTwoFragment extends BaseFragment{
             schoolStudentPos = 0;
             getSchoolStudentBeans();
             if(sendDatas.size()>0){
-                ClientTcpUtils.mClientTcpUtils.sendData_A0_dg(sendDatas);
-                ClientTcpUtils.mClientTcpUtils.sendData_B0();
+//                ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_dg(sendDatas);
+//                ClientTcpUtils.mClientTcpUtils.sendData_B0();
             }
             mHomeTwoTwoListAdapter.notifyDataSetChanged();
         }
@@ -509,7 +534,9 @@ public class HomeTwoFragment extends BaseFragment{
                     if(mSchoolStudentBean.getSteps().size()-1 > stepsPos){
                         sets_cz.add(lists);
                         List<Byte> dldq = mSchoolStudentBean.getSteps().get(stepsPos + 1).getSets().get(setsListPos);//准备下一组被亮的球
+                        dldq.set(1,ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(dldq.get(1)));
                         sendDatas.addAll(dldq);
+                        ClientTcpUtils.mClientTcpUtils.sendData_A0_A1(dldq.get(0),dldq);
                         Log.w("BroadcastReceiver",mSchoolStudentBean.getStudentName()+"击中了一次去发送数据:"+sendDatas);
                         if(sets.size()-1>setsListPos){
                             Log.w("BroadcastReceiver",mSchoolStudentBean.getStudentName()+"击中了其中一个"+sendDatas);
@@ -555,7 +582,9 @@ public class HomeTwoFragment extends BaseFragment{
 
                         } else {//从0位置执行下次循环
                             List<Byte> dldq = mSchoolStudentBean.getSteps().get(0).getSets().get(setsListPos);//准备下一组被亮的球
+                            dldq.set(1,ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(dldq.get(1)));
                             sendDatas.addAll(dldq);
+                            ClientTcpUtils.mClientTcpUtils.sendData_A0_A1(dldq.get(0),dldq);
                             Log.w("BroadcastReceiver","完成一次清空标记:"+mSchoolStudentBean.getStudentName());
                             for(int i=0;i<mSchoolStudentBean.getSteps().size();i++){
                                 mSchoolStudentBean.getSteps().get(i).getSets_cz().clear();
@@ -582,7 +611,16 @@ public class HomeTwoFragment extends BaseFragment{
                 @Override
                 public void btnConfirm(int index) {
                     if(index==1){//下一节
-                        initViewResume();
+                        DialogUtils.showDialogXiaYiJieIsXunQiu(mContext, new DialogUtils.ErrorDialogInterfaceA() {
+                            @Override
+                            public void btnConfirm(int index) {
+                                if(index==1){
+                                    initViewResume();
+                                }else{
+                                    lianjie();
+                                }
+                            }
+                        });
                     }else{//跳过下一节
                         showDialogKaiShiShangKeXiaYiJie();
                     }
@@ -604,6 +642,26 @@ public class HomeTwoFragment extends BaseFragment{
             });
         }
     }
+
+
+    private void lianjie() {
+        DialogUtils.showDialogLianJieSheBei(mContext, ConstValues.mSchoolCourseInfoBean,ConstValues.mSchoolCourseInfoBeanSmall,
+                new DialogUtils.ErrorDialogInterfaceLianJieSheBei() {
+                    @Override
+                    public void lianJieNum(int guangQiu, int guangBan, int dengGuang) {
+                        int sbNum = guangQiu+guangBan;
+                        ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
+                        ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
+                        HomeTwoShangKeActivity.mWifiMessageReceiver.onWifiMessageReceiverInter(mContext,sbNum,dengGuang,new WifiMessageReceiver.WifiMessageReceiverInter() {
+                            @Override
+                            public void messageReceiverInter() {
+                                initViewResume();
+                            }
+                        });
+                    }
+                });
+    }
+
 }
 
 

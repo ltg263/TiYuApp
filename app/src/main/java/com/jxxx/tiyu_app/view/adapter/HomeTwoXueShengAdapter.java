@@ -31,6 +31,7 @@ public class HomeTwoXueShengAdapter extends BaseQuickAdapter<SchoolClassBean.Cla
         List<String> mStudentIds = Arrays.asList(item.getStudentIds().split(","));
         List<SchoolStudentBean> mSchoolStudentBeans = new ArrayList<>();
         for(int i = 0; i<ConstValues.mSchoolStudentInfoBean.size();i++){
+            ConstValues.mSchoolStudentInfoBean.get(i).setAskForLeave(false);
             if(mStudentIds.contains(ConstValues.mSchoolStudentInfoBean.get(i).getId())){
                 mSchoolStudentBeans.add(ConstValues.mSchoolStudentInfoBean.get(i));
             }
@@ -47,29 +48,8 @@ public class HomeTwoXueShengAdapter extends BaseQuickAdapter<SchoolClassBean.Cla
         mHomeTwoXueShengAdapter_z.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                switch (mHomeTwoXueShengAdapter_z.getData().get(position).getClassName()){
-//                    case "闪烁灯":
-//                        ClientTcpUtils.mClientTcpUtils.sendData_A0((byte)0X01,(byte)0X03,(byte)0X30,(byte)0X1F,(byte)0X02,(byte)0X02);
-//                        break;
-//                    case "呼吸灯":
-//                        ClientTcpUtils.mClientTcpUtils.sendData_A0((byte)0X03,(byte)0X03,(byte)0X30,(byte)0X1F,(byte)0X02,(byte)0X02);
-//                        ClientTcpUtils.mClientTcpUtils.sendData_A1((byte)0X03,(byte)0X07,(byte)0X03,(byte)0X03,(byte)0X05);
-//                        break;
-//                    case "启动":
-//                        byte[] b0 = new byte[ConstValuesHttps.MESSAGE_NUM_TOTAL];
-//                        for(int i=0;i<b0.length;i++){
-//                            b0[i] = (byte) (i+1);
-//                        }
-//                        ClientTcpUtils.mClientTcpUtils.sendData_B0(b0);
-//                        break;
-//                    case "关机":
-//                        byte[] b1 = new byte[ConstValuesHttps.MESSAGE_NUM_TOTAL];
-//                        for(int i=0;i<b1.length;i++){
-//                            b1[i] = (byte) (i+1);
-//                        }
-//                        ClientTcpUtils.mClientTcpUtils.sendData_B1(b1);
-//                        break;
-//                }
+                mHomeTwoXueShengAdapter_z.getData().get(position).setAskForLeave(!mHomeTwoXueShengAdapter_z.getData().get(position).isAskForLeave());
+                mHomeTwoXueShengAdapter_z.notifyDataSetChanged();
             }
         });
     }
@@ -86,7 +66,7 @@ public class HomeTwoXueShengAdapter extends BaseQuickAdapter<SchoolClassBean.Cla
                     .setText(R.id.tv_name_no,item.getStudentNo())
                     .setTextColor(R.id.tv_name_no,mContext.getResources().getColor(R.color.color_text_theme))
                     .setTextColor(R.id.tv_name,mContext.getResources().getColor(R.color.color_text_theme));
-            if(helper.getLayoutPosition()==2){//请假
+            if(item.isAskForLeave()){//请假
                 helper.setBackgroundRes(R.id.srl,R.drawable.shape_radius_xuesheng_2)
                         .setTextColor(R.id.tv_name_no,mContext.getResources().getColor(R.color.color_999999))
                         .setTextColor(R.id.tv_name,mContext.getResources().getColor(R.color.color_999999));

@@ -80,10 +80,10 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     ShangKeBanJiAdapter mShangKeBanJiAdapter;
     KeChengXiangQingAdapter mKeChengXiangQingAdapter;
     KeChengXiangQingAdapterSmall mKeChengXiangQingAdapterSmall;
-    boolean isShowCurrentActivity,isSmallCourse;
+    boolean isSmallCourse;
     WifiInfo mWifiInfo;
     WifiUtil mWifiUtil;
-    WifiMessageReceiver mWifiMessageReceiver;
+    public static WifiMessageReceiver mWifiMessageReceiver;
     @Override
     public int intiLayout() {
         return R.layout.activity_home_two_shangke;
@@ -95,6 +95,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
         ConstValues.mSchoolCourseInfoBeanSmall = null;
         ConstValues.mSchoolClassInfoBean = null;
         ConstValues.mSchoolStudentInfoBean = null;
+        mWifiMessageReceiver = null;
         isSmallCourse = getIntent().getBooleanExtra("isSmallCourse",false);
         mKeChengXiangQingAdapter = new KeChengXiangQingAdapter(null);
         rv_list.setAdapter(mKeChengXiangQingAdapter);
@@ -431,7 +432,8 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     }
 
     private void lianjie() {
-        isShowCurrentActivity = true;
+        ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
+        ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
         DialogUtils.showDialogLianJieSheBei(this, ConstValues.mSchoolCourseInfoBean,ConstValues.mSchoolCourseInfoBeanSmall,
                 new DialogUtils.ErrorDialogInterfaceLianJieSheBei() {
                     @Override

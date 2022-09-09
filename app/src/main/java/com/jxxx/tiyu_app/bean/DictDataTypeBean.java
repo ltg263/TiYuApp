@@ -42,6 +42,15 @@ public class DictDataTypeBean {
     private String remark;
     @SerializedName("default")
     private boolean defaultX;
+    private boolean isSelect = false;
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
+
+    public boolean isSelect() {
+        return isSelect;
+    }
 
     public String getSearchValue() {
         return searchValue;

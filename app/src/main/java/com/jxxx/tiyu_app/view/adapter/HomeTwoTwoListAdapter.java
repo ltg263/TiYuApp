@@ -24,11 +24,14 @@ public class HomeTwoTwoListAdapter extends BaseQuickAdapter<SchoolStudentBean, B
                 .setText(R.id.tv_3,item.getPostZjzs()+"")
                 .setText(R.id.tv_4, StringUtil.getTime(item.getPostZys()))
                 .setText(R.id.tv_5, item.getPostPjsd()+"s");
-        if(item.getSteps()==null){
+        if(item.getSteps()==null && item.getLists()==null){
             helper.setText(R.id.tv_2,"-")
                     .setText(R.id.tv_3,"-")
                     .setText(R.id.tv_4,"-")
                     .setText(R.id.tv_5,"-");
+        }
+        if(item.getLists()!=null){
+            helper.setGone(R.id.tv_4,false).setGone(R.id.tv_5,false);
         }
     }
 }
