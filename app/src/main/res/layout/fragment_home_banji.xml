@@ -8,9 +8,9 @@
     <ImageView
         android:id="@+id/iv_icon"
         android:layout_width="140dp"
-        android:layout_height="wrap_content"
+        android:layout_height="90dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_launcher_background" />
+        android:src="@drawable/icon_morenshu" />
 
     <TextView
         android:id="@+id/tv_name"

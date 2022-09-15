@@ -322,6 +322,15 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                     ToastUtil.showLongStrToast(this,"班级信息获取失败");
                     return;
                 }
+                if(ConstValues.mSchoolClassInfoBean.getClassGroupList()==null || ConstValues.mSchoolClassInfoBean.getClassGroupList().size()==0){
+                    ToastUtil.showLongStrToast(this,"该班级无队列");
+                    return;
+                }
+                if(ConstValues.mSchoolStudentInfoBean==null || ConstValues.mSchoolStudentInfoBean.size()==0){
+                    ToastUtil.showLongStrToast(this,"班级学生的信息获取失败");
+                    return;
+                }
+
                 if(ConstValues.mSchoolStudentInfoBean==null || ConstValues.mSchoolStudentInfoBean.size()==0){
                     ToastUtil.showLongStrToast(this,"班级学生的信息获取失败");
                     return;

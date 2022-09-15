@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
-import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.DictDataTypeBean;
@@ -361,7 +360,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                     }
                     sendData[3] = 0;
                     sendData[4] = 0;
-                    sendData[5] = 0;
+//                    sendData[5] = 0;
                     mTvChiXunsj.setText("");
                     mTvShanshuo.setText("");
                     tv_xunhuancishu.setText("");

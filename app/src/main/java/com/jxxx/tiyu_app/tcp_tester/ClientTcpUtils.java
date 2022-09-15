@@ -191,15 +191,10 @@ public class ClientTcpUtils {
     /**
      * 全段配置指令 单个A0 和 A1呼吸灯
      */
-    public synchronized void sendData_A0_A1(byte msg,List<Byte> sendDatas){
+    public void sendData_A0_A1(byte msg,List<Byte> sendDatas){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 sendDatas.remove(0);
                 byte[] mData = new byte[sendDatas.size()];
                 for(int i=0;i<sendDatas.size();i++){
@@ -209,11 +204,11 @@ public class ClientTcpUtils {
                         mData[i] = sendDatas.get(i);
                     }
                 }
-                sendData(msg,mData);
-                sendData_B0();
+                sendData_A0_A1_syn(msg,mData);
             }
         }).start();
     }
+
     /**
      * 全段配置指令 单个A0 和 A1呼吸灯
      */
@@ -221,12 +216,12 @@ public class ClientTcpUtils {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                sendData_A0_A1_sj_syn(msg,mData);
+                sendData_A0_A1_syn(msg,mData);
             }
         }).start();
     }
 
-    private synchronized void sendData_A0_A1_sj_syn(byte msg, byte[] mData) {
+    private synchronized void sendData_A0_A1_syn(byte msg, byte[] mData) {
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {

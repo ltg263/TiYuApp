@@ -345,7 +345,7 @@ public class DialogUtils {
         dialog5.show();
     }
 
-    static int dingguang = 1;
+    static int dingguang = 0;
     /**
      * 链接设备
      */

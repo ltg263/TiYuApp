@@ -207,7 +207,7 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
     private boolean isStart = false;//是否开始
     private long current_time = 0;//执行的时间
     private Handler heartHandler = new Handler();
-    private byte startBroadcastData;//球号
+    private List<Byte> startBroadcastData = new ArrayList<>();//球号
     private List<Byte> sendDatas;//发送的数据
     /**
      * 计时器
@@ -229,6 +229,7 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
     };
 
     public class MyReceiver extends BroadcastReceiver {
+
         @Override
         public void onReceive(Context context, Intent intent) {
             if(!isStart){
@@ -236,25 +237,29 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                 return;
             }
             System.out.println("BroadcastReceiver：current_time：" + current_time);
-            startBroadcastData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA)[0];
-            System.out.println("BroadcastReceiver：球号：" + startBroadcastData);
+            byte[] mData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
+            startBroadcastData.clear();
+            for(int i=0;i<mData.length;i++){
+                startBroadcastData.add(mData[i]);
+            }
+            System.out.println("BroadcastReceiver：球号：" +startBroadcastData);
             sendDatas = new ArrayList<>();
+            byte msg = 0;
             for(int i=0;i<mSchoolStudentBeans.size();i++){
                 List<byte[]> mLists = mSchoolStudentBeans.get(i).getLists();
                 for(int j=0;j<mLists.size();j++){
                     byte[] bytes = mLists.get(j);
-                    if(startBroadcastData == ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytes[1])){
+                    if(startBroadcastData.contains(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytes[1]))){
                         if(j==mLists.size()-1){
                             byte[] bytel = mLists.get(0);
                             if(bytel.length==7){
-                                byte[] new_bytes = new byte[6];
-                                new_bytes[0] = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytel[1]);
-                                new_bytes[1] = bytel[2];
-                                new_bytes[2] = bytel[3];
-                                new_bytes[3] = bytel[4];
-                                new_bytes[4] = bytel[5];
-                                new_bytes[5] = bytel[6];
-                                ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_sj(bytel[0],new_bytes);
+                                msg = bytel[0];
+                                sendDatas.add(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytel[1]));
+                                sendDatas.add(bytel[2]);
+                                sendDatas.add(bytel[3]);
+                                sendDatas.add(bytel[4]);
+                                sendDatas.add(bytel[5]);
+                                sendDatas.add(bytel[6]);
                                 mSchoolStudentBeans.get(i).setPostZjzs(mSchoolStudentBeans.get(i).getPostZjzs()+1);
                                 mSchoolStudentBeans.get(i).setPostWccs(mSchoolStudentBeans.get(i).getPostWccs()+1);
                                 mHomeTwoTwoListAdapter.notifyDataSetChanged();
@@ -264,14 +269,13 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                         }else{
                             byte[] bytel = mLists.get(j+1);
                             if(bytel.length==7){
-                                byte[] new_bytes = new byte[6];
-                                new_bytes[0] = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytel[1]);
-                                new_bytes[1] = bytel[2];
-                                new_bytes[2] = bytel[3];
-                                new_bytes[3] = bytel[4];
-                                new_bytes[4] = bytel[5];
-                                new_bytes[5] = bytel[6];
-                                ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_sj(bytel[0],new_bytes);
+                                msg = bytel[0];
+                                sendDatas.add(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytel[1]));
+                                sendDatas.add(bytel[2]);
+                                sendDatas.add(bytel[3]);
+                                sendDatas.add(bytel[4]);
+                                sendDatas.add(bytel[5]);
+                                sendDatas.add(bytel[6]);
                                 mSchoolStudentBeans.get(i).setPostZjzs(mSchoolStudentBeans.get(i).getPostZjzs()+1);
                                 mHomeTwoTwoListAdapter.notifyDataSetChanged();
                             }else{
@@ -280,6 +284,17 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                         }
                     }
                 }
+            }
+            if(sendDatas!=null  && sendDatas.size()>0){
+                byte[] mSendData_new = new byte[sendDatas.size()];
+                for(int i=0;i<sendDatas.size();i++){
+                    if(sendDatas.get(i)==null){
+                        mSendData_new[i] = 0;
+                    }else{
+                        mSendData_new[i] = sendDatas.get(i);
+                    }
+                }
+                ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_sj(msg,mSendData_new);
             }
         }
     }

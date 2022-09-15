@@ -115,7 +115,7 @@ public class RadioGroupSelectUtils {
                     }
                 })
                 .setBgDarkAlpha(0.5f)
-                .enableBackgroundDark(true)
+//                .enableBackgroundDark(true)
                 .setOutsideTouchable(true)//是否PopupWindow 以外触摸dissmiss
                 .size(mMRadioGroup.getWidth() - 100, ViewGroup.LayoutParams.WRAP_CONTENT)//显示大小
                 .create()//创建PopupWindow

@@ -109,6 +109,7 @@ public class HomeTwoFragment extends BaseFragment{
                 DialogUtils.showDialogHint(mContext, "确定重置当前小课程吗?", false, new DialogUtils.ErrorDialogInterface() {
                     @Override
                     public void btnConfirm() {
+                        current_time = 0;
                         initViewResume();
                     }
                 });
@@ -454,15 +455,14 @@ public class HomeTwoFragment extends BaseFragment{
             }
         }
 //        System.out.println("BroadcastReceiver：sendDatas:"+sendDatas);
-//        ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_dg(sendDatas);
-//        ClientTcpUtils.mClientTcpUtils.sendData_B0();
+//        ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_sj(sendDatas);
     }
 
     private int current_class_group = 0;//正在执行的学生队列
     private int current_class_group_show = 0;//当前显示的队列
     private List<SchoolStudentBean> mSchoolStudentBeansReceiver;//学生队列的信息
     private int schoolStudentPos;//学生队列中某一个学生的信息
-    private byte startBroadcastData;//球号
+    private List<Byte> startBroadcastData = new ArrayList<>();//球号
     private List<Byte> sendDatas;//发送的数据
 
     public class MyReceiver extends BroadcastReceiver {
@@ -473,8 +473,11 @@ public class HomeTwoFragment extends BaseFragment{
                 return;
             }
             System.out.println("BroadcastReceiver：current_time：" + current_time);
-            startBroadcastData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA)[0];
-//            startBroadcastData = (byte) (1+Math.random()*6);
+            byte[] mData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
+            startBroadcastData.clear();
+            for(int i=0;i<mData.length;i++){
+                startBroadcastData.add(mData[i]);
+            }
             System.out.println("BroadcastReceiver：球号：" + startBroadcastData);
             sendDatas = new ArrayList<>();
             if(mSchoolStudentBeansReceiver==null){
@@ -529,7 +532,7 @@ public class HomeTwoFragment extends BaseFragment{
                 Log.w("BroadcastReceiver","已被击打过的球");
                 getSetsList(mSchoolStudentBean,stepsPos,sets_cz,sets,setsListPos+1);
             }else{
-                if(startBroadcastData==lists.get(0)){
+                if(startBroadcastData.contains(lists.get(0))){
                     mSchoolStudentBean.setPostZjzs(mSchoolStudentBean.getPostZjzs()+1);
                     if(mSchoolStudentBean.getSteps().size()-1 > stepsPos){
                         sets_cz.add(lists);

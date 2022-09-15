@@ -91,6 +91,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
             if(!isShowCurrentActivity || startBroadcastData==null){
                 return;
             }
+            startBroadcastData = Arrays.copyOfRange(startBroadcastData, 2, startBroadcastData.length);
             if(dialog!=null && dialog.isShowing() && btn_xunqiu.getText().toString().equals("正在寻球")){
                 for(int i = 0;i<startBroadcastData.length;i++){
                     if(!ConstValuesHttps.MESSAGE_ALL_TOTAL.contains(startBroadcastData[i])){
