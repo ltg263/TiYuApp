@@ -10,7 +10,7 @@ public class VersionResponse {
      */
 
     private int clientType;
-    private long createTime;
+    private String createTime;
     private String downloadPath;
     private int id;
     private String versionNo;
@@ -32,11 +32,11 @@ public class VersionResponse {
         this.clientType = clientType;
     }
 
-    public long getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(long createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

@@ -25,7 +25,8 @@
         android:paddingTop="5dp"
         android:text="小学三年级302班"
         android:textColor="@color/color_000000"
-        android:textSize="14sp"/>
+        android:textSize="@dimen/sp_12"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_type_1"
@@ -33,10 +34,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_name"
         android:layout_marginTop="8dp"
+        android:maxLines="1"
         android:layout_toEndOf="@id/iv_icon"
-        android:text="适合6-12岁  |  上肢  |  平衡力"
+        android:ellipsize="end"
+        android:text=""
         android:textColor="@color/color_666666"
-        android:textSize="12sp" />
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/tv_type_2"
@@ -46,11 +49,9 @@
         android:layout_marginTop="5dp"
         android:paddingHorizontal="10dp"
         android:layout_alignParentEnd="true"
-        android:paddingBottom="5dp"
+        android:paddingVertical="5dp"
         android:text="查看成绩 》"
         android:textColor="@color/color_text_theme"
-        android:textSize="13sp" />
-
-
+        android:textSize="12sp" />
 
 </RelativeLayout>

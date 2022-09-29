@@ -3,13 +3,16 @@ package com.jxxx.tiyu_app.api;
 
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.AuthLoginBean;
+import com.jxxx.tiyu_app.bean.CourseTypeListAllBean;
 import com.jxxx.tiyu_app.bean.DictDataTypeBean;
+import com.jxxx.tiyu_app.bean.PostStudentBean;
 import com.jxxx.tiyu_app.bean.PostStudentResults;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
 import com.jxxx.tiyu_app.bean.SchoolClassRecordBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
+import com.jxxx.tiyu_app.bean.SchoolStudentDetailBean;
 import com.jxxx.tiyu_app.bean.UserInfoProfileBean;
 import com.jxxx.tiyu_app.bean.VersionResponse;
 
@@ -24,6 +27,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
@@ -39,17 +43,17 @@ public interface ApiService {
     Observable<Result<AuthLoginBean>> postAuthLogin(@Body RequestBody body);
 
     /**
-     * 登录方法
+     * 批量添加学生成绩
      * @return
      */
-    @POST("school/studentResults/batchAdd")
-    Observable<Result> postResultsBatchAdd(@Body List<PostStudentResults> mPostStudentResults);
+    @POST("school/classRecord")
+    Observable<Result> postResultsBatchAdd(@Body PostStudentBean mPostStudentBean);
 
     /**
      * 新增上课记录
      * @return
      */
-    @POST("school/classRecord")
+    @POST("school/studentResults/batchAdd")
     Observable<Result> postSchoolClassRecord(@Body PostStudentResults mPostStudentResult);
 
     /**
@@ -65,7 +69,6 @@ public interface ApiService {
      */
     @GET("school/course/queryCourse")
     Observable<Result<SchoolCourseBean>> getSchoolCourseQueryCourse();
-
 
     /**
      * 查询大课程列表
@@ -98,7 +101,7 @@ public interface ApiService {
      * @return
      */
     @GET("school/student/{id}")
-    Observable<Result<SchoolStudentBean>> getSchoolStudentDetail(@Path("id") String id);
+    Observable<Result<SchoolStudentDetailBean>> getSchoolStudentDetail(@Path("id") String id);
 
     /**
      * 查询大课程详情
@@ -149,17 +152,23 @@ public interface ApiService {
 
 
     /**
-     * 用户设备
+     * 用户设备 // 1安卓 2IOS 2pad
      */
-    @GET("api/v1/version/getLast")
+    @GET("system/version/getLastVersion")
     Observable<Result<VersionResponse>> getLast(@Query("clientType") String clientType);
 
 
     /**
-     * 用户设备
+     * 分类条件
      */
     @GET("system/dict/data/type/{dictType}")
     Observable<Result<List<DictDataTypeBean>>> getDictDataType(@Path("dictType") String dictType);
+
+    /**
+     * 大类别：
+     */
+    @GET("school/courseType/listAll")
+    Observable<Result<List<CourseTypeListAllBean>>> getCourseTypeListAll();
 
     /**
      * 上传文件

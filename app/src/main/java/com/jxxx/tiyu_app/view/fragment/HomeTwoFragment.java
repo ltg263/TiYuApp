@@ -27,6 +27,7 @@ import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.base.BaseFragment;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.AuthLoginBean;
+import com.jxxx.tiyu_app.bean.PostStudentBean;
 import com.jxxx.tiyu_app.bean.PostStudentResults;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
@@ -75,6 +76,8 @@ public class HomeTwoFragment extends BaseFragment{
     TextView tv_shangchuan;
     @BindView(R.id.tv_jishi)
     TextView tv_jishi;
+    @BindView(R.id.tv_xieyijie)
+    TextView tv_xieyijie;
     @BindView(R.id.rv_one_list)
     RecyclerView mRvOneList;
     @BindView(R.id.rv_two_list)
@@ -115,9 +118,27 @@ public class HomeTwoFragment extends BaseFragment{
                 });
             }
         });
+        if(ConstValues.mSchoolCourseInfoBean==null || ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size()<=1){
+            tv_xieyijie.setVisibility(View.GONE);
+        }
+        tv_xieyijie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isStart){
+                    ToastUtil.showShortToast(mContext,"正在执行中");
+                    return;
+                }
+
+                showDialogKaiShiShangKeXiaYiJie(true);
+            }
+        });
         tv_shangchuan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isStart){
+                    ToastUtil.showShortToast(mContext,"正在执行中");
+                    return;
+                }
                 Log.w("BroadcastReceiver","完成全部课程:"+mPostStudentResults.toString());
                 DialogUtils.showDialogHint(mContext, "当前课程未完成\n确定要断开连接并上传吗?", false, new DialogUtils.ErrorDialogInterface() {
                     @Override
@@ -181,6 +202,11 @@ public class HomeTwoFragment extends BaseFragment{
                     mPostStudentResult.setCourseId(mCourseSectionVoList.getCourseId());
                     mPostStudentResult.setSmallCourseId(mCourseSectionVoList.getId());
                     mPostStudentResult.setStudentId(ConstValues.mSchoolStudentInfoBean.get(j).getId());
+                    mPostStudentResult.setTeacherId(SharedUtils.singleton().get(ConstValues.TEACHER_ID,""));
+                    mPostStudentResult.setClassSceduleCardId("2");
+                    mPostStudentResult.setClassId(ConstValues.mSchoolClassInfoBean.getId());
+                    mPostStudentResult.setBeginTime(SharedUtils.singleton().get("postSchoolClassRecord_time",""));
+                    mPostStudentResult.setClassDate(SharedUtils.singleton().get("postSchoolClassRecord_time",""));
                     mPostStudentResults.add(mPostStudentResult);
                 }
             }
@@ -200,9 +226,14 @@ public class HomeTwoFragment extends BaseFragment{
             for(int j = 0;j<ConstValues.mSchoolStudentInfoBean.size();j++){
                 if(!ConstValues.mSchoolStudentInfoBean.get(j).isAskForLeave()){
                     PostStudentResults mPostStudentResult = new PostStudentResults();
+                    mPostStudentResult.setTeacherId(SharedUtils.singleton().get(ConstValues.TEACHER_ID,""));
 //                mPostStudentResult.setCourseId(ConstValues.mSchoolCourseInfoBeanSmall.getCourseId());
                     mPostStudentResult.setSmallCourseId(ConstValues.mSchoolCourseInfoBeanSmall.getId());
                     mPostStudentResult.setStudentId(ConstValues.mSchoolStudentInfoBean.get(j).getId());
+                    mPostStudentResult.setClassSceduleCardId("2");
+                    mPostStudentResult.setClassId(ConstValues.mSchoolClassInfoBean.getId());
+                    mPostStudentResult.setBeginTime(SharedUtils.singleton().get("postSchoolClassRecord_time",""));
+                    mPostStudentResult.setClassDate(SharedUtils.singleton().get("postSchoolClassRecord_time",""));
                     mPostStudentResults.add(mPostStudentResult);
                 }
             }
@@ -321,8 +352,17 @@ public class HomeTwoFragment extends BaseFragment{
 
     private void postResultsBatchAdd() {
         showLoading();
+        PostStudentBean mPostStudentBean = new PostStudentBean();
+        mPostStudentBean.setStudentResultsList(mPostStudentResults);
+        mPostStudentBean.setClassId(mPostStudentResults.get(0).getClassId());
+        mPostStudentBean.setClassSceduleCardId(mPostStudentResults.get(0).getClassSceduleCardId());
+        mPostStudentBean.setCourseId(mPostStudentResults.get(0).getCourseId());
+        mPostStudentBean.setSmallCourseId(mPostStudentResults.get(0).getSmallCourseId());
+        mPostStudentBean.setTeacherId(mPostStudentResults.get(0).getTeacherId());
+        mPostStudentBean.setBeginTime(mPostStudentResults.get(0).getBeginTime());
+        mPostStudentBean.setClassDate(mPostStudentResults.get(0).getBeginTime());
         RetrofitUtil.getInstance().apiService()
-                .postResultsBatchAdd(mPostStudentResults)
+                .postResultsBatchAdd(mPostStudentBean)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result>() {
@@ -580,7 +620,7 @@ public class HomeTwoFragment extends BaseFragment{
                             }
                             if(listOkDl.size() == mHomeTwoOneListAdapter.getData().size()){
                                 ToastUtil.showShortToast(mContext,"已完成小课程");
-                                showDialogKaiShiShangKeXiaYiJie();
+                                showDialogKaiShiShangKeXiaYiJie(false);
                             }
 
                         } else {//从0位置执行下次循环
@@ -606,11 +646,11 @@ public class HomeTwoFragment extends BaseFragment{
 
     }
 
-    private void showDialogKaiShiShangKeXiaYiJie() {
+    private void showDialogKaiShiShangKeXiaYiJie(boolean isNoOk) {
         Log.w("BroadcastReceiver","全部提交的数据:"+mPostStudentResults.toString());
         current_course_section++;
         if(ConstValues.mSchoolCourseInfoBean!=null && ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size() > current_course_section){
-            DialogUtils.showDialogKaiShiShangKeXiaYiJie(mContext, ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(current_course_section), new DialogUtils.ErrorDialogInterfaceA() {
+            DialogUtils.showDialogKaiShiShangKeXiaYiJie(mContext,isNoOk, ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(current_course_section), new DialogUtils.ErrorDialogInterfaceA() {
                 @Override
                 public void btnConfirm(int index) {
                     if(index==1){//下一节
@@ -625,7 +665,7 @@ public class HomeTwoFragment extends BaseFragment{
                             }
                         });
                     }else{//跳过下一节
-                        showDialogKaiShiShangKeXiaYiJie();
+                        showDialogKaiShiShangKeXiaYiJie(isNoOk);
                     }
                 }
             });

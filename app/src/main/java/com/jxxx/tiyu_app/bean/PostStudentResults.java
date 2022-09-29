@@ -29,6 +29,7 @@ public class PostStudentResults {
     }
 
     public String classDate;
+    public String beginTime;
     public String classId;
     public String classSceduleCardId;
     public String teacherId;
@@ -43,6 +44,14 @@ public class PostStudentResults {
 
     public void setClassSceduleCardId(String classSceduleCardId) {
         this.classSceduleCardId = classSceduleCardId;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getBeginTime() {
+        return beginTime;
     }
 
     public void setTeacherId(String teacherId) {

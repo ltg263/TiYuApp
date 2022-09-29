@@ -1,7 +1,10 @@
 package com.jxxx.tiyu_app;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +20,7 @@ import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.app.MainApplication;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
+import com.jxxx.tiyu_app.bean.CourseTypeListAllBean;
 import com.jxxx.tiyu_app.bean.DictDataTypeBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.VersionResponse;
@@ -52,6 +56,7 @@ public class MainActivity extends BaseActivity {
     private HomeThreeFragment mHomeThreeFragment;
     public static int indexPos = 0;
     public static Map<String,List<DictDataTypeBean>> mDictDataTypeBeans;
+    public static Map<String,List<CourseTypeListAllBean>> mCourseTypeListAllBeans;
 
     @Override
     public int intiLayout() {
@@ -64,6 +69,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initView() {
         mDictDataTypeBeans = new HashMap<>();
+        mCourseTypeListAllBeans = new HashMap<>();
         //大课程
         // 'sys_grade', //年级
         // 'sys_content_type', //教学内容
@@ -111,9 +117,9 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onNext(Result<VersionResponse> result) {
                         if(isResultOk(result)){
-//                            if(!result.getData().getVersionNo().equals(getVersionName(MainActivity.this))){
-//                                DialogUtils.goUpdating(MainActivity.this,result.getData());
-//                            }
+                            if(!result.getData().getVersionNo().equals(getVersionName(MainActivity.this))){
+                                DialogUtils.goUpdating(MainActivity.this,result.getData());
+                            }
                         }
                     }
 
@@ -248,6 +254,7 @@ public class MainActivity extends BaseActivity {
         switch (indexPos){
             case 0:
                 mBnvHomeNavigation.setSelectedItemId(R.id.menu_home_1);
+                ma_iv_index.getDrawable().setLevel(0);
                 switchFragment(mHomeOneFragment);
                 break;
             case 1:
@@ -309,6 +316,35 @@ public class MainActivity extends BaseActivity {
      * 获取筛选的条件
      */
     private void getDictDataType(String dictType) {
+        if("sys_category".equals(dictType)){
+            RetrofitUtil.getInstance().apiService()
+                    .getCourseTypeListAll()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<Result<List<CourseTypeListAllBean>>>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(Result<List<CourseTypeListAllBean>> result) {
+                            if(isResultOk(result)){
+                                mCourseTypeListAllBeans.put(dictType,result.getData());
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                        }
+                    });
+            return;
+        }
         RetrofitUtil.getInstance().apiService()
                 .getDictDataType(dictType)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -335,5 +371,28 @@ public class MainActivity extends BaseActivity {
                     public void onComplete() {
                     }
                 });
+    }
+    /**
+     * 获取版本名称
+     *
+     * @param context 上下文
+     *
+     * @return 版本名称
+     */
+    public static String getVersionName(Context context) {
+
+        //获取包管理器
+        PackageManager pm = context.getPackageManager();
+        //获取包信息
+        try {
+            PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), 0);
+            //返回版本号
+            return packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
     }
 }

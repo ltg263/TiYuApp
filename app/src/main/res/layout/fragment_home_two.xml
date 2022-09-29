@@ -177,13 +177,34 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_two_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_two_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        <TextView
+            android:id="@+id/tv_xieyijie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_radius_fcc717"
+            android:gravity="center"
+            android:layout_marginEnd="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:layout_alignParentEnd="true"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="5dp"
+            android:text="下一节"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
     <TextView
         android:id="@+id/tv_jishi"
         android:layout_width="match_parent"

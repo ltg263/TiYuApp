@@ -213,7 +213,7 @@ public class DialogUtils {
     /**
      * 开始上课下节课
      */
-    public static void showDialogKaiShiShangKeXiaYiJie(Context context,  SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoList, final ErrorDialogInterfaceA dialogConfirm) {
+    public static void showDialogKaiShiShangKeXiaYiJie(Context context, boolean isNoOk, SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoList, final ErrorDialogInterfaceA dialogConfirm) {
 
         //课程信息
         SchoolCourseBeanSmall mSchoolCourseBean = mCourseSectionVoList.getSmallCourseVo();
@@ -222,6 +222,11 @@ public class DialogUtils {
         final View view = LayoutInflater.from(context).inflate(R.layout.dialog_kaishishangke_xiayijie, null);
         TextView btn_kaishishangke = view.findViewById(R.id.btn_kaishishangke);
         TextView btn_tiaoguo = view.findViewById(R.id.btn_tiaoguo);
+        TextView tv_title = view.findViewById(R.id.tv_title);
+        if(isNoOk){
+            btn_tiaoguo.setText("取消");
+            tv_title.setText("确定结束此节课程进行下一节课吗？");
+        }
         ImageView iv_quxiao =view.findViewById(R.id.iv_quxiao);
         GlideImgLoader.loadImageViewRadiusNoCenter(context,mSchoolCourseBean.getImgUrl(),iv_quxiao);
         TextView tv_name =view.findViewById(R.id.tv_name);
@@ -243,7 +248,7 @@ public class DialogUtils {
         btn_tiaoguo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(dialogConfirm!=null){
+                if(dialogConfirm!=null && !isNoOk){
                     dialogConfirm.btnConfirm(0);
                 }
                 dialog5.dismiss();
@@ -531,7 +536,7 @@ public class DialogUtils {
         UiConfig uiConfig = new UiConfig();
         uiConfig.setUiType(UiType.PLENTIFUL);
         uiConfig.setUpdateLogoImgRes(R.mipmap.ic_logo);
-        uiConfig.setUpdateBtnBgRes(R.drawable.shape_radius_eff6ff);
+        uiConfig.setUpdateBtnBgRes(R.drawable.btn_shape_theme);
 
         UpdateAppUtils
                 .getInstance()

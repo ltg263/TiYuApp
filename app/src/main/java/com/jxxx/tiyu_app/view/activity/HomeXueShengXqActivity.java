@@ -10,11 +10,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
+import com.jxxx.tiyu_app.bean.SchoolStudentDetailBean;
+import com.jxxx.tiyu_app.utils.ChartHelper;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import com.jxxx.tiyu_app.view.fragment.HomeBanJiFragment;
 
@@ -42,6 +46,9 @@ public class HomeXueShengXqActivity extends BaseActivity {
     TextView mTvUserName;
     @BindView(R.id.tv_user_age)
     TextView mTvUserAge;
+    @BindView(R.id.line_chart)
+    LineChart mLineChart;
+    private List<Entry> mData = new ArrayList<>();
 
     @Override
     public int intiLayout() {
@@ -58,6 +65,19 @@ public class HomeXueShengXqActivity extends BaseActivity {
         lists.add("");
         lists.add("");
         initVP(lists);
+
+        ChartHelper.initChart(mData, mLineChart, -1);
+        ChartHelper.addEntry(mData, mLineChart, 100);
+        ChartHelper.addEntry(mData, mLineChart, 110);
+        ChartHelper.addEntry(mData, mLineChart, 160);
+        ChartHelper.addEntry(mData, mLineChart, 120);
+        ChartHelper.addEntry(mData, mLineChart, 10);
+        ChartHelper.addEntry(mData, mLineChart, 120);
+        ChartHelper.addEntry(mData, mLineChart, 10);
+        ChartHelper.addEntry(mData, mLineChart, 120);
+        ChartHelper.addEntry(mData, mLineChart, 10);
+        ChartHelper.addEntry(mData, mLineChart, 120);
+        ChartHelper.addEntry(mData, mLineChart, 100);
     }
 
     @Override
@@ -67,14 +87,14 @@ public class HomeXueShengXqActivity extends BaseActivity {
                 .getSchoolStudentDetail(getIntent().getStringExtra("id"))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Result<SchoolStudentBean>>() {
+                .subscribe(new Observer<Result<SchoolStudentDetailBean>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(Result<SchoolStudentBean> result) {
+                    public void onNext(Result<SchoolStudentDetailBean> result) {
                         if (isResultOk(result) && result.getData() != null) {
                             GlideImgLoader.loadImageViewRadiusNoCenter(HomeXueShengXqActivity.this, result.getData().getImgUrl(), mIvHead);
                             mTvUserNo.setText("学号："+result.getData().getStudentNo());

@@ -68,7 +68,6 @@ public class HomeOneFragment extends BaseFragment {
     RadioButton mRbHomeSelect4;
     @BindView(R.id.mRadioGroup)
     RadioGroup mMRadioGroup;
-
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.et_suosou)
@@ -91,7 +90,7 @@ public class HomeOneFragment extends BaseFragment {
     RecyclerView mRvOneListSmall;
     HomeOneAdapter mHomeOneAdapter;
     HomeOneAdapterSmall mHomeOneAdapterSmall;
-    int page = 0;
+    int page = 1;
     String courseName = null;
     String ageRange = null, contentType = null, category = null,theme = null,processType=null,trainType=null;
     RadioGroupSelectUtils mRadioGroupSelectUtils;
@@ -104,8 +103,8 @@ public class HomeOneFragment extends BaseFragment {
     protected void initView() {
         iv_shanxuan.setSelected(false);
         refreshLayout.setRefreshHeader(new MaterialHeader(mContext).setShowBezierWave(false));
-        refreshLayout.setEnableRefresh(false);
-        refreshLayout.setEnableLoadMore(false);
+//        refreshLayout.setEnableRefresh(false);
+//        refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
@@ -141,6 +140,7 @@ public class HomeOneFragment extends BaseFragment {
                                 ToastUtil.showLongStrToast(mContext,"所搜内容不能为空");
                                 return true;
                             }
+                            page=1;
                             if(mIvDajie.getVisibility()==View.VISIBLE){
                                 getSchoolCourseList();
                             }else{
@@ -181,6 +181,7 @@ public class HomeOneFragment extends BaseFragment {
                                 trainType=value;
                                 break;
                         }
+                        page=1;
                         if(mIvDajie.getVisibility()==View.VISIBLE){
                             getSchoolCourseList();
                         }else{
@@ -288,13 +289,15 @@ public class HomeOneFragment extends BaseFragment {
                 }
                 break;
             case R.id.ll_dajie:
-//              page = 1;
+                page = 1;
                 mRadioGroupSelectUtils.setDaKeJie(true);
                 initDictDataType();
                 iv_shanxuan.setSelected(false);
                 mMRadioGroup.setVisibility(View.GONE);
-                mRbHomeSelect3.setText("流程");
-                mRbHomeSelect4.setText("核心指标");
+                mRbHomeSelect1.setText("年级");
+                mRbHomeSelect2.setText("教学内容");
+                mRbHomeSelect3.setText("大类别");
+                mRbHomeSelect4.setVisibility(View.GONE);
                 mTvDajie.setTextColor(getResources().getColor(R.color.white));
                 mTvXiaojie.setTextColor(getResources().getColor(R.color.white_46));
                 mTvDajie.setTextSize(16);
@@ -307,13 +310,16 @@ public class HomeOneFragment extends BaseFragment {
                 getSchoolCourseList();
                 break;
             case R.id.ll_xiaojie:
-//              page = 1;
+                page = 1;
                 mRadioGroupSelectUtils.setDaKeJie(false);
                 initDictDataType();
                 iv_shanxuan.setSelected(false);
                 mMRadioGroup.setVisibility(View.GONE);
-                mRbHomeSelect3.setText("大类别");
-                mRbHomeSelect4.setText("主题内容");
+                mRbHomeSelect1.setText("年级");
+                mRbHomeSelect2.setText("教学内容");
+                mRbHomeSelect3.setText("流程");
+                mRbHomeSelect4.setText("核心指标");
+                mRbHomeSelect4.setVisibility(View.VISIBLE);
                 mTvDajie.setTextColor(getResources().getColor(R.color.white_46));
                 mTvXiaojie.setTextColor(getResources().getColor(R.color.white));
                 mTvDajie.setTextSize(14);
@@ -383,7 +389,7 @@ public class HomeOneFragment extends BaseFragment {
                     @Override
                     public void onNext(Result<List<SchoolCourseBean>> result) {
                         if(isResultOk(result)){
-                            if(page==0){
+                            if(page==1){
                                 mHomeOneAdapter.setNewData(result.getData());
                             }else{
                                 mHomeOneAdapter.addData(result.getData());
@@ -427,7 +433,7 @@ public class HomeOneFragment extends BaseFragment {
                     @Override
                     public void onNext(Result<List<SchoolCourseBeanSmall>> result) {
                         if(isResultOk(result)){
-                            if(page==0){
+                            if(page==1){
                                 mHomeOneAdapterSmall.setNewData(result.getData());
                             }else{
                                 mHomeOneAdapterSmall.addData(result.getData());

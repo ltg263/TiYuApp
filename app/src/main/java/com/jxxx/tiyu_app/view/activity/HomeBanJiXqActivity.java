@@ -11,6 +11,7 @@ import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.SchoolClassRecordBean;
+import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import com.jxxx.tiyu_app.utils.view.StepArcView_n;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoTwoListAdapter;
 
@@ -31,6 +32,16 @@ public class HomeBanJiXqActivity extends BaseActivity {
     TextView tv_title;
     @BindView(R.id.iv_back)
     ImageView iv_back;
+    @BindView(R.id.tv_user_name)
+    TextView mTvUserName;
+    @BindView(R.id.iv_icon)
+    ImageView mIvIcon;
+    @BindView(R.id.tv_name)
+    TextView mTvName;
+    @BindView(R.id.tv_type_1)
+    TextView mTvType1;
+    @BindView(R.id.tv_type_2)
+    TextView mTvType2;
 
     @Override
     public int intiLayout() {
@@ -41,7 +52,7 @@ public class HomeBanJiXqActivity extends BaseActivity {
     public void initView() {
         iv_back.setOnClickListener(v -> finish());
         tv_title.setText("203班成绩");
-        mSvN.setCurrentCount(100,70,tv_bfb);
+        mSvN.setCurrentCount(100, 70, tv_bfb);
     }
 
     @Override
@@ -62,6 +73,7 @@ public class HomeBanJiXqActivity extends BaseActivity {
                     @Override
                     public void onNext(Result<SchoolClassRecordBean> result) {
                         if (isResultOk(result) && result.getData() != null) {
+                            initDataV(result.getData());
                             mRvTwoList.setAdapter(new HomeTwoTwoListAdapter(null));
                         }
                     }
@@ -76,5 +88,11 @@ public class HomeBanJiXqActivity extends BaseActivity {
                         hideLoading();
                     }
                 });
+    }
+
+    private void initDataV(SchoolClassRecordBean data) {
+        GlideImgLoader.loadImageViewRadiusNoCenter(this,data.getImgUrl(),mIvIcon);
+        mTvUserName.setText(data.getCourseName());
+        mTvType1.setText(data.getLabels());
     }
 }

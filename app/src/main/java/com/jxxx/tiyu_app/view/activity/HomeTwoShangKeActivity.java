@@ -343,7 +343,9 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                         @Override
                         public void btnConfirm() {
                             if(!isAddClassRecord){
-                                postSchoolClassRecord();
+//                                postSchoolClassRecord();
+                                SharedUtils.singleton().put("postSchoolClassRecord_time",
+                                        StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss"));
                             }
                             Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
