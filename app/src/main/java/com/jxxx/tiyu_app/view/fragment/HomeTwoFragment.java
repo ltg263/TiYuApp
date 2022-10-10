@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiInfo;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
@@ -48,6 +49,7 @@ import com.jxxx.tiyu_app.view.activity.HomeTwoXueShengActivity;
 import com.jxxx.tiyu_app.view.activity.LoginActivity;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoOneListAdapter;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoTwoListAdapter;
+import com.jxxx.tiyu_app.wifi.WifiUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -308,43 +310,55 @@ public class HomeTwoFragment extends BaseFragment{
             mContext.registerReceiver(mMyReceiver, filter);// 注册Broadcast Receive
             return;
         }
-        if(!StringUtil.isNetworkConnected(mContext)){
-            DialogUtils.showDialogWanChengSuoYou(mContext, "请连接可用的网络，成绩将自动上传！","连接网络", new DialogUtils.ErrorDialogInterfaceA() {
-                @Override
-                public void btnConfirm(int index) {
-                    Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+        if(!isWifiMeagerEsp()){
+            //断开连接提交数据
+            try {
+                if(mMyReceiver!=null){
+                    mContext.unregisterReceiver(mMyReceiver);
+                    mMyReceiver= null;
                 }
-            });
-            return;
-        }
-        //断开连接提交数据
-        try {
-            if(mMyReceiver!=null){
-                mContext.unregisterReceiver(mMyReceiver);
-                mMyReceiver= null;
+            }catch (Exception ex){
+                ex.printStackTrace();
             }
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-        if(mPostStudentResults!=null && mPostStudentResults.size()>0){
-            for (int i=mPostStudentResults.size()-1;i>=0;i--){
-                if(mPostStudentResults.get(i).getTimes()==null){
-                    mPostStudentResults.remove(i);
+
+            if(mPostStudentResults!=null && mPostStudentResults.size()>0){
+                for (int i=mPostStudentResults.size()-1;i>=0;i--){
+                    if(mPostStudentResults.get(i).getTimes()==null){
+                        mPostStudentResults.remove(i);
+                    }
                 }
-            }
-            Log.w("提交数据：","mPostStudentResults:"+mPostStudentResults.toString());
-            if(mPostStudentResults.size()>0){
-                postResultsBatchAdd();
-            }else{
-                MainActivity.indexPos = 0;
-                ((MainActivity)mContext).setOnResume();
-                isWanCheng = false;
+                Log.w("提交数据：","mPostStudentResults:"+mPostStudentResults.toString());
+                if(mPostStudentResults.size()>0){
+                    postResultsBatchAdd();
+                }else{
+                    MainActivity.indexPos = 0;
+                    ((MainActivity)mContext).setOnResume();
+                    isWanCheng = false;
+                }
             }
         }
     }
 
+
+    WifiInfo mWifiInfo;
+    WifiUtil mWifiUtil;
+    private boolean isWifiMeagerEsp(){
+        mWifiUtil = new WifiUtil(mContext);
+        mWifiInfo = mWifiUtil.getWifiManager().getConnectionInfo();
+        if(mWifiUtil.getWifiManager().isWifiEnabled() && mWifiInfo.getSSID().contains("ESP8266")){
+            DialogUtils.showDialogHint(mContext, "请将WIFI连接到其他可用网络",
+                    true, new DialogUtils.ErrorDialogInterface() {
+                        @Override
+                        public void btnConfirm() {
+                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    });
+            return true;
+        }
+        return false;
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -589,7 +603,9 @@ public class HomeTwoFragment extends BaseFragment{
                         mSchoolStudentBean.setPostWccs(mSchoolStudentBean.getPostWccs()+1);
                         if(current_course_section_loop_num == mSchoolStudentBean.getPostWccs()){//已全部完成
                             mSchoolStudentBean.setPostZys(current_time);
-                            double pjsd = current_time / ((mSchoolStudentBean.getSteps().size() - 1d) * mSchoolStudentBean.getPostWccs());
+                            double pjsd = current_time / (mSchoolStudentBean.getSteps().size() * mSchoolStudentBean.getPostWccs());
+                            Log.w("BroadcastReceiver","pjsd:"+pjsd);
+                            Log.w("BroadcastReceiver","pjsd:"+StringUtil.getValue(pjsd));
                             mSchoolStudentBean.setPostPjsd(Double.parseDouble(StringUtil.getValue(pjsd)));
                             //保存某个学习的信息
                             for(int i=0;i<mPostStudentResults.size();i++){

@@ -67,6 +67,8 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
     EditText et_duilie_num;
     @BindView(R.id.tv_zhixingmingling)
     TextView tv_zhixingmingling;
+    @BindView(R.id.tv_zhixingshijian)
+    EditText tv_zhixingshijian;
     @BindView(R.id.ll_sele_ssx)
     LinearLayout ll_sele_ssx;
     @BindView(R.id.ll_zhixingmingling)
@@ -85,31 +87,31 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
     /**
      * 课程模式
      */
-    List<DictDataTypeBean> sys_course_mode = new ArrayList<>();
+    static List<DictDataTypeBean> sys_course_mode = new ArrayList<>();
     /**
      * 光电球颜色
      */
-    List<DictDataTypeBean> sys_ball_color = new ArrayList<>();
+    static List<DictDataTypeBean> sys_ball_color = new ArrayList<>();
     /**
      * 光电地板颜色
      */
-    List<DictDataTypeBean> sys_plate_color = new ArrayList<>();
+    static List<DictDataTypeBean> sys_plate_color = new ArrayList<>();
     /**
      * 灯光模式
      */
-    List<DictDataTypeBean> sys_light_mode = new ArrayList<>();
+    static List<DictDataTypeBean> sys_light_mode = new ArrayList<>();
     /**
      * 闪烁频率
      */
-    List<DictDataTypeBean> sys_flickering_rate = new ArrayList<>();
+    static List<DictDataTypeBean> sys_flickering_rate = new ArrayList<>();
     /**
      * 触发模式
      */
-    List<DictDataTypeBean> sys_trigger_mode = new ArrayList<>();
+    static List<DictDataTypeBean> sys_trigger_mode = new ArrayList<>();
     /**
      * 执行指令
      */
-    List<DictDataTypeBean> sys_trigger_after = new ArrayList<>();
+    static List<DictDataTypeBean> sys_trigger_after = new ArrayList<>();
     //指令\设备地址\颜色设置\频闪设置\时长设置\触发方式\触发后的执行动作
     byte[] sendData = new byte[]{ConstValuesHttps.MESSAGE_SEND_A0,0,0,0,0,0,0};
     @Override
@@ -199,6 +201,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
             case R.id.btn_kaishiyundong:
                 String sheBeiNum = et_shebei_num.getText().toString();
                 String duilieNum = et_duilie_num.getText().toString();
+                String zhixinshijian = tv_zhixingshijian.getText().toString();
                 Log.w("sendData","sendData:"+ Arrays.toString(sendData));
                 if(StringUtil.isBlank(sheBeiNum)){
                     ToastUtil.showShortToast(this,"请输入每个队列的球数");
@@ -213,7 +216,6 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
 
                 mWifiUtil = new WifiUtil(this);
                 mWifiInfo = mWifiUtil.getWifiManager().getConnectionInfo();
-
                 if(!mWifiUtil.getWifiManager().isWifiEnabled() || !mWifiInfo.getSSID().contains("ESP8266")){
                     DialogUtils.showDialogHint(this, "请将WIFI连接到ESP8266", false, new DialogUtils.ErrorDialogInterface() {
                         @Override
@@ -225,11 +227,15 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                     });
                     return;
                 }
-
-                lianjie(Integer.parseInt(sheBeiNum),Integer.parseInt(duilieNum));
+                int time = 0;
+                if(StringUtil.isNotBlank(zhixinshijian)){
+                    time = Integer.parseInt(zhixinshijian);
+                }
+                lianjie(Integer.parseInt(sheBeiNum),Integer.parseInt(duilieNum),time);
                 break;
         }
     }
+
 
     @Override
     protected void onDestroy() {
@@ -249,7 +255,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
         }
     }
 
-    private void lianjie(int sheBeiNum, int duilieNum) {
+    private void lianjie(int sheBeiNum, int duilieNum,int time) {
         ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
         ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
         /**
@@ -266,6 +272,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                 mIntent.putExtra("sendData",sendData);
                 mIntent.putExtra("sheBeiNum",sheBeiNum);
                 mIntent.putExtra("duilieNum",duilieNum);
+                mIntent.putExtra("time",time);
                 startActivity(mIntent);
             }
         });
@@ -278,9 +285,13 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
         List<String> lists = new ArrayList<>();
         if(dictTypes!=null){
             for(int i=0;i<dictTypes.size();i++){
-                if(pos!=-2 || !dictTypes.get(i).getDictValue().equals("4")
-                        || sendData[5] == 0){
-                    lists.add(dictTypes.get(i).getDictLabel());
+                if(dictTypes.get(i)==null){
+                    lists.add("随机");
+                }else{
+                    if(pos!=-2 || !dictTypes.get(i).getDictValue().equals("4")
+                            || sendData[5] == 0){
+                        lists.add(dictTypes.get(i).getDictLabel());
+                    }
                 }
             }
         }else{
@@ -374,7 +385,11 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
 //                    }
                     return;
                 }
-                sendData[pos] = Byte.parseByte(dictTypes.get(position).getDictValue());
+                if(dictTypes.get(position)==null){
+                    sendData[pos] = -1;
+                }else{
+                    sendData[pos] = Byte.parseByte(dictTypes.get(position).getDictValue());
+                }
                 if(pos==5){//触发模式
                     mTvDengGuangMoShi.setText("");
                     switch (sendData[pos]){
@@ -397,6 +412,8 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
 
     @Override
     public void initData() {
+    }
+    public static void getDictDataType(){
         getDictDataType("sys_course_mode");
         getDictDataType("sys_ball_color");
         getDictDataType("sys_plate_color");
@@ -408,7 +425,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
     /**
      * 获取筛选的条件
      */
-    private void getDictDataType(String dictType) {
+    private static void getDictDataType(String dictType) {
         RetrofitUtil.getInstance().apiService()
                 .getDictDataType(dictType)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -421,7 +438,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
 
                     @Override
                     public void onNext(Result<List<DictDataTypeBean>> result) {
-                        if(isResultOk(result)){
+                        if(result.getCode()==200){
                             switch (dictType){
                                 case "sys_course_mode":
                                     sys_course_mode.addAll(result.getData());
@@ -430,6 +447,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                                     sys_ball_color.addAll(result.getData());
                                     break;
                                 case "sys_plate_color":
+                                    sys_plate_color.add(null);
                                     sys_plate_color.addAll(result.getData());
                                     break;
                                 case "sys_light_mode":

@@ -1,8 +1,11 @@
 package com.jxxx.tiyu_app.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -10,6 +13,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+
+import com.jxxx.tiyu_app.utils.view.DialogUtils;
+import com.jxxx.tiyu_app.wifi.WifiUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -538,14 +544,8 @@ public class StringUtil {
      * @return
      */
     public static boolean isNetworkConnected(Context context) {
-        if (context != null ) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-            if (mNetworkInfo != null ) {
-                return mNetworkInfo.isConnected();
-            }
-        }
+
         return false ;
     }
+
 }

@@ -27,6 +27,7 @@ import com.jxxx.tiyu_app.bean.VersionResponse;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
+import com.jxxx.tiyu_app.view.activity.HomeOneChuangJianSjActivity;
 import com.jxxx.tiyu_app.view.activity.HomeTwoShangKeActivity;
 import com.jxxx.tiyu_app.view.activity.LoginActivity;
 import com.jxxx.tiyu_app.view.fragment.HomeOneFragment;
@@ -70,6 +71,7 @@ public class MainActivity extends BaseActivity {
     public void initView() {
         mDictDataTypeBeans = new HashMap<>();
         mCourseTypeListAllBeans = new HashMap<>();
+        HomeOneChuangJianSjActivity.getDictDataType();
         //大课程
         // 'sys_grade', //年级
         // 'sys_content_type', //教学内容
@@ -256,6 +258,7 @@ public class MainActivity extends BaseActivity {
                 mBnvHomeNavigation.setSelectedItemId(R.id.menu_home_1);
                 ma_iv_index.getDrawable().setLevel(0);
                 switchFragment(mHomeOneFragment);
+                isWifiMeagerEsp();
                 break;
             case 1:
                 mBnvHomeNavigation.setSelectedItemId(R.id.menu_home_2);
@@ -266,6 +269,7 @@ public class MainActivity extends BaseActivity {
             case 2:
                 mBnvHomeNavigation.setSelectedItemId(R.id.menu_home_3);
                 switchFragment(mHomeThreeFragment);
+                isWifiMeagerEsp();
                 break;
         }
     }

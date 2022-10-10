@@ -106,7 +106,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
         mShangKeBanJiAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if(isWifiMeagerEsp()){
+                if(isWifiMeagerEspOne()){
                     return;
                 }
                 SchoolClassBean mItem = mShangKeBanJiAdapter.getData().get(position);
@@ -300,7 +300,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                if(isWifiMeagerEsp()){
+                if(isWifiMeagerEspOne()){
                     return;
                 }
                 finish();
@@ -406,13 +406,13 @@ public class HomeTwoShangKeActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if(isWifiMeagerEsp()){
+        if(isWifiMeagerEspOne()){
             return;
         }
         super.onBackPressed();
     }
 
-    private boolean isWifiMeagerEsp(){
+    private boolean isWifiMeagerEspOne(){
         mWifiInfo = mWifiUtil.getWifiManager().getConnectionInfo();
         if(mWifiUtil.getWifiManager().isWifiEnabled() && mWifiInfo.getSSID().contains("ESP8266")){
             DialogUtils.showDialogHint(HomeTwoShangKeActivity.this, "请将WIFI连接到其他网络", false, new DialogUtils.ErrorDialogInterface() {

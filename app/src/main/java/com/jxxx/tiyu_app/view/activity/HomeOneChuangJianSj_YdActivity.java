@@ -34,7 +34,7 @@ import butterknife.BindView;
 public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
     byte[] sendInitData;
     //每个队列人数，每个人控制的球数
-    int duilieNum, sheBeiNum;
+    int duilieNum, sheBeiNum,time;
     @BindView(R.id.iv_back)
     ImageView mIvBack;
     @BindView(R.id.ma_iv_index)
@@ -63,6 +63,7 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
         tv_title_fu.setOnClickListener(v -> endYunDong());
         sheBeiNum = getIntent().getIntExtra("sheBeiNum", 0);
         duilieNum = getIntent().getIntExtra("duilieNum", 0);
+        time = getIntent().getIntExtra("time", 0);
         sendInitData = getIntent().getByteArrayExtra("sendData");
         getSJData();
         mHomeTwoTwoListAdapter = new HomeTwoTwoListAdapter(mSchoolStudentBeans);
@@ -75,6 +76,10 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if(!isStart){
+                    if(current_time!=0 && time!=0 && current_time>=time*60){
+                        ToastUtil.showShortToast(HomeOneChuangJianSj_YdActivity.this,"执行完毕");
+                        return;
+                    }
                     isStart = true;
                     ma_iv_index.getDrawable().setLevel(1);
                     if(current_time==0){
@@ -173,7 +178,15 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
             if(bytes.length==7){
                 msg = bytes[0];
                 new_bytes.add(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytes[1]));
-                new_bytes.add(bytes[2]);
+                if(bytes[2]==-1){
+                    byte num = (byte) (Math.random()*(7+1));
+                    if(num==0){
+                        num = 2;
+                    }
+                    new_bytes.add(num);
+                }else{
+                    new_bytes.add(bytes[2]);
+                }
                 new_bytes.add(bytes[3]);
                 new_bytes.add(bytes[4]);
                 new_bytes.add(bytes[5]);
@@ -218,6 +231,10 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
             if(isStart){
                 current_time++;
                 heartHandler.postDelayed(hearRunable, 1000);
+                if(current_time>=time*60 && time!=0){
+                    ma_iv_index.getDrawable().setLevel(2);
+                    isStart = false;
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -255,7 +272,15 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                             if(bytel.length==7){
                                 msg = bytel[0];
                                 sendDatas.add(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytel[1]));
-                                sendDatas.add(bytel[2]);
+                                if(bytel[2]==-1){
+                                    byte num = (byte) (Math.random()*(7+1));
+                                    if(num==0){
+                                        num = 2;
+                                    }
+                                    sendDatas.add(num);
+                                }else{
+                                    sendDatas.add(bytel[2]);
+                                }
                                 sendDatas.add(bytel[3]);
                                 sendDatas.add(bytel[4]);
                                 sendDatas.add(bytel[5]);
@@ -271,7 +296,15 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                             if(bytel.length==7){
                                 msg = bytel[0];
                                 sendDatas.add(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytel[1]));
-                                sendDatas.add(bytel[2]);
+                                if(bytel[2]==-1){
+                                    byte num = (byte) (Math.random()*(7+1));
+                                    if(num==0){
+                                        num = 2;
+                                    }
+                                    sendDatas.add(num);
+                                }else{
+                                    sendDatas.add(bytel[2]);
+                                }
                                 sendDatas.add(bytel[3]);
                                 sendDatas.add(bytel[4]);
                                 sendDatas.add(bytel[5]);
