@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -191,7 +192,8 @@ public class ClientTcpUtils {
     /**
      * 全段配置指令 单个A0 和 A1呼吸灯
      */
-    public void sendData_A0_A1(byte msg,List<Byte> sendDatas){
+    public void sendData_A0_A1(byte msg,List<Byte> sendys){
+        List<Byte> sendDatas = new ArrayList<>(sendys);
         new Thread(new Runnable() {
             @Override
             public void run() {

@@ -204,8 +204,10 @@ public class HomeTwoFragment extends BaseFragment{
         listOkDl.clear();
         String mActionInfoJson = null;
         if(ConstValues.mSchoolCourseInfoBean!=null){//大课程信息
+            if(ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size()-1<current_course_section){
+                return;
+            }
             SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoList = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(current_course_section);
-
             SchoolCourseBeanSmall mSmallCourseVo = mCourseSectionVoList.getSmallCourseVo();
             current_course_section_loop_num = mCourseSectionVoList.getLoopNum();
             current_course_section_queueing_num = mCourseSectionVoList.getQueueingNum();
@@ -622,15 +624,18 @@ public class HomeTwoFragment extends BaseFragment{
                 Log.w("BroadcastReceiver","已被击打过的球");
                 getSetsList(mSchoolStudentBean,stepsPos,sets_cz,sets,setsListPos+1);
             }else{
-                if(startBroadcastData.contains(lists.get(0))){
+                if(startBroadcastData.contains(lists.get(1))){
                     mSchoolStudentBean.setPostZjzs(mSchoolStudentBean.getPostZjzs()+1);
                     if(mSchoolStudentBean.getSteps().size()-1 > stepsPos){
                         sets_cz.add(lists);
-                        List<Byte> dldq = mSchoolStudentBean.getSteps().get(stepsPos + 1).getSets().get(setsListPos);//准备下一组被亮的球
-                        dldq.set(1,ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(dldq.get(1)));
+                        //准备下一组被亮的球
+                        List<Byte> dldq = mSchoolStudentBean.getSteps().get(stepsPos + 1).getSets().get(setsListPos);
+                        Log.w("BroadcastReceiver",mSchoolStudentBean.getStudentName()+"击中了一次去发送数据:"+dldq.get(1));
+                        if(mSchoolStudentBean.getPostWccs()==0){
+                            dldq.set(1,ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(dldq.get(1)));
+                        }
                         sendDatas.addAll(dldq);
                         ClientTcpUtils.mClientTcpUtils.sendData_A0_A1(dldq.get(0),dldq);
-                        Log.w("BroadcastReceiver",mSchoolStudentBean.getStudentName()+"击中了一次去发送数据:"+sendDatas);
                         if(sets.size()-1>setsListPos){
                             Log.w("BroadcastReceiver",mSchoolStudentBean.getStudentName()+"击中了其中一个"+sendDatas);
                             getSetsList(mSchoolStudentBean,stepsPos,sets_cz,sets,setsListPos+1);
@@ -676,11 +681,12 @@ public class HomeTwoFragment extends BaseFragment{
                             }
 
                         } else {//从0位置执行下次循环
+                            sets_cz.add(lists);
                             List<Byte> dldq = mSchoolStudentBean.getSteps().get(0).getSets().get(setsListPos);//准备下一组被亮的球
-                            dldq.set(1,ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(dldq.get(1)));
+                            Log.w("BroadcastReceiver","完成一次清空标记:"+dldq.get(1));
+//                            dldq.set(1,ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(dldq.get(1)));
                             sendDatas.addAll(dldq);
                             ClientTcpUtils.mClientTcpUtils.sendData_A0_A1(dldq.get(0),dldq);
-                            Log.w("BroadcastReceiver","完成一次清空标记:"+mSchoolStudentBean.getStudentName());
                             for(int i=0;i<mSchoolStudentBean.getSteps().size();i++){
                                 mSchoolStudentBean.getSteps().get(i).getSets_cz().clear();
                             }
@@ -715,6 +721,9 @@ public class HomeTwoFragment extends BaseFragment{
                             @Override
                             public void btnConfirm(int index) {
                                 if(index==1){
+                                    current_time = 0;
+                                    current_class_group = 0;
+                                    current_class_group_show = 0;
                                     initViewResume();
                                 }else{
                                     lianjie();
@@ -757,6 +766,9 @@ public class HomeTwoFragment extends BaseFragment{
                         HomeTwoShangKeActivity.mWifiMessageReceiver.onWifiMessageReceiverInter(mContext,sbNum,dengGuang,new WifiMessageReceiver.WifiMessageReceiverInter() {
                             @Override
                             public void messageReceiverInter() {
+                                current_time = 0;
+                                current_class_group = 0;
+                                current_class_group_show = 0;
                                 initViewResume();
                             }
                         });
