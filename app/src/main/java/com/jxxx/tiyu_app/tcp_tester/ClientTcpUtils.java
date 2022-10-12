@@ -223,7 +223,7 @@ public class ClientTcpUtils {
 
     private synchronized void sendData_A0_A1_syn(byte msg, byte[] mData) {
         try {
-            Thread.sleep(100);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

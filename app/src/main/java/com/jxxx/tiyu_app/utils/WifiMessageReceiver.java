@@ -75,7 +75,11 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 return;
             }
             if(dialog!=null && dialog.isShowing()){
-                dialog.dismiss();
+                try {
+                    dialog.dismiss();
+                }catch (IllegalArgumentException e){
+
+                }
             }
             Toast.makeText(mContext,"连接已断开",Toast.LENGTH_SHORT).show();
         }

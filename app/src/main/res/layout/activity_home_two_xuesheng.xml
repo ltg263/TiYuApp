@@ -153,6 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="35dp"
                 android:layout_marginVertical="20dp"
+                android:visibility="gone"
                 android:background="@drawable/shape_radius_fff"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="@dimen/dp_10">

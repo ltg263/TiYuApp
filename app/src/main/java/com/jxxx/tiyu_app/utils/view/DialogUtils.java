@@ -73,6 +73,41 @@ public class DialogUtils {
         dialog5.setContentView(view);
         dialog5.show();
     }
+    public static void showDialogHintSelect(Context context, final ErrorDialogInterfaceA dialogConfirm) {
+        final Dialog dialog5 = new Dialog(context, R.style.selectorDialog);
+        final View view = LayoutInflater.from(context).inflate(R.layout.dialog_jieshu_lianjie, null);
+        TextView btn_kaishishangke = view.findViewById(R.id.btn_kaishishangke);
+        TextView btn_tiaoguo = view.findViewById(R.id.btn_tiaoguo);
+        ImageView iv_quxiao = view.findViewById(R.id.iv_quxiao);
+        iv_quxiao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog5.dismiss();
+            }
+        });
+        btn_kaishishangke.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(dialogConfirm!=null){
+                    dialogConfirm.btnConfirm(1);
+                }
+                dialog5.dismiss();
+            }
+        });
+        btn_tiaoguo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dialogConfirm!=null){
+                    dialogConfirm.btnConfirm(0);
+                }
+                dialog5.dismiss();
+            }
+        });
+        dialog5.setCancelable(false);
+        dialog5.setContentView(view);
+        dialog5.show();
+    }
 
     public interface SelectDictTypeDialogInterface {
         /**
@@ -457,6 +492,7 @@ public class DialogUtils {
         iv_quxiao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialogConfirm.lianJieNum(-1,-1,-1);
                 dialog5.dismiss();
             }
         });

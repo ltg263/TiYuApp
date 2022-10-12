@@ -100,6 +100,15 @@ public class PostStudentResults {
     private String times;//	完成次数
     private String finishTimes;//打击次数
     private String speed;//	平均用时
+    private String lassGroupId;//	队列的ID
+
+    public void setLassGroupId(String lassGroupId) {
+        this.lassGroupId = lassGroupId;
+    }
+
+    public String getLassGroupId() {
+        return lassGroupId;
+    }
 
     public void setFinishTimes(String finishTimes) {
         this.finishTimes = finishTimes;

@@ -326,6 +326,11 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                     ToastUtil.showLongStrToast(this,"该班级无队列");
                     return;
                 }
+                for(int i = ConstValues.mSchoolClassInfoBean.getClassGroupList().size()-1;i>=0;i--){
+                    if(StringUtil.isBlank(ConstValues.mSchoolClassInfoBean.getClassGroupList().get(i).getStudentIds())){
+                        ConstValues.mSchoolClassInfoBean.getClassGroupList().remove(i);
+                    }
+                }
                 if(ConstValues.mSchoolStudentInfoBean==null || ConstValues.mSchoolStudentInfoBean.size()==0){
                     ToastUtil.showLongStrToast(this,"班级学生的信息获取失败");
                     return;
@@ -449,14 +454,23 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 new DialogUtils.ErrorDialogInterfaceLianJieSheBei() {
                     @Override
                     public void lianJieNum(int guangQiu, int guangBan, int dengGuang) {
+                        if(guangQiu==-1 && guangBan==-1 && dengGuang==-1){
+//                            if(mWifiMessageReceiver!=null){
+//                                unregisterReceiver(mWifiMessageReceiver);
+//                                mWifiMessageReceiver = null;
+//                            }
+                            return;
+                        }
                         int sbNum = guangQiu+guangBan;
 //                        int sbNum = 3;
                         /**
                          * 广播动态注册
                          */
-                        mWifiMessageReceiver = new WifiMessageReceiver(sbNum,dengGuang);//集成广播的类
-                        IntentFilter mIntentFilter = new IntentFilter(WifiMessageReceiver.START_BROADCAST_ACTION_START);// 创建IntentFilter对象
-                        registerReceiver(mWifiMessageReceiver, mIntentFilter);// 注册Broadcast Receive
+                        if(mWifiMessageReceiver==null){
+                            mWifiMessageReceiver = new WifiMessageReceiver(sbNum,dengGuang);//集成广播的类
+                            IntentFilter mIntentFilter = new IntentFilter(WifiMessageReceiver.START_BROADCAST_ACTION_START);// 创建IntentFilter对象
+                            registerReceiver(mWifiMessageReceiver, mIntentFilter);// 注册Broadcast Receive
+                        }
                         ClientTcpUtils.mClientTcpUtils = new ClientTcpUtils(HomeTwoShangKeActivity.this);
                     }
                 });

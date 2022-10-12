@@ -115,14 +115,27 @@ public class HomeTwoFragment extends BaseFragment{
                     @Override
                     public void btnConfirm() {
                         current_time = 0;
+                        current_class_group = 0;
+                        current_class_group_show = 0;
+                        if(mPostStudentResults!=null){
+                            String smallCourseId;
+                            if(ConstValues.mSchoolCourseInfoBean!=null) {//大课程信息
+                                SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoList = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(current_course_section);
+                                smallCourseId = mCourseSectionVoList.getId();
+                            }else{
+                                smallCourseId = ConstValues.mSchoolCourseInfoBeanSmall.getId();
+                            }
+                            for(int i=mPostStudentResults.size()-1;i>=0;i--){
+                                if(smallCourseId.equals(mPostStudentResults.get(i).getSmallCourseId())){
+                                    mPostStudentResults.remove(i);
+                                }
+                            }
+                        }
                         initViewResume();
                     }
                 });
             }
         });
-        if(ConstValues.mSchoolCourseInfoBean==null || ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size()<=1){
-            tv_xieyijie.setVisibility(View.GONE);
-        }
         tv_xieyijie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,12 +155,17 @@ public class HomeTwoFragment extends BaseFragment{
                     return;
                 }
                 Log.w("BroadcastReceiver","完成全部课程:"+mPostStudentResults.toString());
-                DialogUtils.showDialogHint(mContext, "当前课程未完成\n确定要断开连接并上传吗?", false, new DialogUtils.ErrorDialogInterface() {
+                DialogUtils.showDialogHintSelect(mContext, new DialogUtils.ErrorDialogInterfaceA() {
                     @Override
-                    public void btnConfirm() {
+                    public void btnConfirm(int index) {
                         ClientTcpUtils.mClientTcpUtils.sendData_B1();
                         ClientTcpUtils.mClientTcpUtils.sendData_B0();
-                        DialogUtils.showDialogWanChengSuoYou(mContext, "请断开连接，成绩将自动上传！","断开连接", new DialogUtils.ErrorDialogInterfaceA() {
+                        String title = "请连接到其他可用网络\n成绩将自动上传！";
+                        if(index == 0){
+                            title = "请连接到其他网络";
+                            mPostStudentResults.clear();
+                        }
+                        DialogUtils.showDialogWanChengSuoYou(mContext, title,"连接", new DialogUtils.ErrorDialogInterfaceA() {
                             @Override
                             public void btnConfirm(int index) {
                                 isWanCheng = true;
@@ -210,6 +228,14 @@ public class HomeTwoFragment extends BaseFragment{
                     mPostStudentResult.setBeginTime(SharedUtils.singleton().get("postSchoolClassRecord_time",""));
                     mPostStudentResult.setClassDate(SharedUtils.singleton().get("postSchoolClassRecord_time",""));
                     mPostStudentResults.add(mPostStudentResult);
+                }
+            }
+            if(ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size()>1){
+                tv_xieyijie.setVisibility(View.VISIBLE);
+                tv_xieyijie.setText("下一节");
+                if(ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size()-1==current_course_section){
+                    tv_xieyijie.setText("上一节");
+                    tv_xieyijie.setVisibility(View.GONE);
                 }
             }
         }
@@ -335,6 +361,10 @@ public class HomeTwoFragment extends BaseFragment{
                     ((MainActivity)mContext).setOnResume();
                     isWanCheng = false;
                 }
+            }else{
+                MainActivity.indexPos = 0;
+                ((MainActivity)mContext).setOnResume();
+                isWanCheng = false;
             }
         }
     }
@@ -396,6 +426,12 @@ public class HomeTwoFragment extends BaseFragment{
 
                     @Override
                     public void onError(Throwable e) {
+                        DialogUtils.showDialogHint(mContext, "上传失败重新上传", true, new DialogUtils.ErrorDialogInterface() {
+                            @Override
+                            public void btnConfirm() {
+                                postResultsBatchAdd();
+                            }
+                        });
                         hideLoading();
                     }
 
@@ -664,12 +700,17 @@ public class HomeTwoFragment extends BaseFragment{
 
     private void showDialogKaiShiShangKeXiaYiJie(boolean isNoOk) {
         Log.w("BroadcastReceiver","全部提交的数据:"+mPostStudentResults.toString());
-        current_course_section++;
+        if(!isNoOk){
+            current_course_section++;
+        }
         if(ConstValues.mSchoolCourseInfoBean!=null && ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size() > current_course_section){
             DialogUtils.showDialogKaiShiShangKeXiaYiJie(mContext,isNoOk, ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(current_course_section), new DialogUtils.ErrorDialogInterfaceA() {
                 @Override
                 public void btnConfirm(int index) {
                     if(index==1){//下一节
+                        if(isNoOk){
+                            current_course_section++;
+                        }
                         DialogUtils.showDialogXiaYiJieIsXunQiu(mContext, new DialogUtils.ErrorDialogInterfaceA() {
                             @Override
                             public void btnConfirm(int index) {
@@ -681,7 +722,9 @@ public class HomeTwoFragment extends BaseFragment{
                             }
                         });
                     }else{//跳过下一节
-                        showDialogKaiShiShangKeXiaYiJie(isNoOk);
+                        if(!isNoOk){
+                            showDialogKaiShiShangKeXiaYiJie(isNoOk);
+                        }
                     }
                 }
             });
