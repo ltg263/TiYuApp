@@ -28,6 +28,28 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <LinearLayout
+            android:id="@+id/ll_lianjie"
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_select"
+                android:layout_width="25dp"
+                android:padding="2dp"
+                android:layout_height="25dp"
+                android:src="@drawable/home_select_yuan_dui" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/color_text_theme"
+                android:text="自动关机"/>
+
+        </LinearLayout>
 
 
         <Button

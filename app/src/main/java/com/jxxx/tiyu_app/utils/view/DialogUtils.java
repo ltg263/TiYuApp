@@ -182,6 +182,16 @@ public class DialogUtils {
         final Dialog dialog5 = new Dialog(context, R.style.selectorDialog);
         final View view = LayoutInflater.from(context).inflate(R.layout.dialog_wanchengsuoyou, null);
         TextView tv_title = view.findViewById(R.id.tv_title);
+        ImageView iv_select = view.findViewById(R.id.iv_select);
+//        if (bnt.equals("断开连接")) {
+            view.findViewById(R.id.ll_lianjie).setVisibility(View.VISIBLE);
+            iv_select.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    iv_select.setSelected(!iv_select.isSelected());
+                }
+            });
+//        }
         tv_title.setText(title);
         TextView btn_kaishishangke = view.findViewById(R.id.btn_kaishishangke);
         btn_kaishishangke.setText(bnt);
@@ -191,7 +201,7 @@ public class DialogUtils {
             @Override
             public void onClick(View v) {
                 if(dialogConfirm!=null){
-                    dialogConfirm.btnConfirm(1);
+                    dialogConfirm.btnConfirm(iv_select.isSelected()?0:1);
                 }
                 dialog5.dismiss();
             }

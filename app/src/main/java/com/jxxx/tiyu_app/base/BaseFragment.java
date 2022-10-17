@@ -99,7 +99,11 @@ public abstract class BaseFragment extends Fragment {
         if(mResult.getCode()==200){
             return true;
         }
-        ToastUtil.showLongStrToast(MainApplication.getContext(),mResult.getMsg());
+        String msg = mResult.getMsg();
+        if(StringUtil.isBlank(msg)){
+            msg = mResult.getCode()+"";
+        }
+        ToastUtil.showLongStrToast(MainApplication.getContext(),msg);
         return false;
     }
 }

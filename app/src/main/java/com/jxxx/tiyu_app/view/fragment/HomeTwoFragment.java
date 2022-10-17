@@ -158,8 +158,6 @@ public class HomeTwoFragment extends BaseFragment{
                 DialogUtils.showDialogHintSelect(mContext, new DialogUtils.ErrorDialogInterfaceA() {
                     @Override
                     public void btnConfirm(int index) {
-                        ClientTcpUtils.mClientTcpUtils.sendData_B1();
-                        ClientTcpUtils.mClientTcpUtils.sendData_B0();
                         String title = "请连接到其他可用网络\n成绩将自动上传！";
                         if(index == 0){
                             title = "请连接到其他网络";
@@ -169,7 +167,6 @@ public class HomeTwoFragment extends BaseFragment{
                             @Override
                             public void btnConfirm(int index) {
                                 isWanCheng = true;
-                                ClientTcpUtils.mClientTcpUtils.onDestroy();
                                 Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
@@ -359,11 +356,13 @@ public class HomeTwoFragment extends BaseFragment{
                 if(mPostStudentResults.size()>0){
                     postResultsBatchAdd();
                 }else{
+                    ClientTcpUtils.mClientTcpUtils.onDestroy();
                     MainActivity.indexPos = 0;
                     ((MainActivity)mContext).setOnResume();
                     isWanCheng = false;
                 }
             }else{
+                ClientTcpUtils.mClientTcpUtils.onDestroy();
                 MainActivity.indexPos = 0;
                 ((MainActivity)mContext).setOnResume();
                 isWanCheng = false;
@@ -390,10 +389,6 @@ public class HomeTwoFragment extends BaseFragment{
             return true;
         }
         return false;
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     private void postResultsBatchAdd() {
@@ -739,13 +734,14 @@ public class HomeTwoFragment extends BaseFragment{
             });
         }else{
             Log.w("BroadcastReceiver","完成全部课程:"+mPostStudentResults.toString());
-            ClientTcpUtils.mClientTcpUtils.sendData_B1();
-            ClientTcpUtils.mClientTcpUtils.sendData_B0();
             DialogUtils.showDialogWanChengSuoYou(mContext, "所有课程已完成！\n请断开连接，成绩将自动上传！","断开连接", new DialogUtils.ErrorDialogInterfaceA() {
                 @Override
                 public void btnConfirm(int index) {
+                    if(index==0){
+                        ClientTcpUtils.mClientTcpUtils.sendData_B1();
+                        ClientTcpUtils.mClientTcpUtils.sendData_B0();
+                    }
                     isWanCheng = true;
-                    ClientTcpUtils.mClientTcpUtils.onDestroy();
                     Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
