@@ -9,9 +9,12 @@ import androidx.annotation.Nullable;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.jxxx.tiyu_app.R;
+import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.app.ConstValues;
+import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
+import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.utils.CustomPopWindow;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import com.jxxx.tiyu_app.view.activity.HomeTwoShangKeActivity;
@@ -19,18 +22,24 @@ import com.jxxx.tiyu_app.view.activity.HomeTwoShangKeActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class KeChengXiangQingAdapter extends BaseQuickAdapter<SchoolCourseBean.CourseSectionVoListBean, BaseViewHolder> {
 
 
 
     List<String> list = new ArrayList<>();
+    int queueNum = 0;
+
+    public void setQueueNum(int queueNum) {
+        this.queueNum = queueNum;
+    }
+
     public KeChengXiangQingAdapter(@Nullable List<SchoolCourseBean.CourseSectionVoListBean> data) {
         super(R.layout.item_kechengxiangqing, data);
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        list.add("4");
-        list.add("5");
     }
 
 
@@ -62,13 +71,21 @@ public class KeChengXiangQingAdapter extends BaseQuickAdapter<SchoolCourseBean.C
             @Override
             public void onClick(View v) {
                 if(mContext instanceof HomeTwoShangKeActivity){
+                    list.clear();
+                    for(int i=0;i<queueNum;i++){
+                        list.add((i+1)+"");
+                    }
+                    if(list.size()==0){
+                        return;
+                    }
                     CustomPopWindow.initPopupWindow((Activity) mContext,tv_1, list,
                             new CustomPopWindow.PopWindowInterface() {
                                 @Override
                                 public void getPosition(int position) {
                                     tv_1.setText(list.get(position));
-                                    ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList()
-                                            .get(helper.getLayoutPosition()).setQueueingNum(Integer.parseInt(list.get(position)));
+//                                    ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList()
+//                                            .get(helper.getLayoutPosition()).setQueueingNum(Integer.parseInt(list.get(position)));]
+                                    postSmallCourseCopyQueue(item.getSmallCourseId());
                                 }
                             });
                 }
@@ -78,6 +95,12 @@ public class KeChengXiangQingAdapter extends BaseQuickAdapter<SchoolCourseBean.C
             @Override
             public void onClick(View v) {
                 if(mContext instanceof HomeTwoShangKeActivity) {
+                    list.clear();
+                    list.add("1");
+                    list.add("2");
+                    list.add("3");
+                    list.add("4");
+                    list.add("5");
                     CustomPopWindow.initPopupWindow((Activity) mContext, tv_2, list,
                             new CustomPopWindow.PopWindowInterface() {
                                 @Override
@@ -90,5 +113,37 @@ public class KeChengXiangQingAdapter extends BaseQuickAdapter<SchoolCourseBean.C
                 }
             }
         });
+    }
+
+    private void postSmallCourseCopyQueue(String smallCourseId) {
+        SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoListBean = new SchoolCourseBean.CourseSectionVoListBean();
+        mCourseSectionVoListBean.setId(smallCourseId);
+        RetrofitUtil.getInstance().apiService()
+                .postSmallCourseCopyQueue(mCourseSectionVoListBean)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Result>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Result result) {
+//                        if(isResultOk(result) && result.getData()!=null){
+//                            ConstValues.mSchoolStudentInfoBean = result.getData();
+//                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+//                        hideLoading();
+                    }
+
+                    @Override
+                    public void onComplete() {
+//                        hideLoading();
+                    }
+                });
     }
 }

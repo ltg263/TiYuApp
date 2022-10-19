@@ -21,7 +21,7 @@ public class HomeTwoXueShengListAdapter extends BaseQuickAdapter<SchoolStudentBe
     protected void convert(BaseViewHolder helper, SchoolStudentBean item) {
         GlideImgLoader.loadImageViewRadiusNoCenter(mContext, item.getImgUrl(), helper.getView(R.id.iv_img));
         helper.setText(R.id.tv_studentNo,"学号："+item.getStudentNo()).setText(R.id.tv_studentName,"姓名："+item.getStudentName())
-                .setText(R.id.tv_age,"年纪："+item.getAge()+"岁").setText(R.id.tv_chaoshi,"性别："+(Integer.parseInt(item.getGender())==0?"男":"女"));
+                .setText(R.id.tv_age,"年纪："+item.getAge()+"岁").setText(R.id.tv_chaoshi,"性别："+(item.getGender()==0?"男":"女"));
     }
 }
 

@@ -30,6 +30,7 @@ import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
 import com.jxxx.tiyu_app.utils.CustomPopWindow;
 import com.jxxx.tiyu_app.utils.RadioGroupSelectUtils;
+import com.jxxx.tiyu_app.utils.SharedUtils;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
@@ -376,7 +377,11 @@ public class HomeOneFragment extends BaseFragment {
     private void getSchoolCourseList() {
         showLoading();
         RetrofitUtil.getInstance().apiService()
-                .getSchoolCourseList(courseName,ageRange,contentType,category,theme,
+//                .getSchoolCourseList(SharedUtils.singleton().get(ConstValues.TEACHER_ID,""),
+//                        SharedUtils.singleton().get(ConstValues.SCHOOL_ID,""),
+                .getSchoolCourseList(null,
+                        null,
+                        courseName,ageRange,contentType,category,theme,
                         page,ConstValues.PAGE_SIZE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -420,7 +425,9 @@ public class HomeOneFragment extends BaseFragment {
     private void getSchoolCourseListSmall() {
         showLoading();
         RetrofitUtil.getInstance().apiService()
-                .getSchoolCourseListSmall(courseName,ageRange,contentType,processType,trainType,
+                .getSchoolCourseListSmall(SharedUtils.singleton().get(ConstValues.TEACHER_ID,""),
+                        SharedUtils.singleton().get(ConstValues.SCHOOL_ID,""),
+                        null,courseName,ageRange,contentType,processType,trainType,
                         page,ConstValues.PAGE_SIZE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

@@ -15,10 +15,10 @@ public class SchoolStudentBean {
      * studentNum : 0
      */
 
-    private String age;
+    private int age;
     private String className;
     private String classSchedule;
-    private String gender;
+    private int gender;
     private String id;
     private String schoolId;
     private String imgUrl;
@@ -97,11 +97,11 @@ public class SchoolStudentBean {
         this.postPjsd = postPjsd;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
@@ -131,11 +131,11 @@ public class SchoolStudentBean {
         this.classSchedule = classSchedule;
     }
 
-    public String getGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 

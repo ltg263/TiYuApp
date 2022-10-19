@@ -57,6 +57,13 @@ public interface ApiService {
     Observable<Result> postSchoolClassRecord(@Body PostStudentResults mPostStudentResult);
 
     /**
+     * 复制队列
+     * @return
+     */
+    @POST("school/smallCourse/copyQueue")
+    Observable<Result> postSmallCourseCopyQueue(@Body SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoListBean);
+
+    /**
      * 登出方法
      * @return
      */
@@ -75,7 +82,9 @@ public interface ApiService {
      * @return
      */
     @GET("school/course/list")
-    Observable<Result<List<SchoolCourseBean>>> getSchoolCourseList(@Query("courseName") String courseName,
+    Observable<Result<List<SchoolCourseBean>>> getSchoolCourseList(@Query("teacherId") String teacherId,
+                                                                   @Query("schoolId") String schoolId,
+                                                                   @Query("courseName") String courseName,
                                                                    @Query("ageRange") String ageRange,
                                                                    @Query("contentType") String contentType,
                                                                    @Query("category") String category,
@@ -137,7 +146,10 @@ public interface ApiService {
      * @return
      */
     @GET("school/smallCourse/list")
-    Observable<Result<List<SchoolCourseBeanSmall>>> getSchoolCourseListSmall(@Query("courseName") String courseName,
+    Observable<Result<List<SchoolCourseBeanSmall>>> getSchoolCourseListSmall(@Query("teacherId") String teacherId,
+                                                                             @Query("schoolId") String schoolId,
+                                                                             @Query("courseId") String courseId,
+                                                                             @Query("courseName") String courseName,
                                                                              @Query("ageRange") String ageRange,
                                                                              @Query("contentType") String contentType,
                                                                              @Query("processType") String processType,

@@ -2,7 +2,6 @@ package com.jxxx.tiyu_app.view.fragment;
 
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +10,7 @@ import android.net.wifi.WifiInfo;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +24,6 @@ import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.base.BaseFragment;
 import com.jxxx.tiyu_app.base.Result;
-import com.jxxx.tiyu_app.bean.AuthLoginBean;
 import com.jxxx.tiyu_app.bean.PostStudentBean;
 import com.jxxx.tiyu_app.bean.PostStudentResults;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
@@ -43,10 +39,7 @@ import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.WifiMessageReceiver;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
-import com.jxxx.tiyu_app.utils.view.StepArcView_n;
 import com.jxxx.tiyu_app.view.activity.HomeTwoShangKeActivity;
-import com.jxxx.tiyu_app.view.activity.HomeTwoXueShengActivity;
-import com.jxxx.tiyu_app.view.activity.LoginActivity;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoOneListAdapter;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoTwoListAdapter;
 import com.jxxx.tiyu_app.wifi.WifiUtil;
@@ -61,7 +54,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class HomeTwoFragment extends BaseFragment{
+public class HomeTwoFragment_1 extends BaseFragment{
 
 
     @BindView(R.id.iv_icon)
@@ -99,7 +92,7 @@ public class HomeTwoFragment extends BaseFragment{
 
     @Override
     protected int setLayoutResourceID() {
-        return R.layout.fragment_home_two;
+        return R.layout.fragment_home_two_1;
     }
 
     @Override
@@ -254,7 +247,7 @@ public class HomeTwoFragment extends BaseFragment{
                 if(!ConstValues.mSchoolStudentInfoBean.get(j).isAskForLeave()){
                     PostStudentResults mPostStudentResult = new PostStudentResults();
                     mPostStudentResult.setTeacherId(SharedUtils.singleton().get(ConstValues.TEACHER_ID,""));
-//                  mPostStudentResult.setCourseId(ConstValues.mSchoolCourseInfoBeanSmall.getCourseId());
+//                mPostStudentResult.setCourseId(ConstValues.mSchoolCourseInfoBeanSmall.getCourseId());
                     mPostStudentResult.setSmallCourseId(ConstValues.mSchoolCourseInfoBeanSmall.getId());
                     mPostStudentResult.setStudentId(ConstValues.mSchoolStudentInfoBean.get(j).getId());
                     mPostStudentResult.setClassSceduleCardId("2");

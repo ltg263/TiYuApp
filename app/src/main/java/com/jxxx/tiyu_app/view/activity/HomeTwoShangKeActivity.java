@@ -113,7 +113,9 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 ConstValues.mSchoolClassInfoBean = mItem;
                 mShangKeBanJiAdapter.setId(mItem.getId());
                 mShangKeBanJiAdapter.notifyDataSetChanged();
+                mKeChengXiangQingAdapter.setQueueNum(mItem.getQueueNum());
                 tv_grade.setText(mItem.getClassName()+"班级队列数"+mItem.getQueueNum()+"，队列最大人数"+mItem.getQueuePersonNum());
+                mKeChengXiangQingAdapter.notifyDataSetChanged();
                 showLoading();
                 getSchoolStudentList(mItem.getId());
             }
@@ -186,6 +188,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                                 ConstValues.mSchoolClassInfoBean = mSchoolClassBean;
                                 mShangKeBanJiAdapter.setId(mSchoolClassBean.getId());
                                 getSchoolStudentList(mSchoolClassBean.getId());
+                                mKeChengXiangQingAdapter.setQueueNum(mSchoolClassBean.getQueueNum());
                                 tv_grade.setText(mSchoolClassBean.getClassName()+"班级队列数"+mSchoolClassBean.getQueueNum()
                                         +"，队列最大人数"+mSchoolClassBean.getQueuePersonNum());
                             }

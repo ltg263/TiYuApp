@@ -32,8 +32,8 @@ public class ConstValues {
      * 服务器后台地址
      */
 //    public static final String BASE_URL = "http://192.168.2.146:8080/";
-    public static final String BASE_URL = "http://mingzhou.nbqichen.com:8888/prod-api/";
-//    public static final String BASE_URL = "http://kindergarten.nbqichen.com:8888/prod-api/";
+//    public static final String BASE_URL = "http://mingzhou.nbqichen.com:8888/prod-api/";
+    public static final String BASE_URL = "http://kindergarten.nbqichen.com:8888/prod-api/";
 
     //默认连接超时时间
     public static final int DEFAULT_TIMEOUT = 130;

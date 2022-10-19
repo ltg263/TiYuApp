@@ -21,10 +21,10 @@ public class SchoolStudentDetailBean {
      * weight : 0
      */
 
-    private String age;
+    private int age;
     private String birthday;
     private String classId;
-    private String gender;
+    private int gender;
     private String height;
     private String id;
     private String imgUrl;
@@ -35,11 +35,11 @@ public class SchoolStudentDetailBean {
     private String weight;
     private List<StudentClassRecordsBean> studentClassRecords;
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
@@ -59,11 +59,11 @@ public class SchoolStudentDetailBean {
         this.classId = classId;
     }
 
-    public String getGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
