@@ -1,7 +1,5 @@
 package com.jxxx.tiyu_app.view.adapter;
 
-import android.app.Activity;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -9,26 +7,11 @@ import androidx.annotation.Nullable;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.jxxx.tiyu_app.R;
-import com.jxxx.tiyu_app.api.RetrofitUtil;
-import com.jxxx.tiyu_app.app.ConstValues;
-import com.jxxx.tiyu_app.app.MainApplication;
-import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
-import com.jxxx.tiyu_app.bean.SchoolStudentBean;
-import com.jxxx.tiyu_app.utils.CustomPopWindow;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
-import com.jxxx.tiyu_app.utils.StringUtil;
-import com.jxxx.tiyu_app.utils.ToastUtil;
-import com.jxxx.tiyu_app.view.activity.HomeTwoShangKeActivity;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class KeChengXiangQingAdapter extends BaseQuickAdapter<SchoolCourseBean.CourseSectionVoListBean, BaseViewHolder> {
 
