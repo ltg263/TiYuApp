@@ -241,11 +241,11 @@ public class ClientTcpUtils {
         new Thread(new Runnable() {
             @Override
             public void run() {
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()];
                 for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
                     data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i);

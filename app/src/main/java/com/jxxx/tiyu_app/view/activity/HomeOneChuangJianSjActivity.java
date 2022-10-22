@@ -73,7 +73,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
     LinearLayout ll_sele_ssx;
     @BindView(R.id.ll_zhixingmingling)
     LinearLayout ll_zhixingmingling;
-
+    WifiMessageReceiver mWifiMessageReceiver;
     WifiInfo mWifiInfo;
     WifiUtil mWifiUtil;
     //'sys_course_mode',
@@ -240,21 +240,32 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(HomeTwoShangKeActivity.mWifiMessageReceiver!=null){
-            unregisterReceiver(HomeTwoShangKeActivity.mWifiMessageReceiver);
-            HomeTwoShangKeActivity.mWifiMessageReceiver = null;
+        //断开连接提交数据
+        try {
+            if(mWifiMessageReceiver!=null){
+                mIntentFilter = null;
+                unregisterReceiver(mWifiMessageReceiver);
+                mWifiMessageReceiver= null;
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(HomeTwoShangKeActivity.mWifiMessageReceiver!=null){
-            unregisterReceiver(HomeTwoShangKeActivity.mWifiMessageReceiver);
-            HomeTwoShangKeActivity.mWifiMessageReceiver = null;
+        try {
+            if(mWifiMessageReceiver!=null){
+                mIntentFilter = null;
+                unregisterReceiver(mWifiMessageReceiver);
+                mWifiMessageReceiver= null;
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
     }
-
+    IntentFilter mIntentFilter;
     private void lianjie(int sheBeiNum, int duilieNum,int time) {
         ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
         ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
@@ -262,9 +273,14 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
          * 广播动态注册
          */
         Log.w("sendData","球的总数:"+ (sheBeiNum*duilieNum));
-        HomeTwoShangKeActivity.mWifiMessageReceiver = new WifiMessageReceiver(sheBeiNum*duilieNum, 1);//集成广播的类
-        HomeTwoShangKeActivity.mWifiMessageReceiver.setSuiJi(true);
-        HomeTwoShangKeActivity.mWifiMessageReceiver.setWifiMessageReceiverInter(new WifiMessageReceiver.WifiMessageReceiverInter() {
+        if(mWifiMessageReceiver == null){
+            mWifiMessageReceiver = new WifiMessageReceiver(sheBeiNum*duilieNum, 1);//集成广播的类
+        }else {
+            mWifiMessageReceiver.setSbNum(sheBeiNum * duilieNum);
+            mWifiMessageReceiver.setDengGuang(1);
+        }
+        mWifiMessageReceiver.setSuiJi(true);
+        mWifiMessageReceiver.setWifiMessageReceiverInter(new WifiMessageReceiver.WifiMessageReceiverInter() {
             @Override
             public void messageReceiverInter() {
                 Log.w("sendData","messageReceiverInter");
@@ -276,9 +292,10 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                 startActivity(mIntent);
             }
         });
-
-        IntentFilter mIntentFilter = new IntentFilter(WifiMessageReceiver.START_BROADCAST_ACTION_START);// 创建IntentFilter对象
-        registerReceiver(HomeTwoShangKeActivity.mWifiMessageReceiver, mIntentFilter);// 注册Broadcast Receive
+        if(mIntentFilter == null){
+            mIntentFilter = new IntentFilter(WifiMessageReceiver.START_BROADCAST_ACTION_START);// 创建IntentFilter对象
+            registerReceiver(mWifiMessageReceiver, mIntentFilter);// 注册Broadcast Receive
+        }
         ClientTcpUtils.mClientTcpUtils = new ClientTcpUtils(HomeOneChuangJianSjActivity.this);
     }
     private void initPopupWindow(TextView tvView, List<DictDataTypeBean> dictTypes,List<String> list,int pos) {

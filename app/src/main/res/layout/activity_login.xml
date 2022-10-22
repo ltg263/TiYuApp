@@ -87,7 +87,7 @@
                 android:background="@null"
                 android:digits="@string/register_name_digits"
                 android:hint="请输入账号"
-                android:text="dxp"
+                android:text="litongge"
                 android:textColor="@color/color_333333"
                 android:textCursorDrawable="@drawable/shape_edit_cursor"
                 android:textSize="14dp" />

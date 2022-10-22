@@ -23,6 +23,7 @@ import com.jxxx.tiyu_app.bean.VersionResponse;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
+import com.jxxx.tiyu_app.view.activity.HomeTwoXueShengActivity;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoType_SxAdapter;
 import com.jxxx.tiyu_app.view.adapter.KeChengXiangQingAdapter;
 import com.jxxx.tiyu_app.view.adapter.KeChengXiangQingAdapterSmall;
@@ -229,7 +230,7 @@ public class DialogUtils {
         TextView tv_name =view.findViewById(R.id.tv_name);
         tv_name.setText(mSchoolCourseBean.getCourseName());
         TextView tv_type_1 =view.findViewById(R.id.tv_type_1);
-        tv_type_1.setText("每组"+mSchoolCourseBean.getGroupNum()+"人  |  共"+mSchoolCourseBean.getCourseSectionVoList().size()+"个小节");
+        tv_type_1.setText("共"+mSchoolCourseBean.getCourseSectionVoList().size()+"个小节");
         TextView tv_type_2 =view.findViewById(R.id.tv_type_2);
         tv_type_2.setText(mSchoolCourseBean.getQueueInfo());
         TextView tv_title = view.findViewById(R.id.tv_title);
@@ -277,7 +278,7 @@ public class DialogUtils {
         TextView tv_name =view.findViewById(R.id.tv_name);
         tv_name.setText(mSchoolCourseBean.getCourseName());
         TextView tv_type_1 =view.findViewById(R.id.tv_type_1);
-        tv_type_1.setText("每组" + mSchoolCourseBean.getGroupNum() + "人  |  共" + mSchoolCourseBean.getStepNum() + "个步骤");
+        tv_type_1.setText("共"+mSchoolCourseBean.getQueueNum()+"个队列  |  共" + mSchoolCourseBean.getStepNum() + "个步骤");
         TextView tv_type_2 =view.findViewById(R.id.tv_type_2);
         tv_type_2.setText(mSchoolCourseBean.getQueueInfo());
         btn_kaishishangke.setOnClickListener(new View.OnClickListener() {
@@ -307,11 +308,15 @@ public class DialogUtils {
     /**
      * 开始下一节课是否要寻球
      */
-    public static void showDialogXiaYiJieIsXunQiu(Context context, final ErrorDialogInterfaceA dialogConfirm) {
+    public static void showDialogXiaYiJieIsXunQiu(Context context, SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoListBean, final ErrorDialogInterfaceA dialogConfirm) {
         final Dialog dialog5 = new Dialog(context, R.style.selectorDialog);
         final View view = LayoutInflater.from(context).inflate(R.layout.dialog_xiayijie_xunqiu, null);
         TextView btn_kaishishangke = view.findViewById(R.id.btn_kaishishangke);
         TextView btn_tiaoguo = view.findViewById(R.id.btn_tiaoguo);
+        TextView tvsbnum = view.findViewById(R.id.tv_sbnum);
+        if(mCourseSectionVoListBean != null){
+            tvsbnum.setText("(下一节课使用"+mCourseSectionVoListBean.getBallNum()+"个光电球，"+mCourseSectionVoListBean.getPlateNum()+"块光电地板)");
+        }
         btn_kaishishangke.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -399,7 +404,7 @@ public class DialogUtils {
     /**
      * 链接设备
      */
-    public static void showDialogLianJieSheBei(Context context, SchoolCourseBean mData,SchoolCourseBeanSmall mDataSmall,final ErrorDialogInterfaceLianJieSheBei dialogConfirm) {
+    public static void showDialogLianJieSheBei(Context context, int mBallNum,int mPlateNum, final ErrorDialogInterfaceLianJieSheBei dialogConfirm) {
 
         final Dialog dialog5 = new Dialog(context, R.style.selectorDialog);
         final View view = LayoutInflater.from(context).inflate(R.layout.dialog_lianjieshebei, null);
@@ -408,18 +413,12 @@ public class DialogUtils {
         ImageView iv_quxiao = view.findViewById(R.id.iv_quxiao);
         EditText et_guangqiu_num = view.findViewById(R.id.et_guangqiu_num);
         EditText et_dianban_num = view.findViewById(R.id.et_dianban_num);
-        int mBallNum=0,mPlateNum=0;
-        if(mData!=null){
-            mBallNum = mData.getBallNum();
-            mPlateNum = mData.getPlateNum();
-        }
-        if(mDataSmall!=null){
-            mBallNum = mDataSmall.getBallNum();
-            mPlateNum = mDataSmall.getPlateNum();
-        }
-
-        et_guangqiu_num.setHint("此堂课默认"+mBallNum+"个");
-        et_dianban_num.setHint("此堂课默认"+mPlateNum+"个");
+        et_guangqiu_num.setText(mBallNum+"");
+        et_dianban_num.setText(mPlateNum+"");
+//        et_guangqiu_num.setText("此堂课使用"+mBallNum+"个");
+//        et_dianban_num.setText("此堂课使用"+mPlateNum+"个");
+        et_guangqiu_num.setEnabled(false);
+        et_dianban_num.setEnabled(false);
         TextView btn_1 = view.findViewById(R.id.btn_1);
         TextView btn_2 = view.findViewById(R.id.btn_2);
         TextView btn_3 = view.findViewById(R.id.btn_3);

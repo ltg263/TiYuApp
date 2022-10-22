@@ -41,6 +41,28 @@ public class PostStudentBean {
     private String updateTime;
     private List<PostStudentResults> studentResultsList;
 
+    @Override
+    public String toString() {
+        return "PostStudentBean{" +
+                "beginTime='" + beginTime + '\'' +
+                ", classDate='" + classDate + '\'' +
+                ", classId='" + classId + '\'' +
+                ", classSceduleCardId='" + classSceduleCardId + '\'' +
+                ", courseId='" + courseId + '\'' +
+                ", createBy='" + createBy + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", id='" + id + '\'' +
+                ", schoolId='" + schoolId + '\'' +
+                ", searchValue='" + searchValue + '\'' +
+                ", smallCourseId='" + smallCourseId + '\'' +
+                ", teacherId='" + teacherId + '\'' +
+                ", updateBy='" + updateBy + '\'' +
+                ", updateTime='" + updateTime + '\'' +
+                ", studentResultsList=" + studentResultsList +
+                '}';
+    }
+
     public void setClassSceduleCardId(String classSceduleCardId) {
         this.classSceduleCardId = classSceduleCardId;
     }

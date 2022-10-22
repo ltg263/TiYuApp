@@ -2,16 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingVertical="5dp"
-    android:layout_marginEnd="15dp"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_content_1"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
+        android:layout_marginStart="15dp"
         android:visibility="gone"
         android:textSize="13sp"
         android:textColor="@color/white"
@@ -19,13 +18,13 @@
 
     <TextView
         android:id="@+id/tv_content_2"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
+        android:layout_marginStart="15dp"
         android:textSize="16sp"
         android:paddingVertical="5dp"
-        android:paddingHorizontal="20dp"
         android:background="@drawable/shape_radius_fff_30"
         android:textColor="@color/color_text_theme"
         android:text="组2" />

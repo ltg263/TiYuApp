@@ -50,6 +50,14 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         isShowCurrentActivity = true;
     }
 
+    public void setSbNum(int sbNum) {
+        this.sbNum = sbNum;
+    }
+
+    public void setDengGuang(int dengGuang) {
+        this.dengGuang = dengGuang;
+    }
+
     public void setWifiMessageReceiverInter(WifiMessageReceiverInter wifiMessageReceiverInter) {
         mWifiMessageReceiverInter = wifiMessageReceiverInter;
     }
@@ -193,7 +201,11 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         });
         dialog.setCancelable(false);
         dialog.setContentView(view);
-        dialog.show();
+        try {
+            dialog.show();
+        }catch (Exception e){
+
+        }
     }
 
 

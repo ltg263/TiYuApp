@@ -59,158 +59,47 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_one_list"
+        <net.lucode.hackware.magicindicator.MagicIndicator
+            android:id="@+id/magic_indicator"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:paddingStart="15dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp" />
 
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:background="@drawable/shape_yy_ff_all_6"
-        android:orientation="vertical"
-        android:paddingVertical="20dp">
-
-        <ImageView
-            android:id="@+id/iv_icon"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/tv_name"
-            android:layout_alignBottom="@id/tv_type_2"
-            android:layout_marginHorizontal="15dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_launcher_background" />
-
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/iv_icon"
-            android:paddingTop="5dp"
-            android:text="课程名称"
-            android:textColor="@color/color_333333"
-            android:textSize="@dimen/sp_12"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_type_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_name"
-            android:layout_marginTop="10dp"
-            android:layout_toEndOf="@id/iv_icon"
-            android:text="适合6-12岁  |  上肢  |  平衡力"
-            android:textColor="@color/color_666666"
-            android:textSize="@dimen/dp_10" />
-
-        <TextView
-            android:id="@+id/tv_type_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_type_1"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@id/iv_icon"
-            android:paddingBottom="5dp"
-            android:text="每组4人  |  共4个步骤"
-            android:textColor="@color/color_666666"
-            android:textSize="@dimen/dp_10" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
-        android:background="@color/color_text_theme"
-        android:padding="10dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="姓名"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="完成次数"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="总击中数"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="总用时"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="平均速度"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
-    </LinearLayout>
-
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_two_list"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            android:layout_height="match_parent" />
+
         <TextView
             android:id="@+id/tv_xieyijie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/shape_radius_fcc717"
             android:gravity="center"
-            android:visibility="gone"
-            android:layout_marginEnd="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
-            android:layout_alignParentEnd="true"
             android:paddingHorizontal="15dp"
             android:paddingVertical="5dp"
             android:text="下一节"
             android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="gone" />
 
     </RelativeLayout>
+
     <TextView
         android:id="@+id/tv_jishi"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom|end"
-        android:textColor="@color/color_999999"/>
+        android:textColor="@color/color_999999" />
 
 </LinearLayout>

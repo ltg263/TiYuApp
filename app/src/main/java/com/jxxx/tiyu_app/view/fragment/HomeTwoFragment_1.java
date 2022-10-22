@@ -204,17 +204,17 @@ public class HomeTwoFragment_1 extends BaseFragment{
             GlideImgLoader.loadImageViewRadiusNoCenter(mContext,mSmallCourseVo.getImgUrl(),mIvIcon);
             mTvName.setText(mSmallCourseVo.getCourseName());
             mTvType1.setText(mSmallCourseVo.getLables().replace(",", "|"));
-            mTvType2.setText("每组" + mSmallCourseVo.getGroupNum() + "人  |  共" + mSmallCourseVo.getStepNum() + "个步骤");
+            mTvType2.setText("共"+mSmallCourseVo.getQueueNum()+"个队列  |  共" + mSmallCourseVo.getStepNum() + "个步骤");
             //让控制球
             mActionInfoJson = mSmallCourseVo.getActionInfo();
             //准备提交的数据
             for(int j = 0;j<ConstValues.mSchoolStudentInfoBean.size();j++){
                 if(!ConstValues.mSchoolStudentInfoBean.get(j).isAskForLeave()){
                     PostStudentResults mPostStudentResult = new PostStudentResults();
+                    mPostStudentResult.setTeacherId(SharedUtils.singleton().get(ConstValues.TEACHER_ID,""));
                     mPostStudentResult.setCourseId(mCourseSectionVoList.getCourseId());
                     mPostStudentResult.setSmallCourseId(mCourseSectionVoList.getId());
                     mPostStudentResult.setStudentId(ConstValues.mSchoolStudentInfoBean.get(j).getId());
-                    mPostStudentResult.setTeacherId(SharedUtils.singleton().get(ConstValues.TEACHER_ID,""));
                     mPostStudentResult.setClassSceduleCardId("2");
                     mPostStudentResult.setClassId(ConstValues.mSchoolClassInfoBean.getId());
                     mPostStudentResult.setBeginTime(SharedUtils.singleton().get("postSchoolClassRecord_time",""));
@@ -237,7 +237,7 @@ public class HomeTwoFragment_1 extends BaseFragment{
             GlideImgLoader.loadImageViewRadiusNoCenter(mContext,ConstValues.mSchoolCourseInfoBeanSmall.getImgUrl(),mIvIcon);
             mTvName.setText(ConstValues.mSchoolCourseInfoBeanSmall.getCourseName());
             mTvType1.setText(ConstValues.mSchoolCourseInfoBeanSmall.getLables().replace(",", "|"));
-            mTvType2.setText("每组" + ConstValues.mSchoolCourseInfoBeanSmall.getGroupNum() + "人  |  共" + ConstValues.mSchoolCourseInfoBeanSmall.getStepNum() + "个步骤");
+            mTvType2.setText("共"+ConstValues.mSchoolCourseInfoBeanSmall.getQueueNum()+"个队列  |  共" + ConstValues.mSchoolCourseInfoBeanSmall.getStepNum() + "个步骤");
             //让控制球
             mActionInfoJson = ConstValues.mSchoolCourseInfoBeanSmall.getActionInfo();
 
@@ -705,7 +705,7 @@ public class HomeTwoFragment_1 extends BaseFragment{
                         if(isNoOk){
                             current_course_section++;
                         }
-                        DialogUtils.showDialogXiaYiJieIsXunQiu(mContext, new DialogUtils.ErrorDialogInterfaceA() {
+                        DialogUtils.showDialogXiaYiJieIsXunQiu(mContext, null,new DialogUtils.ErrorDialogInterfaceA() {
                             @Override
                             public void btnConfirm(int index) {
                                 if(index==1){
@@ -745,24 +745,33 @@ public class HomeTwoFragment_1 extends BaseFragment{
 
 
     private void lianjie() {
-        DialogUtils.showDialogLianJieSheBei(mContext, ConstValues.mSchoolCourseInfoBean,ConstValues.mSchoolCourseInfoBeanSmall,
-                new DialogUtils.ErrorDialogInterfaceLianJieSheBei() {
-                    @Override
-                    public void lianJieNum(int guangQiu, int guangBan, int dengGuang) {
-                        int sbNum = guangQiu+guangBan;
-                        ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
-                        ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
-                        HomeTwoShangKeActivity.mWifiMessageReceiver.onWifiMessageReceiverInter(mContext,sbNum,dengGuang,new WifiMessageReceiver.WifiMessageReceiverInter() {
-                            @Override
-                            public void messageReceiverInter() {
-                                current_time = 0;
-                                current_class_group = 0;
-                                current_class_group_show = 0;
-                                initViewResume();
-                            }
-                        });
-                    }
-                });
+        int mBallNum;
+        int mPlateNum;
+        if(ConstValues.mSchoolCourseInfoBeanSmall!=null){
+            mBallNum = ConstValues.mSchoolCourseInfoBeanSmall.getBallNum();
+            mPlateNum = ConstValues.mSchoolCourseInfoBeanSmall.getPlateNum();
+        }else{
+            mBallNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getBallNum();
+            mPlateNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getPlateNum();
+        }
+//        DialogUtils.showDialogLianJieSheBei(mContext, mBallNum, mPlateNum,
+//                new DialogUtils.ErrorDialogInterfaceLianJieSheBei() {
+//                    @Override
+//                    public void lianJieNum(int guangQiu, int guangBan, int dengGuang) {
+//                        int sbNum = guangQiu+guangBan;
+//                        ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
+//                        ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
+//                        HomeTwoShangKeActivity.mWifiMessageReceiver.onWifiMessageReceiverInter(mContext,sbNum,dengGuang,new WifiMessageReceiver.WifiMessageReceiverInter() {
+//                            @Override
+//                            public void messageReceiverInter() {
+//                                current_time = 0;
+//                                current_class_group = 0;
+//                                current_class_group_show = 0;
+//                                initViewResume();
+//                            }
+//                        });
+//                    }
+//                });
     }
 
 }

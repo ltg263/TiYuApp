@@ -167,11 +167,38 @@ public class SchoolCourseBean {
         private String actionInfo;
         private String courseId;
         private String id;
+        private String num;
         private int queueingNum= 1;
         private int loopNum;
+        private int ballNum;
+        private int plateNum;
         private String smallCourseId;
         private String sortNum;
         private SchoolCourseBeanSmall smallCourseVo;
+
+        public void setBallNum(int ballNum) {
+            this.ballNum = ballNum;
+        }
+
+        public void setPlateNum(int plateNum) {
+            this.plateNum = plateNum;
+        }
+
+        public int getBallNum() {
+            return ballNum;
+        }
+
+        public int getPlateNum() {
+            return plateNum;
+        }
+
+        public void setNum(String num) {
+            this.num = num;
+        }
+
+        public String getNum() {
+            return num;
+        }
 
         public void setQueueingNum(int queueingNum) {
             this.queueingNum = queueingNum;

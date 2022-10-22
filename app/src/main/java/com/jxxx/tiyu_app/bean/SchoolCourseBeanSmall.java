@@ -36,6 +36,7 @@ public class SchoolCourseBeanSmall {
     private String courseSectionId;
     private String lables;
     private int groupNum;
+    private int queueNum;
     private String queueInfo;
     private String ageRange;
     private String trainPart;
@@ -46,6 +47,14 @@ public class SchoolCourseBeanSmall {
     private String actionInfo;
     private String sortNumSet;
     private List<StepGroupsBean> stepGroups;
+
+    public void setQueueNum(int queueNum) {
+        this.queueNum = queueNum;
+    }
+
+    public int getQueueNum() {
+        return queueNum;
+    }
 
     public void setSortNumSet(String sortNumSet) {
         this.sortNumSet = sortNumSet;

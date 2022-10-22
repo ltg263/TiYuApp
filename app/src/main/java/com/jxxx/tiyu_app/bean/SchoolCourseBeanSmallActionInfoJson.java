@@ -37,8 +37,18 @@ public class SchoolCourseBeanSmallActionInfoJson {
          */
 
         private int stepNo;
+        private int stepNoOkNum;//执行过的数量 sets
         private List<List<Byte>> sets;
         private List<List<Byte>> sets_cz = new ArrayList<>();
+
+
+        public void setStepNoOkNum(int stepNoOkNum) {
+            this.stepNoOkNum = stepNoOkNum;
+        }
+
+        public int getStepNoOkNum() {
+            return stepNoOkNum;
+        }
 
         public void setSets_cz(List<List<Byte>> sets_cz) {
             this.sets_cz = sets_cz;

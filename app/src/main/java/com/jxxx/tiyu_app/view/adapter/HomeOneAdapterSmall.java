@@ -30,6 +30,6 @@ public class HomeOneAdapterSmall extends BaseQuickAdapter<SchoolCourseBeanSmall,
         helper.addOnClickListener(R.id.tv_kcxq).addOnClickListener(R.id.tv_kssk);
         GlideImgLoader.loadImageViewRadiusNoCenter(mContext,item.getImgUrl(),helper.getView(R.id.iv_icon));
         helper.setText(R.id.tv_name,item.getCourseName()).setText(R.id.tv_type_1,item.getLables())
-            .setText(R.id.tv_type_2,"每组"+item.getGroupNum()+"人  |  共"+item.getStepNum()+"个步骤");
+            .setText(R.id.tv_type_2,"共"+item.getQueueNum()+"个队列  |  共"+item.getStepNum()+"个步骤");
     }
 }

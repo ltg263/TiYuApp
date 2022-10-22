@@ -25,7 +25,7 @@ public class HomeOneAdapter extends BaseQuickAdapter<SchoolCourseBean, BaseViewH
         helper.setText(R.id.tv_name,item.getCourseName())
                 .setText(R.id.tv_type_1,item.getLables().replace(",","|"))
                 .setText(R.id.tv_kssk,"无法上课")
-                .setText(R.id.tv_type_2,"每组"+item.getGroupNum()+"人  |  共"+item.getCourseSectionVoList().size()+"个小节");
+                .setText(R.id.tv_type_2,"共"+item.getCourseSectionVoList().size()+"个小节");
         if(item.getCourseSectionVoList().size()>0){
             helper.setText(R.id.tv_kssk,"开始上课");
         }

@@ -2,17 +2,35 @@ package com.jxxx.tiyu_app.utils;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 
+import androidx.viewpager.widget.ViewPager;
+
+import com.jxxx.tiyu_app.R;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+
+import net.lucode.hackware.magicindicator.MagicIndicator;
+import net.lucode.hackware.magicindicator.ViewPagerHelper;
+import net.lucode.hackware.magicindicator.buildins.UIUtil;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.WrapPagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.CommonPagerTitleView;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 状态栏工具类
@@ -174,5 +192,73 @@ public class StatusBarUtil {
             }
         }
         return result;
+    }
+    /**
+     * 基础的下划线
+     * @param mContext
+     * @param mDataList
+     * @param mMagicIndicator
+     * @param mViewPager
+     */
+    public static void initMagicIndicator_1(Context mContext, boolean is, List<String> mDataList, MagicIndicator mMagicIndicator, ViewPager mViewPager) {
+        mMagicIndicator.setBackgroundColor(Color.parseColor("#00000000"));
+        CommonNavigator commonNavigator = new CommonNavigator(mContext);
+        commonNavigator.setAdjustMode(is);
+        commonNavigator.setScrollPivotX(0.25f);
+        commonNavigator.setAdapter(new CommonNavigatorAdapter() {
+            @Override
+            public int getCount() {
+                return mDataList == null ? 0 : mDataList.size();
+            }
+
+            @Override
+            public IPagerTitleView getTitleView(Context context, final int index) {
+                CommonPagerTitleView mCommonPagerTitleView = new CommonPagerTitleView(mContext);
+                mCommonPagerTitleView.setContentView(R.layout.item_home_two_one);
+                TextView tv_content_1 = mCommonPagerTitleView.findViewById(R.id.tv_content_1);
+                TextView tv_content_2 = mCommonPagerTitleView.findViewById(R.id.tv_content_2);
+                tv_content_1.setText(mDataList.get(index));
+                tv_content_2.setText(mDataList.get(index));
+                mCommonPagerTitleView.setOnPagerTitleChangeListener(new CommonPagerTitleView.OnPagerTitleChangeListener() {
+                    @Override
+                    public void onSelected(int index, int totalCount) {
+                        tv_content_1.setVisibility(View.GONE);
+                        tv_content_2.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onDeselected(int index, int totalCount) {
+                        tv_content_1.setVisibility(View.VISIBLE);
+                        tv_content_2.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onLeave(int index, int totalCount, float leavePercent, boolean leftToRight) {
+
+                    }
+
+                    @Override
+                    public void onEnter(int index, int totalCount, float enterPercent, boolean leftToRight) {
+
+                    }
+                });
+                mCommonPagerTitleView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mViewPager.setCurrentItem(index);
+                    }
+                });
+                return mCommonPagerTitleView;
+            }
+
+            @Override
+            public IPagerIndicator getIndicator(Context context) {
+                LinePagerIndicator indicator = new LinePagerIndicator(context);
+                indicator.setColors(Color.parseColor("#00000000"));
+                return indicator;
+            }
+        });
+        mMagicIndicator.setNavigator(commonNavigator);
+        ViewPagerHelper.bind(mMagicIndicator, mViewPager);
     }
 }

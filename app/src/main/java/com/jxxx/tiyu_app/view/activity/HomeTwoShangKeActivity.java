@@ -1,5 +1,6 @@
 package com.jxxx.tiyu_app.view.activity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,6 +23,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.app.ConstValues;
+import com.jxxx.tiyu_app.app.MainApplication;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.PostStudentResults;
@@ -31,6 +33,7 @@ import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
+import com.jxxx.tiyu_app.utils.CustomPopWindow;
 import com.jxxx.tiyu_app.utils.SharedUtils;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
@@ -83,7 +86,9 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     boolean isSmallCourse;
     WifiInfo mWifiInfo;
     WifiUtil mWifiUtil;
-    public static WifiMessageReceiver mWifiMessageReceiver;
+    private WifiMessageReceiver mWifiMessageReceiver;
+    List<String> list = new ArrayList<>();
+    int queueNum = 0;
     @Override
     public int intiLayout() {
         return R.layout.activity_home_two_shangke;
@@ -95,7 +100,6 @@ public class HomeTwoShangKeActivity extends BaseActivity {
         ConstValues.mSchoolCourseInfoBeanSmall = null;
         ConstValues.mSchoolClassInfoBean = null;
         ConstValues.mSchoolStudentInfoBean = null;
-        mWifiMessageReceiver = null;
         isSmallCourse = getIntent().getBooleanExtra("isSmallCourse",false);
         mKeChengXiangQingAdapter = new KeChengXiangQingAdapter(null);
         rv_list.setAdapter(mKeChengXiangQingAdapter);
@@ -113,17 +117,96 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 ConstValues.mSchoolClassInfoBean = mItem;
                 mShangKeBanJiAdapter.setId(mItem.getId());
                 mShangKeBanJiAdapter.notifyDataSetChanged();
-                mKeChengXiangQingAdapter.setQueueNum(mItem.getQueueNum());
+                queueNum = mItem.getQueueNum();
                 tv_grade.setText(mItem.getClassName()+"班级队列数"+mItem.getQueueNum()+"，队列最大人数"+mItem.getQueuePersonNum());
                 mKeChengXiangQingAdapter.notifyDataSetChanged();
                 showLoading();
                 getSchoolStudentList(mItem.getId());
             }
         });
-
+        mKeChengXiangQingAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoListBean = mKeChengXiangQingAdapter.getData().get(position);
+                switch (view.getId()){
+                    case R.id.tv_2:
+                        list.clear();
+                        list.add("1");
+                        list.add("2");
+                        list.add("3");
+                        list.add("4");
+                        list.add("5");
+                        CustomPopWindow.initPopupWindow(HomeTwoShangKeActivity.this, view, list,
+                                new CustomPopWindow.PopWindowInterface() {
+                                    @Override
+                                    public void getPosition(int position) {
+                                        ((TextView)view).setText(list.get(position));
+//                                        mCourseSectionVoListBean.setLoopNum(Integer.parseInt(list.get(position)));
+                                    }
+                                });
+                        break;
+                    case R.id.tv_1:
+                        if(true){
+                            postSmallCourseCopyQueue((TextView) view,"", mCourseSectionVoListBean.getSmallCourseId(),"2");
+                            return;
+                        }
+                        list.clear();
+                        for(int i=0;i<queueNum;i++){
+                            list.add((i+1)+"");
+                        }
+                        if(list.size()==0){
+                            return;
+                        }
+                        CustomPopWindow.initPopupWindow(HomeTwoShangKeActivity.this,view, list,
+                                new CustomPopWindow.PopWindowInterface() {
+                                    @Override
+                                    public void getPosition(int position) {
+                                           int pos = Integer.parseInt(((TextView) view).getText().toString());
+                                            if(pos < position+2){
+                                                postSmallCourseCopyQueue((TextView) view,list.get(position),
+                                                        mCourseSectionVoListBean.getSmallCourseId(),list.get(position));
+                                            }
+                                    }
+                                });
+                        break;
+                }
+            }
+        });
         mWifiUtil = new WifiUtil(HomeTwoShangKeActivity.this);
     }
+    private void postSmallCourseCopyQueue(TextView tv_1,String str,String smallCourseId,String num) {
+        showLoading();
+        SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoListBean = new SchoolCourseBean.CourseSectionVoListBean();
+        mCourseSectionVoListBean.setId(smallCourseId);
+        mCourseSectionVoListBean.setNum(num);
+        RetrofitUtil.getInstance().apiService()
+                .postSmallCourseCopyQueue(smallCourseId,num)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Result>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onNext(Result result) {
+                        if(isResultOk(result)){
+                            getSchoolCourseDetail();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        hideLoading();
+                    }
+                });
+    }
     private void getSchoolStudentList(String classId) {
         RetrofitUtil.getInstance().apiService()
                 .getSchoolStudentList(classId,null,null)
@@ -188,7 +271,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                                 ConstValues.mSchoolClassInfoBean = mSchoolClassBean;
                                 mShangKeBanJiAdapter.setId(mSchoolClassBean.getId());
                                 getSchoolStudentList(mSchoolClassBean.getId());
-                                mKeChengXiangQingAdapter.setQueueNum(mSchoolClassBean.getQueueNum());
+                                queueNum = mSchoolClassBean.getQueueNum();
                                 tv_grade.setText(mSchoolClassBean.getClassName()+"班级队列数"+mSchoolClassBean.getQueueNum()
                                         +"，队列最大人数"+mSchoolClassBean.getQueuePersonNum());
                             }
@@ -227,7 +310,11 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                             if(result.getData().getCourseSectionVoList().size()==0){
                                 btn_kaishishangke.setText("无法上课");
                             }
-                            tv_shu.setText("默认使用"+result.getData().getBallNum()+"个光电球，"+result.getData().getPlateNum()+"块光电地板");
+                            tv_shu.setText("本节课使用"+result.getData().getBallNum()+"个光电球，"+result.getData().getPlateNum()+"块光电地板");
+                            if(result.getData().getCourseSectionVoList()!=null && result.getData().getCourseSectionVoList().size()>0){
+                                tv_shu.setText("本节课使用"+result.getData().getCourseSectionVoList().get(0).getBallNum()+"个光电球，"
+                                        +result.getData().getCourseSectionVoList().get(0).getPlateNum()+"块光电地板");
+                            }
                         }
                     }
 
@@ -281,7 +368,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                                 if(mStepGroups.size()==0){
                                     btn_kaishishangke.setText("无法上课");
                                 }
-                                tv_shu.setText("默认使用"+ConstValues.mSchoolCourseInfoBeanSmall.getBallNum()+"个光电球，"
+                                tv_shu.setText("本节课使用"+ConstValues.mSchoolCourseInfoBeanSmall.getBallNum()+"个光电球，"
                                         +ConstValues.mSchoolCourseInfoBeanSmall.getPlateNum()+"块光电地板");
                             }
                         }
@@ -311,7 +398,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
             case R.id.btn_kaishishangke:
 //            case R.id.tv_lianjie:
                 if(!btn_kaishishangke.getText().toString().equals("开始上课")){
-//                    return;
+                    return;
                 }
                 if(ConstValues.mSchoolCourseInfoBean==null && !isSmallCourse){
                     ToastUtil.showLongStrToast(this,"大课程信息获取失败");
@@ -439,10 +526,6 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     protected void onRestart() {
         super.onRestart();
         mWifiInfo = mWifiUtil.getWifiManager().getConnectionInfo();
-        if(mWifiMessageReceiver!=null){
-            unregisterReceiver(mWifiMessageReceiver);
-            mWifiMessageReceiver = null;
-        }
         if(mWifiUtil.getWifiManager().isWifiEnabled() && mWifiInfo.getSSID().contains("ESP8266")){
             mTvLianjie.setText("已连接");
             return;
@@ -450,10 +533,29 @@ public class HomeTwoShangKeActivity extends BaseActivity {
         mTvLianjie.setText("未连接");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("BroadcastReceiver：onDestroy"+mWifiMessageReceiver);
+        if(mWifiMessageReceiver!=null){
+            unregisterReceiver(mWifiMessageReceiver);
+            mWifiMessageReceiver = null;
+        }
+    }
+
     private void lianjie() {
         ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
         ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
-        DialogUtils.showDialogLianJieSheBei(this, ConstValues.mSchoolCourseInfoBean,ConstValues.mSchoolCourseInfoBeanSmall,
+        int mBallNum;
+        int mPlateNum;
+        if(isSmallCourse){
+            mBallNum = ConstValues.mSchoolCourseInfoBeanSmall.getBallNum();
+            mPlateNum = ConstValues.mSchoolCourseInfoBeanSmall.getPlateNum();
+        }else{
+            mBallNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getBallNum();
+            mPlateNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getPlateNum();
+        }
+        DialogUtils.showDialogLianJieSheBei(this, mBallNum, mPlateNum,
                 new DialogUtils.ErrorDialogInterfaceLianJieSheBei() {
                     @Override
                     public void lianJieNum(int guangQiu, int guangBan, int dengGuang) {
@@ -483,6 +585,19 @@ public class HomeTwoShangKeActivity extends BaseActivity {
         Intent mIntent = new Intent(mContext, HomeTwoShangKeActivity.class);
         mIntent.putExtra("id",id);
         mIntent.putExtra("isSmallCourse",isSmallCourse);
+        mContext.startActivity(mIntent);
+    }
+    public static void startActivityIntentFragment(Context mContext){
+        String id;
+        Intent mIntent = new Intent(mContext, HomeTwoShangKeActivity.class);
+        if(ConstValues.mSchoolCourseInfoBean!=null) {//大课程信息
+            id = ConstValues.mSchoolCourseInfoBean.getId();
+            mIntent.putExtra("isSmallCourse",false);
+        }else{
+            id = ConstValues.mSchoolCourseInfoBeanSmall.getId();
+            mIntent.putExtra("isSmallCourse",true);
+        }
+        mIntent.putExtra("id",id);
         mContext.startActivity(mIntent);
     }
 }

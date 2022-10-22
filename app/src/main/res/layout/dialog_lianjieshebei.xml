@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:text="请输入光电球个数"
+            android:text="此堂课使用光电球的数量"
             android:textColor="@color/color_000000"
             android:textSize="14sp" />
 
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:text="请输入光电地板个数"
+            android:text="此堂课使用光电地板的数量"
             android:textColor="@color/color_000000"
             android:textSize="14sp" />
 

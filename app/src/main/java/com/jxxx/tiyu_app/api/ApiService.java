@@ -61,7 +61,8 @@ public interface ApiService {
      * @return
      */
     @POST("school/smallCourse/copyQueue")
-    Observable<Result> postSmallCourseCopyQueue(@Body SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoListBean);
+    Observable<Result> postSmallCourseCopyQueue(@Query("id") String id,@Query("num") String num);
+//    Observable<Result> postSmallCourseCopyQueue(@Body SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoListBean);
 
     /**
      * 登出方法

@@ -377,10 +377,10 @@ public class HomeOneFragment extends BaseFragment {
     private void getSchoolCourseList() {
         showLoading();
         RetrofitUtil.getInstance().apiService()
-//                .getSchoolCourseList(SharedUtils.singleton().get(ConstValues.TEACHER_ID,""),
-//                        SharedUtils.singleton().get(ConstValues.SCHOOL_ID,""),
-                .getSchoolCourseList(null,
-                        null,
+                .getSchoolCourseList(SharedUtils.singleton().get(ConstValues.TEACHER_ID,""),
+                        SharedUtils.singleton().get(ConstValues.SCHOOL_ID,""),
+//                .getSchoolCourseList(null,
+//                        null,
                         courseName,ageRange,contentType,category,theme,
                         page,ConstValues.PAGE_SIZE)
                 .observeOn(AndroidSchedulers.mainThread())

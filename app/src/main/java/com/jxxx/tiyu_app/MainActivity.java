@@ -222,10 +222,10 @@ public class MainActivity extends BaseActivity {
                     return;
                 }
                 if(ma_iv_index.getDrawable().getLevel()==1){
-                    ma_iv_index.getDrawable().setLevel(2);
-                    if(mHomeTwoFragment!=null){
-                        mHomeTwoFragment.startOrStop(false);
-                    }
+//                    ma_iv_index.getDrawable().setLevel(2);
+//                    if(mHomeTwoFragment!=null){
+//                        mHomeTwoFragment.startOrStop(false);
+//                    }
 
                 }else{
                     if(mHomeTwoFragment!=null){

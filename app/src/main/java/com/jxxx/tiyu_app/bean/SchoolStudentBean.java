@@ -24,6 +24,25 @@ public class SchoolStudentBean {
     private String imgUrl;
     private String studentNo;
     private String studentName;
+    private List<Byte> allQiuNo;
+    private int currentStepNo;//当前执行的步骤
+
+    public void setCurrentStepNo(int currentStepNo) {
+        this.currentStepNo = currentStepNo;
+    }
+
+    public int getCurrentStepNo() {
+        return currentStepNo;
+    }
+
+    public void setAllQiuNo(List<Byte> allQiuNo) {
+        this.allQiuNo = allQiuNo;
+    }
+
+    public List<Byte> getAllQiuNo() {
+        return allQiuNo;
+    }
+
     private List<byte[]> lists;
 
     public void setLists(List<byte[]> lists) {

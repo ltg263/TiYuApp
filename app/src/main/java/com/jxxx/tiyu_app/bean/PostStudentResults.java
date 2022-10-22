@@ -1,17 +1,22 @@
 package com.jxxx.tiyu_app.bean;
 
 public class PostStudentResults {
-
     @Override
     public String toString() {
         return "PostStudentResults{" +
-                "courseId='" + courseId + '\'' +
+                "classDate='" + classDate + '\'' +
+                ", beginTime='" + beginTime + '\'' +
+                ", classId='" + classId + '\'' +
+                ", classSceduleCardId='" + classSceduleCardId + '\'' +
+                ", teacherId='" + teacherId + '\'' +
+                ", courseId='" + courseId + '\'' +
                 ", smallCourseId='" + smallCourseId + '\'' +
                 ", studentId='" + studentId + '\'' +
                 ", timeUse='" + timeUse + '\'' +
                 ", times='" + times + '\'' +
                 ", finishTimes='" + finishTimes + '\'' +
                 ", speed='" + speed + '\'' +
+                ", lassGroupId='" + lassGroupId + '\'' +
                 '}';
     }
 

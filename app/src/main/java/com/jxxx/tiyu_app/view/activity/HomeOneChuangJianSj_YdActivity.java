@@ -13,8 +13,11 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jxxx.tiyu_app.MainActivity;
 import com.jxxx.tiyu_app.R;
+import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.base.BaseActivity;
+import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
@@ -96,9 +99,16 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
         ma_iv_index_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                current_time = 0;
-                getSJData();
-                mHomeTwoTwoListAdapter.setNewData(mSchoolStudentBeans);
+                DialogUtils.showDialogHint(HomeOneChuangJianSj_YdActivity.this, "确定重置数据吗?", false, new DialogUtils.ErrorDialogInterface() {
+                    @Override
+                    public void btnConfirm() {
+                        ma_iv_index.getDrawable().setLevel(2);
+                        isStart = false;
+                        current_time = 0;
+                        getSJData();
+                        mHomeTwoTwoListAdapter.setNewData(mSchoolStudentBeans);
+                    }
+                });
             }
         });
     }
