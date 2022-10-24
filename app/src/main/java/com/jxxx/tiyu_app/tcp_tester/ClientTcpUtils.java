@@ -109,6 +109,8 @@ public class ClientTcpUtils {
                     System.out.println("接收到的总数据长度：" +v.length);
                     System.out.println("接收到的总数据(10):" + Arrays.toString(v));
                     System.out.println("接收到的总数据(16):" + BinaryToHexString(v));
+                    System.out.println("原始数据接受(10)-->>"+Arrays.toString(v));
+                    System.out.println("原始数据接受(16)-->>"+BinaryToHexString(v));
                     if(mErrorDialogInterfac!=null){
                         mErrorDialogInterfac.btnConfirm("接收数据",v);
                     }
@@ -341,6 +343,7 @@ public class ClientTcpUtils {
                 byte[] mData = ConstValuesHttps.getByteData(msg,data);
 
                 System.out.println("发送的数据-->>"+Integer.toHexString(mData[1] & 0xFF)+":" + Arrays.toString(mData));
+                System.out.println("原始数据发送-->>"+Integer.toHexString(mData[1] & 0xFF)+":" + Arrays.toString(mData));
                 try {
                     writer.write(mData);
                     writer.flush();

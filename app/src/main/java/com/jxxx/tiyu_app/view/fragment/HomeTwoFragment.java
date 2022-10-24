@@ -431,7 +431,6 @@ public class HomeTwoFragment extends BaseFragment{
 
     private boolean isStart = false;//是否开始
     private Handler heartHandler = new Handler();
-    private List<Byte> startBroadcastData = new ArrayList<>();//球号
     /**
      * 计时器
      */
@@ -461,16 +460,14 @@ public class HomeTwoFragment extends BaseFragment{
             }
             System.out.println("BroadcastReceiver：current_time：" + current_time);
             byte[] mData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
-            startBroadcastData.clear();
+            System.out.println("BroadcastReceiver：球号：" + Arrays.toString(mData));
             for(int i=0;i<mData.length;i++){
-                startBroadcastData.add(mData[i]);
+                getMapKayYunDong(mData[i],0);
             }
-            System.out.println("BroadcastReceiver：球号：" + startBroadcastData);
-            getMapKayYunDong(0);
         }
     }
 
-    private void getMapKayYunDong(int pos) {
+    private void getMapKayYunDong(byte qiuhao,int pos) {
         System.out.println("BroadcastReceiver：pos"+pos);
         System.out.println("BroadcastReceiver：HomeTwoXueShengActivity.mMapKey_id.size()"+HomeTwoXueShengActivity.mMapKey_id.size());
         if(HomeTwoXueShengActivity.mMapKey_id.size()<=pos){
@@ -487,12 +484,14 @@ public class HomeTwoFragment extends BaseFragment{
             List<SchoolCourseBeanSmallActionInfoJson.StepsBean> mSteps = mSchoolStudentBean.getSteps();
             //步骤不为空的时候 某个学生的球数不为空的时候
             if(mSteps!=null && mSteps.size()>0 &&mSchoolStudentBean.getAllQiuNo()!=null){
+                System.out.println("BroadcastReceiver：getAllQiuNo" + mSchoolStudentBean.getAllQiuNo());
+                System.out.println("BroadcastReceiver：qiuhao" + qiuhao);
                 //[16,12]
                 for(int q = 0;q<mSchoolStudentBean.getAllQiuNo().size();q++){
                     //遍历某个学生的球并从Map中获取对应的球号
                     Byte key = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(mSchoolStudentBean.getAllQiuNo().get(q));
                     //如果设备回调的球号包含这个学生控制的球内开始执行逻辑[10,16] [1]
-                    if(startBroadcastData.contains(key)){
+                    if(qiuhao==key){
                         mSchoolStudentBean.setPostZjzs(mSchoolStudentBean.getPostZjzs()+1);
                         setNotifyDataSetChanged_Fragment();
                         duiBiXueShengStep(mSchoolStudentBean,mSteps,0);
@@ -500,14 +499,14 @@ public class HomeTwoFragment extends BaseFragment{
                     }
                 }
                 System.out.println("BroadcastReceiver：else"+1);
-                getMapKayYunDong(pos+1);
+                getMapKayYunDong(qiuhao,pos+1);
             }else{
                 System.out.println("BroadcastReceiver：else"+2);
-                getMapKayYunDong(pos+1);
+                getMapKayYunDong(qiuhao,pos+1);
             }
         }else{
             System.out.println("BroadcastReceiver：else"+3);
-            getMapKayYunDong(pos+1);
+            getMapKayYunDong(qiuhao,pos+1);
         }
     }
 
