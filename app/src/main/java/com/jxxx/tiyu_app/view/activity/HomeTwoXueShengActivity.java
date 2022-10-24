@@ -153,10 +153,12 @@ public class HomeTwoXueShengActivity extends BaseActivity {
                         List<Byte> allQiuNo = new ArrayList<>();
                         for(int a = 0;a<mSteps.size();a++){
                             List<List<Byte>> mSets = mSteps.get(a).getSets();
-                            mSteps.get(a).setStepNoOkNum(0);
-                            for(int b = 0;b<mSets.size();b++){
-                                if(!allQiuNo.contains(mSets.get(b).get(1))){
-                                    allQiuNo.add(mSets.get(b).get(1));
+                            if(mSets!=null){
+                                mSteps.get(a).setStepNoOkNum(0);
+                                for(int b = 0;b<mSets.size();b++){
+                                    if(!allQiuNo.contains(mSets.get(b).get(1))){
+                                        allQiuNo.add(mSets.get(b).get(1));
+                                    }
                                 }
                             }
                         }
