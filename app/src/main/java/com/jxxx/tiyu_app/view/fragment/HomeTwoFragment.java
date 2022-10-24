@@ -160,6 +160,7 @@ public class HomeTwoFragment extends BaseFragment{
                         DialogUtils.showDialogWanChengSuoYou(mContext, title,"连接", new DialogUtils.ErrorDialogInterfaceA() {
                             @Override
                             public void btnConfirm(int index) {
+                                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
                                 if(index==0){
                                     ClientTcpUtils.mClientTcpUtils.sendData_B1();
                                     ClientTcpUtils.mClientTcpUtils.sendData_B0();
@@ -683,6 +684,7 @@ public class HomeTwoFragment extends BaseFragment{
         DialogUtils.showDialogWanChengSuoYou(mContext, "所有课程已完成！\n请断开连接，成绩将自动上传！","断开连接", new DialogUtils.ErrorDialogInterfaceA() {
             @Override
             public void btnConfirm(int index) {
+                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
                 if(index==0){
                     ClientTcpUtils.mClientTcpUtils.sendData_B1();
                     ClientTcpUtils.mClientTcpUtils.sendData_B0();

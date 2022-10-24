@@ -295,6 +295,19 @@ public class ClientTcpUtils {
         sendData(ConstValuesHttps.MESSAGE_SEND_B2,b2_data);
     }
 
+
+    /**
+     * 设置显示的球号 00
+     */
+    public void sendData_B3_add00(){
+        byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()];
+        for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
+            data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i);
+        }
+        sendData(ConstValuesHttps.MESSAGE_SEND_B3,ConstValuesHttps.getByteDataB0OrB1(data));
+        sendData_B0();
+    }
+
     /**
      * 设置显示的球号
      * @param ads:地址

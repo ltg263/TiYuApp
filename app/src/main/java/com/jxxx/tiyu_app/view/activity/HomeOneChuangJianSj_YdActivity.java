@@ -126,6 +126,7 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                         "请断开设备连接\n链接到可用网络","断开连接", new DialogUtils.ErrorDialogInterfaceA() {
                     @Override
                     public void btnConfirm(int index) {
+                        ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
                         if(index==0){
                             ClientTcpUtils.mClientTcpUtils.sendData_B1();
                             ClientTcpUtils.mClientTcpUtils.sendData_B0();
