@@ -269,6 +269,7 @@ public class DialogUtils {
         TextView btn_kaishishangke = view.findViewById(R.id.btn_kaishishangke);
         TextView btn_tiaoguo = view.findViewById(R.id.btn_tiaoguo);
         TextView tv_title = view.findViewById(R.id.tv_title);
+        ImageView iv_icon = view.findViewById(R.id.iv_icon);
         if(isNoOk){
             btn_tiaoguo.setText("取消");
             tv_title.setText("确定结束此节课程进行下一节课吗？");
@@ -279,6 +280,7 @@ public class DialogUtils {
         tv_name.setText(mSchoolCourseBean.getCourseName());
         TextView tv_type_1 =view.findViewById(R.id.tv_type_1);
         tv_type_1.setText("共"+mSchoolCourseBean.getQueueNum()+"个队列  |  共" + mSchoolCourseBean.getStepNum() + "个步骤");
+        GlideImgLoader.loadImageViewRadiusNoCenter(context,mSchoolCourseBean.getImgUrl(),iv_icon);
         TextView tv_type_2 =view.findViewById(R.id.tv_type_2);
         tv_type_2.setText(mSchoolCourseBean.getQueueInfo());
         btn_kaishishangke.setOnClickListener(new View.OnClickListener() {

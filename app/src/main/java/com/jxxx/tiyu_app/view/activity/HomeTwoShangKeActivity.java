@@ -141,7 +141,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                                     @Override
                                     public void getPosition(int position) {
                                         ((TextView)view).setText(list.get(position));
-//                                        mCourseSectionVoListBean.setLoopNum(Integer.parseInt(list.get(position)));
+                                        mCourseSectionVoListBean.setLoopNum(Integer.parseInt(list.get(position)));
                                     }
                                 });
                         break;
@@ -390,10 +390,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                if(isWifiMeagerEspOne()){
-                    return;
-                }
-                finish();
+                onBackPressed();
                 break;
             case R.id.btn_kaishishangke:
 //            case R.id.tv_lianjie:
@@ -498,12 +495,16 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 });
     }
 
-
     @Override
     public void onBackPressed() {
         if(isWifiMeagerEspOne()){
             return;
         }
+        ConstValues.mSchoolCourseInfoBean = null;
+        ConstValues.mSchoolCourseInfoBeanSmall = null;
+        ConstValues.mSchoolClassInfoBean = null;
+        ConstValues.mSchoolStudentInfoBean = null;
+        Log.w("BroadcastReceiver","onBackPressed:");
         super.onBackPressed();
     }
 

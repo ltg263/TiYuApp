@@ -64,18 +64,25 @@ public class HomeTwoListFragment extends BaseFragment {
     @Override
     protected void initData() {
         if(ConstValues.mSchoolCourseInfoBean!=null){//大课程信息
-            SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoList = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList()
-                    .get(HomeTwoXueShengActivity.current_course_section);
-            SchoolCourseBeanSmall mSmallCourseVo = mCourseSectionVoList.getSmallCourseVo();
-            GlideImgLoader.loadImageViewRadiusNoCenter(mContext,mSmallCourseVo.getImgUrl(),mIvIcon);
-            mTvName.setText(mSmallCourseVo.getCourseName());
-            mTvType1.setText(mSmallCourseVo.getLables().replace(",", "|"));
-            mTvType2.setText("共"+mSmallCourseVo.getQueueNum()+"个队列   |  共" + mSmallCourseVo.getStepNum() + "个步骤");
+            List<SchoolCourseBean.CourseSectionVoListBean> mCourseSectionVoLists = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList();
+            if(mCourseSectionVoLists!=null && mCourseSectionVoLists.size()>HomeTwoXueShengActivity.current_course_section){
+                SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoList
+                        = mCourseSectionVoLists.get(HomeTwoXueShengActivity.current_course_section);
+                SchoolCourseBeanSmall mSmallCourseVo = mCourseSectionVoList.getSmallCourseVo();
+                if(mSmallCourseVo != null){
+                    GlideImgLoader.loadImageViewRadiusNoCenter(mContext,mSmallCourseVo.getImgUrl(),mIvIcon);
+                    mTvName.setText(mSmallCourseVo.getCourseName());
+                    mTvType1.setText(mSmallCourseVo.getLables().replace(",", "|"));
+                    mTvType2.setText("共"+mSmallCourseVo.getQueueNum()+"个队列   |  共" + mSmallCourseVo.getStepNum() + "个步骤");
+                }
+            }
         }else{//小课程信息
-            GlideImgLoader.loadImageViewRadiusNoCenter(mContext,ConstValues.mSchoolCourseInfoBeanSmall.getImgUrl(),mIvIcon);
-            mTvName.setText(ConstValues.mSchoolCourseInfoBeanSmall.getCourseName());
-            mTvType1.setText(ConstValues.mSchoolCourseInfoBeanSmall.getLables().replace(",", "|"));
-            mTvType2.setText("共"+ConstValues.mSchoolCourseInfoBeanSmall.getQueueNum()+"个队列   |  共" + ConstValues.mSchoolCourseInfoBeanSmall.getStepNum() + "个步骤");
+            if(ConstValues.mSchoolCourseInfoBeanSmall != null){
+                GlideImgLoader.loadImageViewRadiusNoCenter(mContext,ConstValues.mSchoolCourseInfoBeanSmall.getImgUrl(),mIvIcon);
+                mTvName.setText(ConstValues.mSchoolCourseInfoBeanSmall.getCourseName());
+                mTvType1.setText(ConstValues.mSchoolCourseInfoBeanSmall.getLables().replace(",", "|"));
+                mTvType2.setText("共"+ConstValues.mSchoolCourseInfoBeanSmall.getQueueNum()+"个队列   |  共" + ConstValues.mSchoolCourseInfoBeanSmall.getStepNum() + "个步骤");
+            }
         }
     }
 }

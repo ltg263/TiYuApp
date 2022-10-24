@@ -296,14 +296,18 @@ public class HomeTwoFragment extends BaseFragment{
                 mWifiMessageReceiver = new WifiMessageReceiver();//集成广播的类
                 IntentFilter mIntentFilter = new IntentFilter(WifiMessageReceiver.START_BROADCAST_ACTION_START);// 创建IntentFilter对象
                 mContext.registerReceiver(mWifiMessageReceiver, mIntentFilter);// 注册Broadcast Receive
+                Log.w("BroadcastReceiver：","注册广播:WifiMessageReceiver");
             }
             initVP();
             /**
              * 广播动态注册
              */
-            mMyReceiver = new MyReceiver();//集成广播的类
-            IntentFilter filter = new IntentFilter("com.jxxx.tiyu_app.view.fragment");// 创建IntentFilter对象
-            mContext.registerReceiver(mMyReceiver, filter);// 注册Broadcast Receive
+            if(mMyReceiver==null) {
+                mMyReceiver = new MyReceiver();//集成广播的类
+                IntentFilter filter = new IntentFilter("com.jxxx.tiyu_app.view.fragment");// 创建IntentFilter对象
+                mContext.registerReceiver(mMyReceiver, filter);// 注册Broadcast Receive
+                Log.w("BroadcastReceiver：","注册广播:MyReceiver");
+            }
             return;
         }
         if(!isWifiMeagerEsp()){
@@ -312,6 +316,7 @@ public class HomeTwoFragment extends BaseFragment{
                 if(mMyReceiver!=null){
                     mContext.unregisterReceiver(mMyReceiver);
                     mMyReceiver= null;
+                    Log.w("BroadcastReceiver：","注销广播:MyReceiver");
                 }
             }catch (Exception ex){
                 ex.printStackTrace();
@@ -321,6 +326,7 @@ public class HomeTwoFragment extends BaseFragment{
                 if(mWifiMessageReceiver!=null){
                     mContext.unregisterReceiver(mWifiMessageReceiver);
                     mWifiMessageReceiver = null;
+                    Log.w("BroadcastReceiver：","注销广播:mWifiMessageReceiver");
                 }
             }catch (Exception ex){
                 ex.printStackTrace();
