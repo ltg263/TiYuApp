@@ -1,6 +1,6 @@
 <resources>
-<!--    <string name="app_name">明州_幼教</string>-->
-    <string name="app_name">明州_中小学</string>
+<!--    <string name="app_name">明洲_幼教</string>-->
+    <string name="app_name">明洲_中小学</string>
     <string name="loading_text">请稍候...</string>
     <string name="home_main_1">我的课程</string>
     <string name="home_main_3">我的班级</string>

@@ -25,6 +25,9 @@ public class UserInfoProfileBean {
     private String classNames;
     private String createTime;
     private int gender;
+    private int classNum;
+    private int lecturesNum;
+    private int studentNum;
     private int id;
     private String mobile;
     private int schoolId;
@@ -34,6 +37,30 @@ public class UserInfoProfileBean {
     private int userId;
     private String userName;
     private List<ClassListBean> classList;
+
+    public void setClassNum(int classNum) {
+        this.classNum = classNum;
+    }
+
+    public void setLecturesNum(int lecturesNum) {
+        this.lecturesNum = lecturesNum;
+    }
+
+    public void setStudentNum(int studentNum) {
+        this.studentNum = studentNum;
+    }
+
+    public int getClassNum() {
+        return classNum;
+    }
+
+    public int getLecturesNum() {
+        return lecturesNum;
+    }
+
+    public int getStudentNum() {
+        return studentNum;
+    }
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;

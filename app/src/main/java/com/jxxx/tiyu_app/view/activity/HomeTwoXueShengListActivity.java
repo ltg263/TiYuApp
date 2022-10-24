@@ -57,7 +57,7 @@ public class HomeTwoXueShengListActivity extends BaseActivity {
     public void initData() {
         showLoading();
         RetrofitUtil.getInstance().apiService()
-                .getSchoolStudentList(getIntent().getStringExtra("classId"),0, ConstValues.PAGE_SIZE)
+                .getSchoolStudentList(getIntent().getStringExtra("classId"),null,null)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result<List<SchoolStudentBean>>>() {

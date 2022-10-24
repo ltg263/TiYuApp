@@ -138,11 +138,11 @@ public class HomeThreeFragment extends BaseFragment {
                             UserInfoProfileBean userInfo = result.getData();
                             if (userInfo != null) {
                                 GlideImgLoader.loadImageViewRadiusNoCenter(mContext, userInfo.getAvatar(), mIvHead);
-                                mTvUserName.setText(userInfo.getUserName());
+                                mTvUserName.setText(userInfo.getTeacherName());
                                 mTvUserPhone.setText(userInfo.getMobile());
-                                mTvBanji.setText("0");
-                                mTvXuesheng.setText("0");
-                                mTvYishangke.setText("0");
+                                mTvBanji.setText(userInfo.getClassNum()+"");
+                                mTvXuesheng.setText(userInfo.getStudentNum()+"");
+                                mTvYishangke.setText(userInfo.getLecturesNum()+"");
                             }
                         }
                     }
