@@ -2,13 +2,10 @@ package com.jxxx.tiyu_app.tcp_tester;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.jxxx.tiyu_app.app.MainApplication;
-import com.jxxx.tiyu_app.utils.SharedUtils;
 import com.jxxx.tiyu_app.utils.WifiMessageReceiver;
 
 import java.io.IOException;
@@ -18,8 +15,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import retrofit2.http.Body;
 
 public class ClientTcpUtils {
 
@@ -352,9 +347,7 @@ public class ClientTcpUtils {
             @Override
             public void run() {
                 byte[] mData = ConstValuesHttps.getByteData(msg,data);
-
                 System.out.println("发送的数据-->>"+Integer.toHexString(mData[1] & 0xFF)+":" + Arrays.toString(mData));
-                System.out.println("原始数据发送-->>"+Integer.toHexString(mData[1] & 0xFF)+":" + Arrays.toString(mData));
                 try {
                     writer.write(mData);
                     writer.flush();
