@@ -155,7 +155,7 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
         for(int i=0;i<duilieNum;i++){
             List<byte[]> lists  = new ArrayList<>();
             SchoolStudentBean mSchoolStudentBean = new SchoolStudentBean();
-            mSchoolStudentBean.setStudentName(i+"号成员");
+            mSchoolStudentBean.setStudentName(i+"队列");
             mSchoolStudentBean.setPostWccs(0);
             mSchoolStudentBean.setPostZjzs(0);
             mSchoolStudentBean.setPostZys(0);
