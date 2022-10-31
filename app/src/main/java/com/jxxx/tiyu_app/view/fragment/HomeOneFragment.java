@@ -28,6 +28,7 @@ import com.jxxx.tiyu_app.base.BaseFragment;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
+import com.jxxx.tiyu_app.tcp_tester.SelectActivity;
 import com.jxxx.tiyu_app.utils.CustomPopWindow;
 import com.jxxx.tiyu_app.utils.RadioGroupSelectUtils;
 import com.jxxx.tiyu_app.utils.SharedUtils;
@@ -360,7 +361,8 @@ public class HomeOneFragment extends BaseFragment {
 //                });
                 break;
             case R.id.ceshishuju:
-                startActivity(new Intent(mContext,CeShiShuJuAct.class));
+//                startActivity(new Intent(mContext,CeShiShuJuAct.class));
+                startActivity(new Intent(mContext, SelectActivity.class));
                 break;
         }
     }
