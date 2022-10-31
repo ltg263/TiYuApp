@@ -93,8 +93,8 @@ public class CeShiShuJuAct extends BaseActivity {
                 byte[] mData = getByteData(data);
                 System.out.println("发送的数据-->>"+Integer.toHexString(mData[1] & 0xFF)+":" + Arrays.toString(mData));
                 mTvFa.setText(Integer.toHexString(mData[1] & 0xFF)+":" + Arrays.toString(mData));
-                ClientTcpUtils.mClientTcpUtils.sendData_cs(mData);
-                ClientTcpUtils.mClientTcpUtils.sendData_B0();
+//                ClientTcpUtils.mClientTcpUtils.sendData_cs(mData);
+//                ClientTcpUtils.mClientTcpUtils.sendData_B0();
             }
         });
     }

@@ -67,7 +67,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         this.mWifiMessageReceiverInter = mWifiMessageReceiverInter;
         this.sbNum = sbNum;
         this.dengGuang = dengGuang;
-        showDialogXunQiu(mContext,sbNum);
+        showDialogXunQiu(mContext,sbNum,false);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
             if(!isShowCurrentActivity){
                 return;
             }
-            showDialogXunQiu(mContext,sbNum);
+            showDialogXunQiu(mContext,sbNum,true);
             Toast.makeText(mContext,"连接成功",Toast.LENGTH_SHORT).show();
         }
         if(mStartBroadcastType== ConstValuesHttps.MESSAGE_GET_C0){
@@ -106,14 +106,16 @@ public class WifiMessageReceiver extends BroadcastReceiver {
             startBroadcastData = Arrays.copyOfRange(startBroadcastData, 2, startBroadcastData.length);
             if(dialog!=null && dialog.isShowing() && btn_xunqiu.getText().toString().equals("正在寻球")){
                 for(int i = 0;i<startBroadcastData.length;i++){
+                    Log.i("BroadcastReceiver", "MESSAGE_ALL_TOTAL: " + ConstValuesHttps.MESSAGE_ALL_TOTAL);
+                    Log.i("BroadcastReceiver", "startBroadcastData: " + startBroadcastData[i]);
                     if(!ConstValuesHttps.MESSAGE_ALL_TOTAL.contains(startBroadcastData[i])){
                         ConstValuesHttps.MESSAGE_ALL_TOTAL.add(startBroadcastData[i]);
                         String[] sortNumSet = null;
                         if(ConstValues.mSchoolCourseInfoBean!=null
                                 && ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList()!=null
-                                && ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size()>0
-                                && StringUtil.isNotBlank(ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getSmallCourseVo().getSortNumSet())){
-                            sortNumSet = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getSmallCourseVo().getSortNumSet().split(",");
+                                && ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size()>HomeTwoXueShengActivity.current_course_section
+                                && StringUtil.isNotBlank(ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getSmallCourseVo().getSortNumSet())){
+                            sortNumSet = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getSmallCourseVo().getSortNumSet().split(",");
                         }else if(ConstValues.mSchoolCourseInfoBeanSmall != null
                                 && StringUtil.isNotBlank(ConstValues.mSchoolCourseInfoBeanSmall.getSortNumSet())){
                             sortNumSet = ConstValues.mSchoolCourseInfoBeanSmall.getSortNumSet().split(",");
@@ -125,6 +127,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                             }
                         }
                         if(sortNumSet != null && sortNumSet.length>=ConstValuesHttps.MESSAGE_ALL_TOTAL.size()){
+                            Log.i("BroadcastReceiver", "sendData_B3: " + startBroadcastData[i]);
                             ClientTcpUtils.mClientTcpUtils.sendData_B3(startBroadcastData[i],
                                     Byte.parseByte(sortNumSet[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()-1]));
                         }
@@ -132,17 +135,6 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 }
                 if(sbNum <= ConstValuesHttps.MESSAGE_ALL_TOTAL.size() && dialog.isShowing()){
                     btn_xunqiu.setText("完成寻球");
-                    List<Byte> b2_list = new ArrayList<>();
-                    for(int i = 0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
-                        b2_list.add(ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i));
-                        b2_list.add((byte) dengGuang);//00:亮度为室内亮度 01亮度为室外亮度
-                        b2_list.add((byte) 0x00);
-                        b2_list.add((byte) 0x00);
-                        b2_list.add((byte) 0x00);
-                        b2_list.add((byte) 0x00);
-                    }
-                    ClientTcpUtils.mClientTcpUtils.sendData_B2_dg(b2_list);
-                    ClientTcpUtils.mClientTcpUtils.sendData_B0();
                 }
                 mSvN.setCurrentCount(sbNum,ConstValuesHttps.MESSAGE_ALL_TOTAL.size(),tv_bfb);
             }
@@ -162,7 +154,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
     StepArcView_n mSvN;
     TextView tv_bfb;
     Button btn_xunqiu;
-    private void showDialogXunQiu(Context mContext,int sbNum) {
+    private void showDialogXunQiu(Context mContext,int sbNum,boolean isShowQuXiao) {
         dialog = new Dialog(mContext, R.style.selectorDialog);
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_kaishixunqiu, null);
         btn_xunqiu = view.findViewById(R.id.btn_xunqiu);
@@ -183,6 +175,9 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                     btn_xunqiu.setText("正在寻球");
                 }
                 if(btn_xunqiu.getText().toString().equals("完成寻球")){
+                    for(int i = 0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
+                        ClientTcpUtils.mClientTcpUtils.sendData_B2(ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i),(byte) dengGuang);
+                    }
                     isShowCurrentActivity = false;
                     dialog.dismiss();
                     if(mWifiMessageReceiverInter==null){
@@ -193,9 +188,13 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 }
             }
         });
+        if(!isShowQuXiao){
+            iv_quxiao.setVisibility(View.GONE);
+        }
         iv_quxiao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
                 dialog.dismiss();
             }
         });

@@ -171,31 +171,6 @@ public class ClientTcpUtils {
             mErrorDialogInterfac.btnConfirm("断开连接",null);
         }
     }
-    /**
-     * 全段配置指令 多个A0 和 A1呼吸灯
-     */
-    public void sendData_A0_A1_dg(byte msg,List<Byte> sendDatas){
-        byte[] a0_data = new byte[sendDatas.size()];
-        for(int i=0;i<sendDatas.size();i++){
-            if(sendDatas.get(i)==null){
-                a0_data[i] = 0;
-            }else{
-                a0_data[i] = sendDatas.get(i);
-            }
-        }
-        sendData_A0_A1_gd_syn(msg,a0_data);
-    }
-
-
-    private synchronized void sendData_A0_A1_gd_syn(byte msg, byte[] mData) {
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        sendData(msg,mData);
-        sendData_B0();
-    }
 
     /**
      * 全段配置指令 单个A0 和 A1呼吸灯
@@ -214,7 +189,8 @@ public class ClientTcpUtils {
                         mData[i] = sendDatas.get(i);
                     }
                 }
-                sendData_A0_A1_syn(msg,mData);
+
+                sendData(msg,mData);
             }
         }).start();
     }
@@ -223,66 +199,21 @@ public class ClientTcpUtils {
      * 全段配置指令 单个A0 和 A1呼吸灯
      */
     public void sendData_A0_A1_sj(byte msg, byte[] mData){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                sendData_A0_A1_syn(msg,mData);
-            }
-        }).start();
-    }
-
-    private synchronized void sendData_A0_A1_syn(byte msg, byte[] mData) {
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         sendData(msg,mData);
-        sendData_B0();
-    }
-
-
-    /**
-     * 一键启动
-     */
-    public void sendData_B0(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()];
-                for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
-                    data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i);
-                }
-                sendData(ConstValuesHttps.MESSAGE_SEND_B0,ConstValuesHttps.getByteDataB0OrB1(data));
-            }
-        }).start();
     }
 
     /**
      * 一键关机
      */
     public void sendData_B1(){
-//        byte[] data = new byte[ConstValuesHttps.MESSAGE_NUM_TOTAL];
-//        for(int i=0;i<data.length;i++){
-//            data[i] = (byte) (i+1);
-//        }
         byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()];
         for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
             data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i);
         }
-        sendData(ConstValuesHttps.MESSAGE_SEND_B1,ConstValuesHttps.getByteDataB0OrB1(data));
-    }
-    /**
-     * 网关数据上报
-     * @param data
-     */
-    public void sendData_C0(byte[] data){
-        sendData(ConstValuesHttps.MESSAGE_GET_C0,data);
+        for (int i=0;i<data.length;i++){
+            byte[] data_new = new byte[]{data[i], 0,0,0,0,0};
+            sendData(ConstValuesHttps.MESSAGE_SEND_B1,data_new);
+        }
     }
 
     /**
@@ -295,15 +226,6 @@ public class ClientTcpUtils {
         sendData(ConstValuesHttps.MESSAGE_SEND_B2,data);
     }
 
-    public void sendData_B2_dg(List<Byte> sendDatas){
-        byte[] b2_data = new byte[sendDatas.size()];
-        for(int i=0;i<sendDatas.size();i++){
-            b2_data[i] = sendDatas.get(i);
-        }
-        sendData(ConstValuesHttps.MESSAGE_SEND_B2,b2_data);
-    }
-
-
     /**
      * 设置显示的球号 00
      */
@@ -312,8 +234,10 @@ public class ClientTcpUtils {
         for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
             data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i);
         }
-        sendData(ConstValuesHttps.MESSAGE_SEND_B3,ConstValuesHttps.getByteDataB0OrB1(data));
-        sendData_B0();
+        for (int i=0;i<data.length;i++){
+            byte[] data_new = new byte[]{data[i], 0,0,0,0,0};
+            sendData(ConstValuesHttps.MESSAGE_SEND_B3,data_new);
+        }
     }
 
     /**
@@ -322,40 +246,43 @@ public class ClientTcpUtils {
      * @param new_ads:新的地址
      */
     public void sendData_B3(byte ads,byte new_ads){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                sendData_B3Syn(ads,new_ads);
-            }
-        }).start();
-    }
-
-    private synchronized void sendData_B3Syn(byte ads,byte new_ads) {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.put(new_ads,ads);
         byte[] data = new byte[]{ads, new_ads,0,0,0,0};
         sendData(ConstValuesHttps.MESSAGE_SEND_B3,data);
-        sendData_B0();
+
+//        byte[] data_di = new byte[]{ads, 0X07,0,0X3D,0x01,0X03};
+//        sendData(ConstValuesHttps.MESSAGE_SEND_A0,data_di);
     }
 
     public void sendData(byte msg, byte[] data){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                byte[] mData = ConstValuesHttps.getByteData(msg,data);
-                System.out.println("发送的数据-->>"+Integer.toHexString(mData[1] & 0xFF)+":" + Arrays.toString(mData));
-                try {
-                    writer.write(mData);
-                    writer.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                synchronized(this){
+                    byte[] mData = ConstValuesHttps.getByteData(msg,data);
+                    System.out.println("发送的数据-->>(10)"+Integer.toHexString(mData[6] & 0xFF)+":" + Arrays.toString(mData));
+                    try {
+                        writer.write(mData);
+                        writer.flush();
+                    } catch (IOException e) {
+                        System.out.println("发送的数据-->>e"+e);
+                        e.printStackTrace();
+                    }
+//                    if(msg!=ConstValuesHttps.MESSAGE_SEND_B0){
+//                        sendData_B0(data[0]);
+//                    }
                 }
             }
         }).start();
+    }
+    /**
+     * 一键启动
+     * @param ads:地址
+     *
+     */
+    public void sendData_B0(byte ads){
+        byte[] data = new byte[]{ads, 0,0,0,0,0};
+        sendData(ConstValuesHttps.MESSAGE_SEND_B0,data);
     }
 
 
@@ -373,21 +300,5 @@ public class ClientTcpUtils {
          * 确定
          */
         public void btnConfirm(String type,byte[] v);
-    }
-
-
-    public void sendData_cs(byte[] mData){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    writer.write(mData);
-                    writer.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 }

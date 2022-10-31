@@ -83,9 +83,9 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                         ToastUtil.showShortToast(HomeOneChuangJianSj_YdActivity.this,"执行完毕");
                         return;
                     }
-                    isStart = true;
-                    ma_iv_index.getDrawable().setLevel(1);
                     if(current_time==0){
+                        isStart = true;
+                        ma_iv_index.getDrawable().setLevel(1);
                         sendDataInit();
                         heartHandler.postDelayed(hearRunable, 1000);
                     }
@@ -129,7 +129,6 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                         ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
                         if(index==0){
                             ClientTcpUtils.mClientTcpUtils.sendData_B1();
-                            ClientTcpUtils.mClientTcpUtils.sendData_B0();
                         }
                         isWanCheng = true;
                         Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
@@ -183,41 +182,29 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
      * 初始化首个球
      */
     private void sendDataInit() {
-        List<Byte> new_bytes = new ArrayList<>();
-        byte msg = 0;
         for(int i=0;i<mSchoolStudentBeans.size();i++){
             List<byte[]> mLists = mSchoolStudentBeans.get(i).getLists();
             byte[] bytes = mLists.get(0);
+            byte[] data = new byte[6];
             if(bytes.length==7){
-                msg = bytes[0];
-                new_bytes.add(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytes[1]));
+                data[0] = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytes[1]);
                 if(bytes[2]==-1){
                     byte num = (byte) (Math.random()*(7+1));
                     if(num==0){
                         num = 2;
                     }
-                    new_bytes.add(num);
+                    data[1] = num;
                 }else{
-                    new_bytes.add(bytes[2]);
+                    data[1] = bytes[2];
                 }
-                new_bytes.add(bytes[3]);
-                new_bytes.add(bytes[4]);
-                new_bytes.add(bytes[5]);
-                new_bytes.add(bytes[6]);
+                data[2] = bytes[3];
+                data[3] = bytes[4];
+                data[4] = bytes[5];
+                data[5] = bytes[6];
+                ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_sj(bytes[0],data);
             }else{
                 ToastUtil.showShortToast(this,"有错误数据-->>"+bytes);
             }
-        }
-        if(msg!=0 &&new_bytes.size()>0 ){
-            byte[] mData = new byte[new_bytes.size()];
-            for(int i=0;i<new_bytes.size();i++){
-                if(new_bytes.get(i)==null){
-                    mData[i] = 0;
-                }else{
-                    mData[i] = new_bytes.get(i);
-                }
-            }
-            ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_sj(msg,mData);
         }
     }
 
@@ -226,17 +213,19 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
         /**
          * 广播动态注册
          */
-        mMyReceiver = new MyReceiver();//集成广播的类
-        IntentFilter filter = new IntentFilter("com.jxxx.tiyu_app.view.fragment");// 创建IntentFilter对象
-        registerReceiver(mMyReceiver, filter);// 注册Broadcast Receive
+        if(mMyReceiver==null){
+            mMyReceiver = new MyReceiver();//集成广播的类
+            IntentFilter filter = new IntentFilter("com.jxxx.tiyu_app.view.fragment");// 创建IntentFilter对象
+            registerReceiver(mMyReceiver, filter);// 注册Broadcast Receive
+        }
     }
     private boolean isStart = false;//是否开始
     private long current_time = 0;//执行的时间
     private Handler heartHandler = new Handler();
     private List<Byte> startBroadcastData = new ArrayList<>();//球号
-    private List<Byte> sendDatas;//发送的数据
     /**
      * 计时器
+     * 7 8 11 15 16 17 18 21 22 23
      */
     private Runnable hearRunable = new Runnable() {
         @Override
@@ -259,7 +248,6 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
     };
 
     public class MyReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             if(!isStart){
@@ -273,74 +261,39 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                 startBroadcastData.add(mData[i]);
             }
             System.out.println("BroadcastReceiver：球号：" +startBroadcastData);
-            sendDatas = new ArrayList<>();
-            byte msg = 0;
             for(int i=0;i<mSchoolStudentBeans.size();i++){
                 List<byte[]> mLists = mSchoolStudentBeans.get(i).getLists();
                 for(int j=0;j<mLists.size();j++){
                     byte[] bytes = mLists.get(j);
                     if(startBroadcastData.contains(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytes[1]))){
                         if(j==mLists.size()-1){
-                            byte[] bytel = mLists.get(0);
-                            if(bytel.length==7){
-                                msg = bytel[0];
-                                sendDatas.add(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytel[1]));
-                                if(bytel[2]==-1){
-                                    byte num = (byte) (Math.random()*(7+1));
-                                    if(num==0){
-                                        num = 2;
-                                    }
-                                    sendDatas.add(num);
-                                }else{
-                                    sendDatas.add(bytel[2]);
+                            mSchoolStudentBeans.get(i).setPostWccs(mSchoolStudentBeans.get(i).getPostWccs()+1);
+                        }
+                        byte[] bytel = mLists.get(0);
+                        byte[] data = new byte[6];
+                        if(bytel.length==7){
+                            data[0] = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytel[1]);
+                            if(bytel[2]==-1){
+                                byte num = (byte) (Math.random()*(7+1));
+                                if(num==0){
+                                    num = 2;
                                 }
-                                sendDatas.add(bytel[3]);
-                                sendDatas.add(bytel[4]);
-                                sendDatas.add(bytel[5]);
-                                sendDatas.add(bytel[6]);
-                                mSchoolStudentBeans.get(i).setPostZjzs(mSchoolStudentBeans.get(i).getPostZjzs()+1);
-                                mSchoolStudentBeans.get(i).setPostWccs(mSchoolStudentBeans.get(i).getPostWccs()+1);
-                                mHomeTwoTwoListAdapter.notifyDataSetChanged();
+                                data[1] = num;
                             }else{
-                                ToastUtil.showShortToast(HomeOneChuangJianSj_YdActivity.this,"有错误数据-->>"+bytes);
+                                data[1] = bytel[2];
                             }
+                            data[2] = bytel[3];
+                            data[3] = bytel[4];
+                            data[4] = bytel[5];
+                            data[5] = bytel[6];
+                            mSchoolStudentBeans.get(i).setPostZjzs(mSchoolStudentBeans.get(i).getPostZjzs()+1);
+                            mHomeTwoTwoListAdapter.notifyDataSetChanged();
+                            ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_sj(bytel[0],data);
                         }else{
-                            byte[] bytel = mLists.get(j+1);
-                            if(bytel.length==7){
-                                msg = bytel[0];
-                                sendDatas.add(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytel[1]));
-                                if(bytel[2]==-1){
-                                    byte num = (byte) (Math.random()*(7+1));
-                                    if(num==0){
-                                        num = 2;
-                                    }
-                                    sendDatas.add(num);
-                                }else{
-                                    sendDatas.add(bytel[2]);
-                                }
-                                sendDatas.add(bytel[3]);
-                                sendDatas.add(bytel[4]);
-                                sendDatas.add(bytel[5]);
-                                sendDatas.add(bytel[6]);
-                                mSchoolStudentBeans.get(i).setPostZjzs(mSchoolStudentBeans.get(i).getPostZjzs()+1);
-                                mHomeTwoTwoListAdapter.notifyDataSetChanged();
-                            }else{
-                                ToastUtil.showShortToast(HomeOneChuangJianSj_YdActivity.this,"有错误数据-->>"+bytes);
-                            }
+                            ToastUtil.showShortToast(HomeOneChuangJianSj_YdActivity.this,"有错误数据-->>"+bytes);
                         }
                     }
                 }
-            }
-            if(sendDatas!=null  && sendDatas.size()>0){
-                byte[] mSendData_new = new byte[sendDatas.size()];
-                for(int i=0;i<sendDatas.size();i++){
-                    if(sendDatas.get(i)==null){
-                        mSendData_new[i] = 0;
-                    }else{
-                        mSendData_new[i] = sendDatas.get(i);
-                    }
-                }
-                ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_sj(msg,mSendData_new);
             }
         }
     }

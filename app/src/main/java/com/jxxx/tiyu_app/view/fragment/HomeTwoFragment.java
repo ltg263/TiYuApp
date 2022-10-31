@@ -163,7 +163,6 @@ public class HomeTwoFragment extends BaseFragment{
                                 ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
                                 if(index==0){
                                     ClientTcpUtils.mClientTcpUtils.sendData_B1();
-                                    ClientTcpUtils.mClientTcpUtils.sendData_B0();
                                 }
                                 isWanCheng = true;
                                 Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
@@ -214,34 +213,13 @@ public class HomeTwoFragment extends BaseFragment{
                     SchoolCourseBeanSmallActionInfoJson.StepsBean mStepsBean = mSchoolStudentBean_First.getSteps().get(0);
                     mStepsBean.setStepNoOkNum(0);
                     List<List<Byte>> mSets = mStepsBean.getSets();
-                    if(mSets.size()==1){//只有一个球
-                        if(mSets.get(0).size()==7){
-                            sendDatas = new ArrayList<>(mSets.get(0));
+                    for (int j = 0; j < mSets.size(); j++) {
+                        if (mSets.get(j).size() == 7) {
+                            sendDatas = new ArrayList<>(mSets.get(j));
                             sendDatas.set(1, ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(sendDatas.get(1)));
                             mSchoolStudentBean_First.setCurrentStepNo(mStepsBean.getStepNo());
                             ClientTcpUtils.mClientTcpUtils.sendData_A0_A1(sendDatas.get(0),sendDatas);
-                        }else{
-                            ToastUtil.showShortToast(getActivity(),"有错误数据-->>"+0);
                         }
-                    }else {
-                        sendDatas = new ArrayList<>();
-                        byte msg  = 0;
-                        for (int j = 0; j < mSets.size(); j++) {
-                            if (mSets.get(j).size() == 7) {
-                                msg = mSets.get(j).get(0);
-                                sendDatas.add(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(mSets.get(j).get(1)));
-                                sendDatas.add(mSets.get(j).get(2));
-                                sendDatas.add(mSets.get(j).get(3));
-                                sendDatas.add(mSets.get(j).get(4));
-                                sendDatas.add(mSets.get(j).get(5));
-                                sendDatas.add(mSets.get(j).get(6));
-                            } else {
-                                ToastUtil.showShortToast(getActivity(), "有错误数据-->>" + j);
-                            }
-                        }
-                        mSchoolStudentBean_First.setCurrentStepNo(mStepsBean.getStepNo());
-                        System.out.println("发送的数据-->>1111"+sendDatas);
-                        ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_dg(msg,sendDatas);
                     }
                 }
             }
@@ -250,6 +228,7 @@ public class HomeTwoFragment extends BaseFragment{
     List<Fragment> fragments = new ArrayList<>();
     private void initVP() {
         StatusBarUtil.initMagicIndicator_1(mContext,false, HomeTwoXueShengActivity.mDataList, mMagicIndicator, mViewPager);
+        fragments.clear();
         for(int i = 0;i<HomeTwoXueShengActivity.mDataList.size();i++){
             Bundle mBundle1 = new Bundle();
             mBundle1.putString("mMapKey",HomeTwoXueShengActivity.mMapKey_id.get(i));
@@ -338,7 +317,6 @@ public class HomeTwoFragment extends BaseFragment{
                         mPostStudentResults.remove(i);
                     }
                 }
-                Log.w("提交数据：","mPostStudentResults:"+mPostStudentResults.toString());
                 if(mPostStudentResults.size()>0){
                     postResultsBatchAdd();
                 }else{
@@ -386,6 +364,7 @@ public class HomeTwoFragment extends BaseFragment{
         mPostStudentBean.setCourseId(mPostStudentResults.get(0).getCourseId());
         mPostStudentBean.setSmallCourseId(mPostStudentResults.get(0).getSmallCourseId());
         mPostStudentBean.setTeacherId(mPostStudentResults.get(0).getTeacherId());
+        mPostStudentBean.setEndTime(StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss"));
         mPostStudentBean.setBeginTime(mPostStudentResults.get(0).getBeginTime());
         mPostStudentBean.setClassDate(mPostStudentResults.get(0).getBeginTime());
         Log.w("postResultsBatchAdd","提交数据："+mPostStudentBean.toString());
@@ -485,7 +464,6 @@ public class HomeTwoFragment extends BaseFragment{
             //步骤不为空的时候 某个学生的球数不为空的时候
             if(mSteps!=null && mSteps.size()>0 &&mSchoolStudentBean.getAllQiuNo()!=null){
                 System.out.println("BroadcastReceiver：getAllQiuNo" + mSchoolStudentBean.getAllQiuNo());
-                System.out.println("BroadcastReceiver：qiuhao" + qiuhao);
                 //[16,12]
                 for(int q = 0;q<mSchoolStudentBean.getAllQiuNo().size();q++){
                     //遍历某个学生的球并从Map中获取对应的球号
@@ -493,6 +471,7 @@ public class HomeTwoFragment extends BaseFragment{
                     //如果设备回调的球号包含这个学生控制的球内开始执行逻辑[10,16] [1]
                     if(qiuhao==key){
                         mSchoolStudentBean.setPostZjzs(mSchoolStudentBean.getPostZjzs()+1);
+                        System.out.println("BroadcastReceiver：" + mSchoolStudentBean.getStudentName()+"：总击中数:"+mSchoolStudentBean.getPostZjzs());
                         setNotifyDataSetChanged_Fragment();
                         duiBiXueShengStep(mSchoolStudentBean,mSteps,0);
                         return;
@@ -524,7 +503,6 @@ public class HomeTwoFragment extends BaseFragment{
             mStepsBean.setStepNoOkNum(mStepsBean.getStepNoOkNum()+1);
         }
         System.out.println("BroadcastReceiver：mStepsBean.getStepNoOkNum():" +mStepsBean.getStepNoOkNum());
-        System.out.println("BroadcastReceiver：mStepsBean.getSets().size()" +mStepsBean.getSets().size());
         if(mStepsBean.getStepNoOkNum()==mStepsBean.getSets().size()){
             System.out.println("BroadcastReceiver：duiBiXueShengStep()执行下一个球");
             if(mSteps.size()-1>posSteps){
@@ -539,7 +517,6 @@ public class HomeTwoFragment extends BaseFragment{
 //                    ToastUtil.showShortToast(mContext,mSchoolStudentBean.getStudentName()+"已完成");
                     mSchoolStudentBean.setPostZys(current_time);
                     double pjsd = current_time / (mSchoolStudentBean.getSteps().size() * mSchoolStudentBean.getPostWccs());
-                    Log.w("BroadcastReceiver","pjsd:"+pjsd);
                     Log.w("BroadcastReceiver","pjsd:"+StringUtil.getValue(pjsd));
                     mSchoolStudentBean.setPostPjsd(Double.parseDouble(StringUtil.getValue(pjsd)));
                     System.out.println("BroadcastReceiver：duiBiXueShengStep()已完成："+mSchoolStudentBean.getStudentName());
@@ -557,36 +534,46 @@ public class HomeTwoFragment extends BaseFragment{
         if(mSchoolStudentBean.getCurrentStepNo()!=mStepsBean.getStepNo() && mSteps.size() > posSteps){
             SchoolCourseBeanSmallActionInfoJson.StepsBean mStepsBean_xia = mSteps.get(posSteps);
             List<List<Byte>> mSets = mStepsBean_xia.getSets();
-            if(mSets.size()==1){//只有一个球
-                System.out.println("BroadcastReceiver：只有一个球");
-                if(mSets.get(0).size()==7){
-                    sendDatas = new ArrayList<>(mSets.get(0));
+            for (int j = 0; j < mSets.size(); j++) {
+                if(mSets.get(j).size()==7){
+                    sendDatas = new ArrayList<>(mSets.get(j));
                     sendDatas.set(1, ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(sendDatas.get(1)));
                     ClientTcpUtils.mClientTcpUtils.sendData_A0_A1(sendDatas.get(0),sendDatas);
                     mSchoolStudentBean.setCurrentStepNo(mStepsBean.getStepNo());
                 }else{
                     ToastUtil.showShortToast(getActivity(),"有错误数据-->>"+0);
                 }
-            }else {
-                System.out.println("BroadcastReceiver：有多个球");
-                sendDatas = new ArrayList<>();
-                byte msg  = 0;
-                for (int j = 0; j < mSets.size(); j++) {
-                    if (mSets.get(j).size() == 7) {
-                        msg = mSets.get(j).get(0);
-                        sendDatas.add(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(mSets.get(j).get(1)));
-                        sendDatas.add(mSets.get(j).get(2));
-                        sendDatas.add(mSets.get(j).get(3));
-                        sendDatas.add(mSets.get(j).get(4));
-                        sendDatas.add(mSets.get(j).get(5));
-                        sendDatas.add(mSets.get(j).get(6));
-                    } else {
-                        ToastUtil.showShortToast(getActivity(), "有错误数据-->>" + j);
-                    }
-                }
-                mSchoolStudentBean.setCurrentStepNo(mStepsBean.getStepNo());
-                ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_dg(msg,sendDatas);
             }
+//            if(mSets.size()==1){//只有一个球
+//                System.out.println("BroadcastReceiver：只有一个球");
+//                if(mSets.get(0).size()==7){
+//                    sendDatas = new ArrayList<>(mSets.get(0));
+//                    sendDatas.set(1, ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(sendDatas.get(1)));
+//                    ClientTcpUtils.mClientTcpUtils.sendData_A0_A1(sendDatas.get(0),sendDatas);
+//                    mSchoolStudentBean.setCurrentStepNo(mStepsBean.getStepNo());
+//                }else{
+//                    ToastUtil.showShortToast(getActivity(),"有错误数据-->>"+0);
+//                }
+//            }else {
+//                System.out.println("BroadcastReceiver：有多个球");
+//                sendDatas = new ArrayList<>();
+//                byte msg  = 0;
+//                for (int j = 0; j < mSets.size(); j++) {
+//                    if (mSets.get(j).size() == 7) {
+//                        msg = mSets.get(j).get(0);
+//                        sendDatas.add(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(mSets.get(j).get(1)));
+//                        sendDatas.add(mSets.get(j).get(2));
+//                        sendDatas.add(mSets.get(j).get(3));
+//                        sendDatas.add(mSets.get(j).get(4));
+//                        sendDatas.add(mSets.get(j).get(5));
+//                        sendDatas.add(mSets.get(j).get(6));
+//                    } else {
+//                        ToastUtil.showShortToast(getActivity(), "有错误数据-->>" + j);
+//                    }
+//                }
+//                mSchoolStudentBean.setCurrentStepNo(mStepsBean.getStepNo());
+//                ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_dg(msg,sendDatas);
+//            }
             return;
         }
         System.out.println("BroadcastReceiver：多个球反馈了"+mStepsBean.getStepNoOkNum()+"个");
@@ -686,7 +673,6 @@ public class HomeTwoFragment extends BaseFragment{
                 ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
                 if(index==0){
                     ClientTcpUtils.mClientTcpUtils.sendData_B1();
-                    ClientTcpUtils.mClientTcpUtils.sendData_B0();
                 }
                 isWanCheng = true;
                 Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
@@ -720,6 +706,7 @@ public class HomeTwoFragment extends BaseFragment{
                             mPostStudentResult.setStudentId(ConstValues.mSchoolStudentInfoBean.get(j).getId());
                             mPostStudentResult.setClassSceduleCardId("2");
                             mPostStudentResult.setClassId(ConstValues.mSchoolClassInfoBean.getId());
+                            mPostStudentResult.setEndTime(StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss"));
                             mPostStudentResult.setBeginTime(SharedUtils.singleton().get("postSchoolClassRecord_time",""));
                             mPostStudentResult.setClassDate(SharedUtils.singleton().get("postSchoolClassRecord_time",""));
                             mPostStudentResult.setTimeUse(mSchoolStudentBean.getPostZys()+"");
@@ -741,10 +728,10 @@ public class HomeTwoFragment extends BaseFragment{
             mBallNum = ConstValues.mSchoolCourseInfoBeanSmall.getBallNum();
             mPlateNum = ConstValues.mSchoolCourseInfoBeanSmall.getPlateNum();
         }else{
-            mBallNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getBallNum();
-            mPlateNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getPlateNum();
+            mBallNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getBallNum();
+            mPlateNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getPlateNum();
         }
-        DialogUtils.showDialogLianJieSheBei(mContext, mBallNum, mPlateNum,
+        DialogUtils.showDialogLianJieSheBei(mContext,false, mBallNum, mPlateNum,
                 new DialogUtils.ErrorDialogInterfaceLianJieSheBei() {
                     @Override
                     public void lianJieNum(int guangQiu, int guangBan, int dengGuang) {

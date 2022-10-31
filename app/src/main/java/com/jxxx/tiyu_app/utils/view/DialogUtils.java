@@ -406,7 +406,7 @@ public class DialogUtils {
     /**
      * 链接设备
      */
-    public static void showDialogLianJieSheBei(Context context, int mBallNum,int mPlateNum, final ErrorDialogInterfaceLianJieSheBei dialogConfirm) {
+    public static void showDialogLianJieSheBei(Context context,boolean isShowQiXiao, int mBallNum,int mPlateNum, final ErrorDialogInterfaceLianJieSheBei dialogConfirm) {
 
         final Dialog dialog5 = new Dialog(context, R.style.selectorDialog);
         final View view = LayoutInflater.from(context).inflate(R.layout.dialog_lianjieshebei, null);
@@ -500,6 +500,9 @@ public class DialogUtils {
                 }
             }
         });
+        if(!isShowQiXiao){
+            iv_quxiao.setVisibility(View.GONE);
+        }
         iv_quxiao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -556,7 +556,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
             mBallNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getBallNum();
             mPlateNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getPlateNum();
         }
-        DialogUtils.showDialogLianJieSheBei(this, mBallNum, mPlateNum,
+        DialogUtils.showDialogLianJieSheBei(this,true, mBallNum, mPlateNum,
                 new DialogUtils.ErrorDialogInterfaceLianJieSheBei() {
                     @Override
                     public void lianJieNum(int guangQiu, int guangBan, int dengGuang) {

@@ -111,9 +111,16 @@ public class ConstValuesHttps {
     public static byte[] getByteData(byte message, byte[] data) {
         List<Byte> lists = new ArrayList<>();
         lists.add(MESSAGE_START);
+        lists.add((byte) 0x0A);
+        lists.add((byte) 0x91);
+        lists.add((byte) 0x90);
+        lists.add(data[0]);
+        lists.add((byte) 0x00);
         lists.add(message);
         for (int i = 0; i < data.length; i++) {
-            lists.add(data[i]);
+            if(i!=0){
+                lists.add(data[i]);
+            }
         }
         lists.add(MESSAGE_END);
         return listTobyte(lists);
@@ -123,7 +130,7 @@ public class ConstValuesHttps {
      * 转换成的byte数组
      */
     public static byte[] listTobyte(List<Byte> list) {
-        if (list == null || list.size() < 0)
+        if (list == null || list.size() == 0)
             return null;
 
         byte[] bytes = new byte[list.size()];

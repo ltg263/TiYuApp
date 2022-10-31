@@ -5,6 +5,7 @@ public class PostStudentResults {
     public String toString() {
         return "PostStudentResults{" +
                 "classDate='" + classDate + '\'' +
+                ", endTime='" + endTime + '\'' +
                 ", beginTime='" + beginTime + '\'' +
                 ", classId='" + classId + '\'' +
                 ", classSceduleCardId='" + classSceduleCardId + '\'' +
@@ -35,9 +36,18 @@ public class PostStudentResults {
 
     public String classDate;
     public String beginTime;
+    public String endTime;
     public String classId;
     public String classSceduleCardId;
     public String teacherId;
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
 
     public void setClassDate(String classDate) {
         this.classDate = classDate;

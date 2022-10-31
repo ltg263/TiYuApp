@@ -731,8 +731,8 @@ public class HomeTwoFragment_1 extends BaseFragment{
                 @Override
                 public void btnConfirm(int index) {
                     if(index==0){
-                        ClientTcpUtils.mClientTcpUtils.sendData_B1();
-                        ClientTcpUtils.mClientTcpUtils.sendData_B0();
+//                        ClientTcpUtils.mClientTcpUtils.sendData_B1();
+//                        ClientTcpUtils.mClientTcpUtils.sendData_B0();
                     }
                     isWanCheng = true;
                     Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
