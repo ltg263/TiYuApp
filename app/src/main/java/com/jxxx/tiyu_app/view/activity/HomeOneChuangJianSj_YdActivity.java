@@ -6,19 +6,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jxxx.tiyu_app.MainActivity;
 import com.jxxx.tiyu_app.R;
-import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.base.BaseActivity;
-import com.jxxx.tiyu_app.bean.SchoolCourseBean;
-import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
@@ -28,6 +23,7 @@ import com.jxxx.tiyu_app.utils.WifiMessageReceiver;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoTwoListAdapter;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,6 +44,8 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
     RecyclerView mRvTwoList;
     @BindView(R.id.tv_jishi)
     TextView mTvJishi;
+    @BindView(R.id.tv_lianjie)
+    TextView tv_lianjie;
     @BindView(R.id.tv_title_fu)
     TextView tv_title_fu;
     MyReceiver mMyReceiver;
@@ -109,6 +107,22 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                         mHomeTwoTwoListAdapter.setNewData(mSchoolStudentBeans);
                     }
                 });
+            }
+        });
+        tv_lianjie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                byte[] v = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size()];
+                for(int i = 0;i<v.length;i++){
+                    v[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.get(i);
+                }
+                byte[] v1 = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()];
+                for(int i = 0;i<v1.length;i++){
+                    v1[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i);
+                }
+                String str =  "所有的球:"+ClientTcpUtils.BinaryToHexString(v)+"\n使用中的球:"+ClientTcpUtils.BinaryToHexString(v1);
+                DialogUtils.showDialogHint(
+                        HomeOneChuangJianSj_YdActivity.this, str,true,null);
             }
         });
     }

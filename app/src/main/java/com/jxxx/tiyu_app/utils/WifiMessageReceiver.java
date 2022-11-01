@@ -108,7 +108,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
             for(int i = 0;i<startBroadcastData.length;i++){
                 if(!ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.contains(startBroadcastData[i])) {
                     ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.add(startBroadcastData[i]);
-                    if(tv_sbNum_zj!=null){
+                    if(tv_sbNum_zj!=null && isShowCurrentActivity){
                         tv_sbNum_zj.setText("(主机已连接"+ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size()+"个球)");
                     }
                 }
@@ -121,7 +121,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                     Log.i("BroadcastReceiver", "MESSAGE_ALL_TOTAL: " + ConstValuesHttps.MESSAGE_ALL_TOTAL);
                     Log.i("BroadcastReceiver", "startBroadcastData: " + startBroadcastData[i]);
                     if(!ConstValuesHttps.MESSAGE_ALL_TOTAL.contains(startBroadcastData[i])){
-                        if(sortNumSet != null && sortNumSet.length>=ConstValuesHttps.MESSAGE_ALL_TOTAL.size()){
+                        if(sortNumSet != null && sortNumSet.length-1>=ConstValuesHttps.MESSAGE_ALL_TOTAL.size()){
                             ConstValuesHttps.MESSAGE_ALL_TOTAL.add(startBroadcastData[i]);
                             Log.i("BroadcastReceiver", "sendData_B3: " + startBroadcastData[i]);
                             ClientTcpUtils.mClientTcpUtils.sendData_B3(startBroadcastData[i],
