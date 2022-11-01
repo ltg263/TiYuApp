@@ -41,7 +41,7 @@ public class MainApplication extends Application {
 
 //        AppException appException = AppException.getInstance();
 //        appException.init(mContext,false);
-        LogcatHelper.getInstance(this).start();
+//        LogcatHelper.getInstance(this).start();
     }
 
     /**

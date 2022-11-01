@@ -16,10 +16,13 @@ import com.jxxx.tiyu_app.R;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 /**
  * Create By HauyuChen
@@ -37,9 +40,8 @@ public class ClientActivity extends Activity {
     private Button btn_send;
     private boolean isConnected = false;
     Socket socket = null;
-    BufferedWriter writer = null;
-    BufferedReader reader = null;
-    private String line;
+    OutputStream writer = null;
+    InputStream reader = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -65,7 +67,13 @@ public class ClientActivity extends Activity {
             @Override
             public void onClick(View v) {
                 /* 发送按钮处理函数 */
-                send();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        send();
+                    }
+                }).start();
+
             }
         });
     }
@@ -77,9 +85,9 @@ public class ClientActivity extends Activity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             /* 更新UI */
-            edit_recv.append(line);
+//            edit_recv.append(line);
             /* 调试输出 */
-            Log.i("PDA", "----->" + line);
+            Log.i("PDA", "----->" + msg.obj);
         }
     };
 
@@ -95,22 +103,20 @@ public class ClientActivity extends Activity {
                         /* 建立socket */
                         socket = new Socket(IPAdr, PORT);
                         /* 输出流 */
-                        writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                        writer = socket.getOutputStream();
                         /* 输入流 */
-                        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        reader = socket.getInputStream();
                         /* 调试输出 */
                         Log.i(TAG, "输入输出流获取成功");
                         Log.i(TAG, "检测数据");
                         /* 读数据并更新UI */
-                        char[] buf = new char[2048];
-                        int i;
-                        while((i= reader.read(buf,0,100))!=-1)
-                        {
-                            line = new String(buf,0,i);
-                            Message msg = handler.obtainMessage();
-                            msg.obj = line;
-                            handler.sendMessage(msg);
-                            Log.i(TAG, "send to handler");
+                        byte[] buffer = new byte[1024];
+                        int len = reader.read(buffer);
+                        if (len > 0) {
+                            Message msg_1 = handler.obtainMessage();
+                            msg_1.what = 1;
+                            msg_1.obj = Arrays.copyOf(buffer,len);
+                            handler.sendMessage(msg_1);
                         }
                     } catch (UnknownHostException e){
                         Toast.makeText(ClientActivity.this,"无法建立连接：）",Toast.LENGTH_SHORT).show();
@@ -144,10 +150,12 @@ public class ClientActivity extends Activity {
     public void send() {
         try {
             /* 向输出流写数据 */
-            writer.write(edit_send.getText().toString()+"\n");
+
+            byte[] mData =new byte[]{1,3};
+            writer.write(mData);
             writer.flush();
             /* 更新UI */
-            edit_send.setText("");
+//            edit_send.setText("");
         } catch (IOException e) {
             e.printStackTrace();
         }

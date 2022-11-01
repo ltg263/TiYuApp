@@ -40,6 +40,16 @@
                 android:textSize="26dp"
                 android:layout_centerInParent="true"/>
 
+            <TextView
+                android:id="@+id/tv_sbNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:text="0/0"
+                android:textColor="@color/white"
+                android:textSize="12sp"/>
         </com.jxxx.tiyu_app.utils.view.SquareRelativeLayout>
 
 
@@ -57,14 +67,23 @@
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="60dp"
+            android:layout_marginTop="60dp"
             android:gravity="center"
             android:lineSpacingExtra="5dp"
             android:text="恭喜您\n设备已连接成功！"
             android:textColor="@color/color_text_theme"
             android:textSize="16sp"
             android:textStyle="bold" />
-
+        <TextView
+            android:id="@+id/tv_sbNum_zj"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="60dp"
+            android:text="(共需要-设备，已连接-个设备)"
+            android:textColor="@color/color_text_theme"
+            android:textSize="12sp"/>
         <Button
             android:id="@+id/btn_xunqiu"
             android:layout_width="match_parent"
@@ -76,7 +95,6 @@
             android:text="开始寻球"
             android:textColor="@color/white" />
     </LinearLayout>
-
 
     <ImageView
         android:id="@+id/iv_quxiao"

@@ -20,7 +20,7 @@ public class HomeThreeListAdapter extends BaseQuickAdapter<SchoolClassBean, Base
 
     @Override
     protected void convert(BaseViewHolder helper,SchoolClassBean item) {
-        GlideImgLoader.loadImageViewRadiusNoCenter(mContext, "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png", helper.getView(R.id.iv_icon));
+        GlideImgLoader.loadImageViewRadiusNoCenter(mContext, null, helper.getView(R.id.iv_icon));
         helper.setText(R.id.tv_name,item.getClassName()).setText(R.id.tv_type_1,item.getStudentNum()+"个学生")
         .setText(R.id.tv_type_2,"已上"+11+"次课");
     }

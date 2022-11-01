@@ -34,6 +34,8 @@ public class HomeMySheZhiActivity extends BaseActivity {
     TextView mTvTuichu;
     @BindView(R.id.tv_age)
     TextView mTvAge;
+    @BindView(R.id.tv_schoolName)
+    TextView mTvSchoolName;
     @BindView(R.id.iv_head)
     ImageView mIvHead;
 
@@ -94,6 +96,7 @@ public class HomeMySheZhiActivity extends BaseActivity {
                                 mTvPhonenumber.setText(userInfo.getMobile());
                                 mTvSex.setText(userInfo.getGender()==0?"男":"女");
                                 mTvAge.setText(userInfo.getAge()+"");
+                                mTvSchoolName.setText(userInfo.getSchoolName());
                             }
                         }
                     }

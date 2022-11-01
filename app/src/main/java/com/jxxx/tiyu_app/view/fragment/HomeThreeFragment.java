@@ -75,6 +75,13 @@ public class HomeThreeFragment extends BaseFragment {
     @Override
     protected void initData() {
         showLoading();
+//        getSchoolTeacherCurrent();
+//        getSchoolClassList();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         getSchoolTeacherCurrent();
         getSchoolClassList();
     }

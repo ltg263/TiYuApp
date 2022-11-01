@@ -737,6 +737,7 @@ public class HomeTwoFragment extends BaseFragment{
                     public void lianJieNum(int guangQiu, int guangBan, int dengGuang) {
                         int sbNum = guangQiu+guangBan;
                         ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
+                        ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.clear();
                         ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
                         mWifiMessageReceiver.onWifiMessageReceiverInter(mContext,sbNum,dengGuang,new WifiMessageReceiver.WifiMessageReceiverInter() {
                             @Override

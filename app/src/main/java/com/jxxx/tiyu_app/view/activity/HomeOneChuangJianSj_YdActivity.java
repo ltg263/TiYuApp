@@ -266,10 +266,13 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                 for(int j=0;j<mLists.size();j++){
                     byte[] bytes = mLists.get(j);
                     if(startBroadcastData.contains(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytes[1]))){
+                        byte[] bytel;
                         if(j==mLists.size()-1){
+                            bytel = mLists.get(0);
                             mSchoolStudentBeans.get(i).setPostWccs(mSchoolStudentBeans.get(i).getPostWccs()+1);
+                        }else{
+                            bytel = mLists.get(j+1);
                         }
-                        byte[] bytel = mLists.get(0);
                         byte[] data = new byte[6];
                         if(bytel.length==7){
                             data[0] = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytel[1]);

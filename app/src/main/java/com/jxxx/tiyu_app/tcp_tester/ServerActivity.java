@@ -3,12 +3,16 @@ package com.jxxx.tiyu_app.tcp_tester;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -34,8 +38,7 @@ public class ServerActivity extends Activity {
     private InputStream inputStream=null;
     private boolean thread_flag=true;
     private boolean thread_read_flag=true;
-    StringBuilder rec_str = null;
-    BufferedWriter writer = null;
+    OutputStream writer = null;
 
     private EditText edit_listenport = null;
     private Button btn_connect = null;
@@ -54,7 +57,13 @@ public class ServerActivity extends Activity {
             @Override
             public void onClick(View v) {
                 /* 发送按钮处理函数 */
-                send();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        send();
+                    }
+                }).start();
             }
         });
         //监听按钮
@@ -94,17 +103,16 @@ public class ServerActivity extends Activity {
                     inputStream = client[index].getInputStream();
                     int readBytes = inputStream.read(data);
                     /* 调试输出 */
-                    Log.d(TAG, "index:"+index+" readBytes:" + readBytes + " data:"+ new String(data, 0, readBytes));
+                    Log.d(TAG, "index:"+index+" readBytes:" + readBytes + " data:"+ Arrays.toString(Arrays.copyOf(data,readBytes)));
                     Log.d(TAG,"from: "+client[index].getRemoteSocketAddress().toString());
-                    if (readBytes == 0)
-                        continue;
-                    rec_str.append(new String(data, 0, readBytes));
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            /* 更新UI */
-                            edit_recv.setText(rec_str.toString());
-                        }
-                    });
+                    if (readBytes > 0) {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                /* 更新UI */
+                                edit_recv.setText(Arrays.toString(Arrays.copyOf(data,readBytes)));
+                            }
+                        });
+                    }
                 }
             } catch (Exception e) {
                 Log.d(TAG, "ReadThread:while (thread_flag)" + e.getMessage());
@@ -131,7 +139,7 @@ public class ServerActivity extends Activity {
                     /* accept（）阻塞，一直监听端口，判断是否与连接 */
                     client[client_index] = serverSocket.accept();
                     /* 输出流 */
-                    writer = new BufferedWriter(new OutputStreamWriter(client[client_index].getOutputStream()));
+                    writer = client[client_index].getOutputStream();
                     thread_read_flag = true;
                     /* 开启线程，接收数据 */
                     new Thread(new ReadThread(client_index)).start();
@@ -149,9 +157,8 @@ public class ServerActivity extends Activity {
     public void listen() {
         if(false == isConnected){
             try {
-                rec_str = new StringBuilder();
                 /* 监听端口 */
-                serverSocket = new ServerSocket(Integer.valueOf(edit_listenport.getText().toString()));
+                serverSocket = new ServerSocket(Integer.parseInt(edit_listenport.getText().toString())) ;
                 Toast.makeText(ServerActivity.this,"监听成功：）",Toast.LENGTH_SHORT).show();
                 /* 开启线程，等待连接 */
                 new Thread(new SocketServerThread()).start();
@@ -180,10 +187,13 @@ public class ServerActivity extends Activity {
     public void send() {
         try {
             /*  向输出流写数据 */
-            writer.write(edit_send.getText().toString()+"\n");
-            writer.flush();
+            if(writer!=null){
+                byte[] mData =new byte[]{1,3};
+                writer.write(mData);
+                writer.flush();
+            }
             /* 更新UI */
-            edit_send.setText("");
+//            edit_send.setText("");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -198,7 +208,7 @@ public class ServerActivity extends Activity {
         try {
             /* 关闭socket */
             for(int i=0;i<MAXSIZE;i++){
-                if(client[client_index].isConnected()) {
+                if(client!=null && client[client_index].isConnected()) {
                     client[client_index].shutdownInput();
                     client[client_index].shutdownOutput();
                     client[client_index].getInputStream().close();

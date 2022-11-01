@@ -243,8 +243,8 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
         //断开连接提交数据
         try {
             if(mWifiMessageReceiver!=null){
-                mIntentFilter = null;
                 unregisterReceiver(mWifiMessageReceiver);
+                mIntentFilter = null;
                 mWifiMessageReceiver= null;
             }
         }catch (Exception ex){
@@ -257,8 +257,8 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
         super.onRestart();
         try {
             if(mWifiMessageReceiver!=null){
-                mIntentFilter = null;
                 unregisterReceiver(mWifiMessageReceiver);
+                mIntentFilter = null;
                 mWifiMessageReceiver= null;
             }
         }catch (Exception ex){
@@ -268,6 +268,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
     IntentFilter mIntentFilter;
     private void lianjie(int sheBeiNum, int duilieNum,int time) {
         ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
+        ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.clear();
         ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
         /**
          * 广播动态注册

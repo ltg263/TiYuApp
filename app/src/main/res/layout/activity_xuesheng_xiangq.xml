@@ -68,7 +68,7 @@
             android:layout_below="@id/tv_user_name"
             android:layout_marginVertical="15dp"
             android:gravity="center"
-            android:text="年纪：12岁   超时：2次"
+            android:text="年龄：12岁   超时：2次"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14" />
 

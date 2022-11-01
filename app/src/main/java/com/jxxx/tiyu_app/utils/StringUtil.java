@@ -297,6 +297,9 @@ public class StringUtil {
      * @param obj
      * @return
      */
+    public static String getValue(String obj) {
+        return getValue(Double.valueOf(obj));
+    }
     public static String getValue(double obj) {
         if (isIntegerForDouble(obj)) {
             return String.valueOf((int) obj);

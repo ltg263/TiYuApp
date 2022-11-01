@@ -546,6 +546,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
 
     private void lianjie() {
         ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
+        ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.clear();
         ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
         int mBallNum;
         int mPlateNum;

@@ -23,9 +23,14 @@ public class ConstValuesHttps {
     public static byte MESSAGE_NUM_TOTAL = 26;
 
     /**
-     * 所有的球
+     * 课程所用所有的球
      */
     public static List<Byte> MESSAGE_ALL_TOTAL = new ArrayList<>();
+
+    /**
+     * 主机连接所有的球
+     */
+    public static List<Byte> MESSAGE_ALL_TOTAL_ZJ = new ArrayList<>();
 
     public static Map<Byte,Byte> MESSAGE_ALL_TOTAL_MAP = new HashMap<>();
 

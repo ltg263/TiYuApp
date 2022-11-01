@@ -483,16 +483,16 @@ public class DialogUtils {
                         return;
                     }
                     if(Integer.parseInt(guangqiuNum) > ConstValues.BALL_NUM_MAX){
-                        ToastUtil.showLongStrToast(context,"光电球最多"+ConstValues.BALL_NUM_MAX+"个");
-                        return;
+//                        ToastUtil.showLongStrToast(context,"光电球最多"+ConstValues.BALL_NUM_MAX+"个");
+//                        return;
                     }
                     if(Integer.parseInt(dianbanNum)<finalMPlateNum){
                         ToastUtil.showLongStrToast(context,"光电地板不能少于"+finalMPlateNum+"个");
                         return;
                     }
                     if(Integer.parseInt(dianbanNum) > ConstValues.PLATE_NUM_MAX){
-                        ToastUtil.showLongStrToast(context,"光电地板最多"+ConstValues.PLATE_NUM_MAX+"个");
-                        return;
+//                        ToastUtil.showLongStrToast(context,"光电地板最多"+ConstValues.PLATE_NUM_MAX+"个");
+//                        return;
                     }
                     dialog5.dismiss();
                     dialogConfirm.lianJieNum(StringUtil.isNotBlank(guangqiuNum)?Integer.parseInt(guangqiuNum):finalMBallNum

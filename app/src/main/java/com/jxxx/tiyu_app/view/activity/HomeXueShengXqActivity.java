@@ -20,6 +20,7 @@ import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.bean.SchoolStudentDetailBean;
 import com.jxxx.tiyu_app.utils.ChartHelper;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
+import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.view.fragment.HomeBanJiFragment;
 
 import java.util.ArrayList;
@@ -99,7 +100,10 @@ public class HomeXueShengXqActivity extends BaseActivity {
                             GlideImgLoader.loadImageViewRadiusNoCenter(HomeXueShengXqActivity.this, result.getData().getImgUrl(), mIvHead);
                             mTvUserNo.setText("学号："+result.getData().getStudentNo());
                             mTvUserName.setText("姓名："+result.getData().getStudentName());
-                            mTvUserAge.setText("年纪："+result.getData().getAge()+"    超时：11次");
+                            mTvUserAge.setText("年龄："+result.getData().getAge()+"岁");
+                            if(StringUtil.isNotBlank(result.getData().getWeight())){
+                                mTvUserAge.setText("年龄："+result.getData().getAge()+"岁  体重："+StringUtil.getValue(result.getData().getWeight())+"公斤");
+                            }
                         }
                     }
 
