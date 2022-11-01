@@ -120,6 +120,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 for(int i = 0;i<startBroadcastData.length;i++){
                     Log.i("BroadcastReceiver", "MESSAGE_ALL_TOTAL: " + ConstValuesHttps.MESSAGE_ALL_TOTAL);
                     Log.i("BroadcastReceiver", "startBroadcastData: " + startBroadcastData[i]);
+                    Log.i("BroadcastReceiver", "sortNumSet: " + Arrays.toString(sortNumSet));
                     if(!ConstValuesHttps.MESSAGE_ALL_TOTAL.contains(startBroadcastData[i])){
                         if(sortNumSet != null && sortNumSet.length-1>=ConstValuesHttps.MESSAGE_ALL_TOTAL.size()){
                             ConstValuesHttps.MESSAGE_ALL_TOTAL.add(startBroadcastData[i]);
@@ -163,7 +164,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         tv_sbNum_zj =  view.findViewById(R.id.tv_sbNum_zj);
         mSvN = view.findViewById(R.id.sv_n);
         btn_xunqiu.setText("开始寻球");
-        tv_sbNum.setText(sbNum+"/0");
+        tv_sbNum.setText("0/"+sbNum);
         tv_sbNum_zj.setText("(主机已连接"+0+"个球)");
         mSvN.setCurrentCount(sbNum,0,tv_bfb);
         btn_xunqiu.setOnClickListener(new View.OnClickListener() {

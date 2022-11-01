@@ -731,6 +731,7 @@ public class HomeTwoFragment extends BaseFragment{
             mBallNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getBallNum();
             mPlateNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getPlateNum();
         }
+        ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
         DialogUtils.showDialogLianJieSheBei(mContext,false, mBallNum, mPlateNum,
                 new DialogUtils.ErrorDialogInterfaceLianJieSheBei() {
                     @Override

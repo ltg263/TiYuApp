@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.jxxx.tiyu_app.MainActivity;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.app.ConstValues;
@@ -446,6 +447,9 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                     });
                     return;
                 }
+                HomeTwoXueShengActivity.current_course_section = 0;
+                HomeTwoXueShengActivity.current_course_section_loop_num = 0;
+                MainActivity.indexPos = 1;
                 lianjie();
                 break;
         }
