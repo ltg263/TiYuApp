@@ -249,7 +249,23 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        setOnResume();
+        switch (mBnvHomeNavigation.getSelectedItemId()){
+            case R.id.menu_home_1:
+                if(indexPos!=0){
+                    setOnResume();
+                }
+                break;
+            case R.id.menu_home_2:
+                if(indexPos!=1){
+                    setOnResume();
+                }
+                break;
+            case R.id.menu_home_3:
+                if(indexPos!=2){
+                    setOnResume();
+                }
+                break;
+        }
     }
 
     public void setOnResume() {

@@ -234,6 +234,7 @@ public class ClientTcpUtils {
         for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size();i++){
             data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.get(i);
         }
+
         for (int i=0;i<data.length;i++){
             byte[] data_new = new byte[]{data[i], 0,0,0,0,0};
             sendData(ConstValuesHttps.MESSAGE_SEND_B3,data_new);

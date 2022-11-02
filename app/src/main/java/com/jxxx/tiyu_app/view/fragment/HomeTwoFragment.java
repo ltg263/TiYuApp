@@ -79,6 +79,8 @@ public class HomeTwoFragment extends BaseFragment{
     TextView tv_jishi;
     @BindView(R.id.tv_xieyijie)
     TextView tv_xieyijie;
+    //非正常回显
+    boolean isOnClickResume = true;
     private List<Byte> sendDatas;//发送的数据
     /**
      * 正在执行的排数
@@ -96,6 +98,7 @@ public class HomeTwoFragment extends BaseFragment{
 
     @Override
     protected void initView() {
+        isOnClickResume = true;
         tv_chongzhi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,14 +163,13 @@ public class HomeTwoFragment extends BaseFragment{
                         DialogUtils.showDialogWanChengSuoYou(mContext, title,"连接", new DialogUtils.ErrorDialogInterfaceA() {
                             @Override
                             public void btnConfirm(int index) {
-                                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
                                 if(index==0){
                                     ClientTcpUtils.mClientTcpUtils.sendData_B1();
+                                }else{
+                                    ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
                                 }
                                 isWanCheng = true;
-                                Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                                strataSetFlags();
                             }
                         });
                     }
@@ -259,6 +261,12 @@ public class HomeTwoFragment extends BaseFragment{
         setNotifyDataSetChanged_Fragment();
     }
 
+    private void strataSetFlags(){
+        Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        isOnClickResume = true;
+    }
 
     boolean isWanCheng = false;
     private long current_time = 0;//执行的时间
@@ -268,6 +276,10 @@ public class HomeTwoFragment extends BaseFragment{
     @Override
     public void onResume() {
         super.onResume();
+        if(!isOnClickResume){
+            return;
+        }
+        isOnClickResume = false;
         if(!isWanCheng){
             current_time = 0;
             current_class_group = 0;
@@ -333,6 +345,7 @@ public class HomeTwoFragment extends BaseFragment{
 //                HomeTwoShangKeActivity.startActivityIntentFragment(mContext);
                 isWanCheng = false;
             }
+            isOnClickResume = true;
         }
     }
 
@@ -346,9 +359,7 @@ public class HomeTwoFragment extends BaseFragment{
                     true, new DialogUtils.ErrorDialogInterface() {
                         @Override
                         public void btnConfirm() {
-                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            strataSetFlags();
                         }
                     });
             return true;
@@ -670,14 +681,13 @@ public class HomeTwoFragment extends BaseFragment{
         DialogUtils.showDialogWanChengSuoYou(mContext, "所有课程已完成！\n请断开连接，成绩将自动上传！","断开连接", new DialogUtils.ErrorDialogInterfaceA() {
             @Override
             public void btnConfirm(int index) {
-                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
                 if(index==0){
                     ClientTcpUtils.mClientTcpUtils.sendData_B1();
+                }else{
+                    ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
                 }
                 isWanCheng = true;
-                Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                strataSetFlags();
             }
         });
     }

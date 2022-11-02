@@ -449,7 +449,6 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 }
                 HomeTwoXueShengActivity.current_course_section = 0;
                 HomeTwoXueShengActivity.current_course_section_loop_num = 0;
-                MainActivity.indexPos = 1;
                 lianjie();
                 break;
         }
