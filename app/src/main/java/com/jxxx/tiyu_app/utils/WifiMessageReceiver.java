@@ -42,12 +42,13 @@ public class WifiMessageReceiver extends BroadcastReceiver {
     }
 
     public WifiMessageReceiver(){
-
+        sortNumSet = null;
     }
     public WifiMessageReceiver(int sbNum,int dengGuang) {
         this.sbNum = sbNum;
         this.dengGuang = dengGuang;
         isShowCurrentActivity = true;
+        sortNumSet = null;
     }
 
     public void setSbNum(int sbNum) {
@@ -60,6 +61,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
 
     public void setWifiMessageReceiverInter(WifiMessageReceiverInter wifiMessageReceiverInter) {
         mWifiMessageReceiverInter = wifiMessageReceiverInter;
+        sortNumSet = null;
     }
 
     public void onWifiMessageReceiverInter (Context mContext, int sbNum, int dengGuang, WifiMessageReceiverInter mWifiMessageReceiverInter){
@@ -67,6 +69,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         this.mWifiMessageReceiverInter = mWifiMessageReceiverInter;
         this.sbNum = sbNum;
         this.dengGuang = dengGuang;
+        sortNumSet = null;
         showDialogXunQiu(mContext,sbNum,false);
     }
 
@@ -103,6 +106,31 @@ public class WifiMessageReceiver extends BroadcastReceiver {
             if(startBroadcastData==null){
                 return;
             }
+            if(!isShowCurrentActivity){
+                return;
+            }
+            if(sortNumSet==null){
+                ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
+                ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.clear();
+                ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
+                if(isSuiJi){
+                    ConstValues.mSchoolCourseInfoBean = null;
+                    ConstValues.mSchoolCourseInfoBeanSmall = null;
+                    sortNumSet = new String[sbNum];
+                    for(int s=0;s<sortNumSet.length;s++){
+                        sortNumSet[s] = (s+1)+"";
+                    }
+                }
+                if(ConstValues.mSchoolCourseInfoBean!=null
+                        && ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList()!=null
+                        && ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size()>HomeTwoXueShengActivity.current_course_section
+                        && StringUtil.isNotBlank(ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getSmallCourseVo().getSortNumSet())){
+                    sortNumSet = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getSmallCourseVo().getSortNumSet().split(",");
+                }else if(ConstValues.mSchoolCourseInfoBeanSmall != null
+                        && StringUtil.isNotBlank(ConstValues.mSchoolCourseInfoBeanSmall.getSortNumSet())){
+                    sortNumSet = ConstValues.mSchoolCourseInfoBeanSmall.getSortNumSet().split(",");
+                }
+            }
             startBroadcastData = Arrays.copyOfRange(startBroadcastData, 2, startBroadcastData.length);
             ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.clear();
             for(int i = 0;i<startBroadcastData.length;i++){
@@ -112,9 +140,6 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                         tv_sbNum_zj.setText("(主机已连接"+ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size()+"个球)");
                     }
                 }
-            }
-            if(!isShowCurrentActivity){
-                return;
             }
             if(dialog!=null && dialog.isShowing() && btn_xunqiu.getText().toString().equals("正在寻球")){
                 for(int i = 0;i<startBroadcastData.length;i++){
@@ -175,24 +200,6 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                     return;
                 }
                 if(btn_xunqiu.getText().toString().equals("开始寻球")){
-                    ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
-                    ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.clear();
-                    ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
-                    if(isSuiJi){
-                        sortNumSet = new String[sbNum];
-                        for(int s=0;s<sortNumSet.length;s++){
-                            sortNumSet[s] = (s+1)+"";
-                        }
-                    }
-                    if(ConstValues.mSchoolCourseInfoBean!=null
-                            && ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList()!=null
-                            && ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size()>HomeTwoXueShengActivity.current_course_section
-                            && StringUtil.isNotBlank(ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getSmallCourseVo().getSortNumSet())){
-                        sortNumSet = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getSmallCourseVo().getSortNumSet().split(",");
-                    }else if(ConstValues.mSchoolCourseInfoBeanSmall != null
-                            && StringUtil.isNotBlank(ConstValues.mSchoolCourseInfoBeanSmall.getSortNumSet())){
-                        sortNumSet = ConstValues.mSchoolCourseInfoBeanSmall.getSortNumSet().split(",");
-                    }
                     btn_xunqiu.setText("正在寻球");
                 }
                 if(btn_xunqiu.getText().toString().equals("完成寻球")){

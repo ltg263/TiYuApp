@@ -261,7 +261,8 @@ public class ClientTcpUtils {
             public void run() {
                 synchronized(this){
                     byte[] mData = ConstValuesHttps.getByteData(msg,data);
-                    System.out.println("发送的数据-->>(10)"+Integer.toHexString(mData[6] & 0xFF)+":" + Arrays.toString(mData));
+//                    System.out.println("发送的数据-->>(10)"+Integer.toHexString(mData[6] & 0xFF)+":" + Arrays.toString(mData));
+                    System.out.println("发送的数据-->>(16)"+Integer.toHexString(mData[6] & 0xFF)+":" + BinaryToHexString(mData));
                     try {
                         writer.write(mData);
                         writer.flush();
