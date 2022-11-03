@@ -256,7 +256,6 @@ public class HomeTwoFragment extends BaseFragment{
                 return "";
             }
         });
-
         mViewPager.setCurrentItem(0);
         setNotifyDataSetChanged_Fragment();
     }

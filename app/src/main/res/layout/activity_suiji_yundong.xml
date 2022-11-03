@@ -154,6 +154,6 @@
             android:layout_marginBottom="10dp"
             android:elevation="8dp"
             android:scaleType="centerInside"
-            android:src="@drawable/home_tab_selector_2" />
+            android:src="@drawable/footer_icon_4_cz" />
     </LinearLayout>
 </LinearLayout>

@@ -150,7 +150,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                     ToastUtil.showShortToast(this,"请先选择触发模式");
                     return;
                 }
-                initPopupWindow(mTvYanse,sys_plate_color,null,2);
+                initPopupWindow(mTvYanse,sys_ball_color,null,2);
                 break;
             case R.id.tv_dengguangmoshi:
                 if(StringUtil.isBlank(mTvSelectSb.getText().toString())){
@@ -173,6 +173,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
             case R.id.tv_chixunsj:
                 lists.clear();
                 if(sendData[0]==ConstValuesHttps.MESSAGE_SEND_A0){
+                    lists.add("常亮");
                     for(int i =1;i<61;i++){
                         lists.add(i+"s");
                     }
@@ -353,10 +354,22 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                     return;
                 }
                 if(pos==-2){
+                    mTvYanse.setVisibility(View.VISIBLE);
+                    ll_zhixingmingling.setVisibility(View.VISIBLE);
+                    ll_sele_ssx.setVisibility(View.VISIBLE);
+                    mTvChiXunsj.setVisibility(View.VISIBLE);
+                    mTvShanshuo.setVisibility(View.VISIBLE);
+                    tv_xunhuancishu.setVisibility(View.VISIBLE);
                     switch (Byte.parseByte(dictTypes.get(position).getDictValue())){
                         case 1://灭灯
-                            tv_sele_ssx.setVisibility(View.GONE);
-                            ll_sele_ssx.setVisibility(View.GONE);
+                            tv_sele_ssx.setText("请选择持续时间");
+                            tv_sele_ssx.setVisibility(View.VISIBLE);
+                            ll_sele_ssx.setVisibility(View.VISIBLE);
+                            mTvChiXunsj.setVisibility(View.VISIBLE);
+                            mTvShanshuo.setVisibility(View.GONE);
+                            tv_xunhuancishu.setVisibility(View.GONE);
+                            mTvYanse.setVisibility(View.GONE);
+                            ll_zhixingmingling.setVisibility(View.GONE);
                             sendData[0] = ConstValuesHttps.MESSAGE_SEND_A0;
                             break;
                         case 2://亮灯
@@ -398,9 +411,16 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                 }
                 tvView.setText(mPopupWindowAdapter.getData().get(position));
                 if(list!=null){
-//                    if(pos==4){
+                    if(pos==4){
+                        String str = mPopupWindowAdapter.getData().get(position).replace("s","");
+                        if(str.equals("常亮")){
+                            sendData[pos] = 61;
+                        }else{
+                            sendData[pos] = (byte) Integer.parseInt(str);
+                        }
+                    }else{
                         sendData[pos] = (byte) (position+1);
-//                    }
+                    }
                     return;
                 }
                 if(dictTypes.get(position)==null){
@@ -462,6 +482,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                                     sys_course_mode.addAll(result.getData());
                                     break;
                                 case "sys_ball_color":
+                                    sys_ball_color.add(null);
                                     sys_ball_color.addAll(result.getData());
                                     break;
                                 case "sys_plate_color":
@@ -470,6 +491,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                                     break;
                                 case "sys_light_mode":
                                     sys_light_mode.addAll(result.getData());
+                                    sys_light_mode.remove(0);
                                     break;
                                 case "sys_flickering_rate":
                                     sys_flickering_rate.addAll(result.getData());
