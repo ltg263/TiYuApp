@@ -87,7 +87,7 @@
                 android:background="@null"
                 android:digits="@string/register_name_digits"
                 android:hint="请输入账号"
-                android:text="litongge"
+                android:text=""
                 android:textColor="@color/color_333333"
                 android:textCursorDrawable="@drawable/shape_edit_cursor"
                 android:textSize="14dp" />
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:background="@null"
-                android:text="123456"
+                android:text=""
                 android:digits="@string/register_name_digits"
                 android:hint="请输入密码"
                 android:inputType="textPassword"

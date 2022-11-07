@@ -28,6 +28,9 @@ public class ConstValues {
     public static final String SCHOOL_ID = "school_id";
     public static final String TOKEN = "token";
 
+    public static final String USER_NAME = "user_name";
+    public static final String USER_PAS = "user_pas";
+
     /**
      * 服务器后台地址
      */

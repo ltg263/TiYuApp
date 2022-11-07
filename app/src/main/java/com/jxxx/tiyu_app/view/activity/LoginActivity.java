@@ -43,12 +43,20 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public int intiLayout() {
+        MainApplication.getContext().AppExit();
         return R.layout.activity_login;
     }
 
     @Override
     public void initView() {
-        MainApplication.addActivity(this);
+        String userName = SharedUtils.singleton().get(ConstValues.USER_NAME,"");
+        String userPas = SharedUtils.singleton().get(ConstValues.USER_PAS,"");
+        if(StringUtil.isNotBlank(userName)){
+            mEtUser.setText(userName);
+        }
+        if(StringUtil.isNotBlank(userPas)){
+            mEtPas.setText(userPas);
+        }
     }
 
     @Override
@@ -107,6 +115,8 @@ public class LoginActivity extends BaseActivity {
                             SharedUtils.singleton().put(ConstValues.TEACHER_ID,result.getData().getTeacherId());
                             SharedUtils.singleton().put(ConstValues.SCHOOL_ID,result.getData().getSchoolId());
                             SharedUtils.singleton().put(ConstValues.USER_ID,result.getData().getUserId());
+                            SharedUtils.singleton().put(ConstValues.USER_NAME,username);
+                            SharedUtils.singleton().put(ConstValues.USER_PAS,password);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }

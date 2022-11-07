@@ -54,7 +54,7 @@ public class MainApplication extends Application {
     /**
      * add Activity 添加Activity到栈
      */
-    public static void addActivity(Activity activity){
+    public void addActivity(Activity activity){
         if(activityStack ==null){
             activityStack =new Stack<>();
         }

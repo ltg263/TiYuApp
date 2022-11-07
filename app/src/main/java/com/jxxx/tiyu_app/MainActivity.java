@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//保持屏幕唤醒
-        MainApplication.addActivity(this);
+        MainApplication.getContext().addActivity(this);
         initBottomBar();
 
         if (EasyPermissions.hasPermissions(this, params)) {

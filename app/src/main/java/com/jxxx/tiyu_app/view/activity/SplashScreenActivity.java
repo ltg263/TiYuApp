@@ -44,7 +44,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void startUi(boolean isLogin) {
-        MainApplication.addActivity(this);
+        MainApplication.getContext().addActivity(this);
         if(!isLogin){
             startActivity(new Intent(this, MainActivity.class));
         }else{
