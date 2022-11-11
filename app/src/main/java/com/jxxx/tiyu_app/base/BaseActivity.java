@@ -71,14 +71,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if(!getLocalClassName().contains("view.activity.device.")){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制竖屏
         }
-
-        if(!(this instanceof HomeOneChuangJianSj_YdActivity)
-                && !(this instanceof HomeOneChuangJianSjActivity)
-                && !(this instanceof HomeTwoShangKeActivity)
-                && !(this instanceof HomeTwoXueShengActivity)
-                && !(this instanceof MainActivity) ){
-            isWifiMeagerEsp();
-        }
     }
 
 
@@ -246,13 +238,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onRestart();
         if(!(this instanceof LoginActivity) && StringUtil.isBlank(SharedUtils.getToken())){
             startActivity(new Intent(this,LoginActivity.class));
-        }
-        if(!(this instanceof HomeOneChuangJianSj_YdActivity)
-                && !(this instanceof HomeOneChuangJianSjActivity)
-                && !(this instanceof HomeTwoShangKeActivity)
-                && !(this instanceof HomeTwoXueShengActivity)
-                && !(this instanceof MainActivity) ){
-            isWifiMeagerEsp();
         }
     }
 }

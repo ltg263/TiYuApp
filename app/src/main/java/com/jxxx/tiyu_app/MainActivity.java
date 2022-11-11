@@ -192,7 +192,7 @@ public class MainActivity extends BaseActivity {
         mBnvHomeNavigation.setItemIconTintList(null);
         mBnvHomeNavigation.setOnNavigationItemSelectedListener(item -> {
             if(indexPos==1){
-                ToastUtil.showShortToast(MainActivity.this,"请先断开课程链接");
+                ToastUtil.showShortToast(MainActivity.this,"请先断开课程连接");
                 return false;
             }
             switch (item.getItemId()){
@@ -217,7 +217,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if(indexPos!=1){
-                    ToastUtil.showShortToast(MainActivity.this,"请先链接课程");
+                    ToastUtil.showShortToast(MainActivity.this,"请先连接课程");
                     getSchoolCourseQueryCourse();
                     return;
                 }
@@ -274,7 +274,6 @@ public class MainActivity extends BaseActivity {
                 mBnvHomeNavigation.setSelectedItemId(R.id.menu_home_1);
                 ma_iv_index.getDrawable().setLevel(0);
                 switchFragment(mHomeOneFragment);
-                isWifiMeagerEsp();
                 break;
             case 1:
                 mBnvHomeNavigation.setSelectedItemId(R.id.menu_home_2);
@@ -285,7 +284,6 @@ public class MainActivity extends BaseActivity {
             case 2:
                 mBnvHomeNavigation.setSelectedItemId(R.id.menu_home_3);
                 switchFragment(mHomeThreeFragment);
-                isWifiMeagerEsp();
                 break;
         }
     }

@@ -70,7 +70,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         this.sbNum = sbNum;
         this.dengGuang = dengGuang;
         sortNumSet = null;
-        showDialogXunQiu(mContext,sbNum,false);
+        showDialogXunQiu(mContext,sbNum,false,false);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         this.mContext = mContext;
         byte mStartBroadcastType = intent.getByteExtra(WifiMessageReceiver.START_BROADCAST_TYPE, (byte) 0X00);
         byte[] startBroadcastData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
-        System.out.println("接收到的数据：" + Arrays.toString(startBroadcastData));
+        System.out.println("接收的数据-->>(16)" + ClientTcpUtils.BinaryToHexString(startBroadcastData));
         Log.i("BroadcastReceiver", "onReceive: " + Integer.toHexString(mStartBroadcastType & 0xFF));
         if(mStartBroadcastType == WifiMessageReceiver.START_BROADCAST_TYPE_CLOSE){
             System.out.println("连接已断开");
@@ -92,17 +92,28 @@ public class WifiMessageReceiver extends BroadcastReceiver {
 
                 }
             }
-            Toast.makeText(mContext,"连接已断开",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext,"断开连接",Toast.LENGTH_SHORT).show();
+        }
+        if(mStartBroadcastType == WifiMessageReceiver.START_BROADCAST_TYPE_CONNECT_JT){
+            System.out.println("开始监听");
+            if(!isShowCurrentActivity){
+                return;
+            }
+            showDialogXunQiu(mContext,sbNum,true,true);
         }
         if(mStartBroadcastType == WifiMessageReceiver.START_BROADCAST_TYPE_CONNECT){
             System.out.println("连接成功");
             if(!isShowCurrentActivity){
                 return;
             }
-            showDialogXunQiu(mContext,sbNum,true);
-            Toast.makeText(mContext,"连接成功",Toast.LENGTH_SHORT).show();
+//            showDialogXunQiu(mContext,sbNum,true);
+
+            if(dialog.isShowing()){
+                btn_xunqiu.setText("开始寻球");
+                tv_title.setText("恭喜您\n设备已连接成功！");
+            }
         }
-        if(mStartBroadcastType== ConstValuesHttps.MESSAGE_GET_C0){
+        if(mStartBroadcastType == ConstValuesHttps.MESSAGE_GET_C0){
             if(startBroadcastData==null){
                 return;
             }
@@ -175,15 +186,15 @@ public class WifiMessageReceiver extends BroadcastReceiver {
 
     Dialog dialog;
     StepArcView_n mSvN;
-    TextView tv_bfb,tv_sbNum,tv_sbNum_zj;
+    TextView tv_bfb,tv_sbNum,tv_sbNum_zj,tv_title;
     Button btn_xunqiu;
     String[] sortNumSet = null;
-    private void showDialogXunQiu(Context mContext,int sbNum,boolean isShowQuXiao) {
+    private void showDialogXunQiu(Context mContext,int sbNum,boolean isShowQuXiao,boolean isDengdai) {
         dialog = new Dialog(mContext, R.style.selectorDialog);
         View view = LayoutInflater.from(mContext).inflate(R.layout.dialog_kaishixunqiu, null);
         btn_xunqiu = view.findViewById(R.id.btn_xunqiu);
         ImageView iv_quxiao =view.findViewById(R.id.iv_quxiao);
-        TextView tv_title =  view.findViewById(R.id.tv_title);
+        tv_title =  view.findViewById(R.id.tv_title);
         tv_bfb =  view.findViewById(R.id.tv_bfb);
         tv_sbNum =  view.findViewById(R.id.tv_sbNum);
         tv_sbNum_zj =  view.findViewById(R.id.tv_sbNum_zj);
@@ -191,6 +202,10 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         btn_xunqiu.setText("开始寻球");
         tv_sbNum.setText("0/"+sbNum);
         tv_sbNum_zj.setText("(主机已连接"+0+"个球)");
+        if(isDengdai){
+            tv_title.setText("已开启监听\n等待设备连接");
+            btn_xunqiu.setText("正在连接");
+        }
         mSvN.setCurrentCount(sbNum,0,tv_bfb);
         btn_xunqiu.setOnClickListener(new View.OnClickListener() {
 
@@ -222,7 +237,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         iv_quxiao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
+                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true,false);
                 dialog.dismiss();
             }
         });
@@ -240,9 +255,10 @@ public class WifiMessageReceiver extends BroadcastReceiver {
     public static String START_BROADCAST_TYPE = "start_broadcast_type";
     public static String START_BROADCAST_DATA = "start_broadcast_data";
     public static byte START_BROADCAST_TYPE_CLOSE = (byte) 0XFF;//断开
-    public static byte START_BROADCAST_TYPE_CONNECT =(byte) 0X00;//链接成功
+    public static byte START_BROADCAST_TYPE_CONNECT =(byte) 0X00;//连接成功
+    public static byte START_BROADCAST_TYPE_CONNECT_JT = -2;//开始监听成功
     /**
-     * @param type ：0XFF（断开） 0X00（链接成功）
+     * @param type ：0XFF（断开） 0X00（连接成功）
      * @param data : 数据
      */
     public static void startBroadcast(byte type,byte[] data){

@@ -70,7 +70,8 @@ public class ClientActivity extends Activity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        send();
+                        String str = edit_send.getText().toString();
+                        send(str);
                     }
                 }).start();
 
@@ -85,9 +86,10 @@ public class ClientActivity extends Activity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             /* 更新UI */
-//            edit_recv.append(line);
+            byte[] v = (byte[]) msg.obj;
+            edit_recv.setText(Arrays.toString(v));
             /* 调试输出 */
-            Log.i("PDA", "----->" + msg.obj);
+            Log.i("PDA", "----->" + Arrays.toString(v));
         }
     };
 
@@ -106,17 +108,24 @@ public class ClientActivity extends Activity {
                         writer = socket.getOutputStream();
                         /* 输入流 */
                         reader = socket.getInputStream();
+                        if(socket.isConnected()){
+                            Log.i(TAG, "连接成功");
+                        }else {
+                            Log.i(TAG, "连接失败");
+                        }
+                        /* 读数据并更新UI */
                         /* 调试输出 */
                         Log.i(TAG, "输入输出流获取成功");
-                        Log.i(TAG, "检测数据");
-                        /* 读数据并更新UI */
                         byte[] buffer = new byte[1024];
-                        int len = reader.read(buffer);
-                        if (len > 0) {
-                            Message msg_1 = handler.obtainMessage();
-                            msg_1.what = 1;
-                            msg_1.obj = Arrays.copyOf(buffer,len);
-                            handler.sendMessage(msg_1);
+                        while (socket!=null && socket.isConnected()) {
+                            /* 输入流 */
+                            int len = reader.read(buffer);
+                            if (len > 0) {
+                                Message msg_1 = handler.obtainMessage();
+                                msg_1.what = 1;
+                                msg_1.obj = Arrays.copyOf(buffer,len);
+                                handler.sendMessage(msg_1);
+                            }
                         }
                     } catch (UnknownHostException e){
                         Toast.makeText(ClientActivity.this,"无法建立连接：）",Toast.LENGTH_SHORT).show();
@@ -147,12 +156,10 @@ public class ClientActivity extends Activity {
     }
 
     /* 发送按钮处理函数：向输出流写数据 */
-    public void send() {
+    public void send(String str) {
         try {
             /* 向输出流写数据 */
-
-            byte[] mData =new byte[]{1,3};
-            writer.write(mData);
+            writer.write(str.getBytes());
             writer.flush();
             /* 更新UI */
 //            edit_send.setText("");

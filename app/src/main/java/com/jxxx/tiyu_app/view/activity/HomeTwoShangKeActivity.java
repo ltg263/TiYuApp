@@ -85,8 +85,6 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     KeChengXiangQingAdapter mKeChengXiangQingAdapter;
     KeChengXiangQingAdapterSmall mKeChengXiangQingAdapterSmall;
     boolean isSmallCourse;
-    WifiInfo mWifiInfo;
-    WifiUtil mWifiUtil;
     private WifiMessageReceiver mWifiMessageReceiver;
     List<String> list = new ArrayList<>();
     int queueNum = 0;
@@ -111,9 +109,6 @@ public class HomeTwoShangKeActivity extends BaseActivity {
         mShangKeBanJiAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if(isWifiMeagerEspOne()){
-                    return;
-                }
                 SchoolClassBean mItem = mShangKeBanJiAdapter.getData().get(position);
                 ConstValues.mSchoolClassInfoBean = mItem;
                 mShangKeBanJiAdapter.setId(mItem.getId());
@@ -173,7 +168,6 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 }
             }
         });
-        mWifiUtil = new WifiUtil(HomeTwoShangKeActivity.this);
     }
     private void postSmallCourseCopyQueue(TextView tv_1,String str,String smallCourseId,String num) {
         showLoading();
@@ -228,6 +222,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.w("onError","e:"+e.toString());
                         hideLoading();
                     }
 
@@ -419,34 +414,14 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                         ConstValues.mSchoolClassInfoBean.getClassGroupList().remove(i);
                     }
                 }
-                if(ConstValues.mSchoolStudentInfoBean==null || ConstValues.mSchoolStudentInfoBean.size()==0){
+
+                if(ConstValues.mSchoolStudentInfoBean == null || ConstValues.mSchoolStudentInfoBean.size()==0){
                     ToastUtil.showLongStrToast(this,"班级学生的信息获取失败");
                     return;
                 }
 
-                if(ConstValues.mSchoolStudentInfoBean==null || ConstValues.mSchoolStudentInfoBean.size()==0){
-                    ToastUtil.showLongStrToast(this,"班级学生的信息获取失败");
-                    return;
-                }
-
-                mWifiInfo = mWifiUtil.getWifiManager().getConnectionInfo();
-
-                if(!mWifiUtil.getWifiManager().isWifiEnabled() || !mWifiInfo.getSSID().contains("ESP8266")){
-                    DialogUtils.showDialogHint(this, "请将WIFI连接到ESP8266", false, new DialogUtils.ErrorDialogInterface() {
-                        @Override
-                        public void btnConfirm() {
-                            if(!isAddClassRecord){
-//                                postSchoolClassRecord();
-                                SharedUtils.singleton().put("postSchoolClassRecord_time",
-                                        StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss"));
-                            }
-                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        }
-                    });
-                    return;
-                }
+                SharedUtils.singleton().put("postSchoolClassRecord_time",
+                        StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss"));
                 HomeTwoXueShengActivity.current_course_section = 0;
                 HomeTwoXueShengActivity.current_course_section_loop_num = 0;
                 lianjie();
@@ -500,41 +475,12 @@ public class HomeTwoShangKeActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if(isWifiMeagerEspOne()){
-            return;
-        }
         ConstValues.mSchoolCourseInfoBean = null;
         ConstValues.mSchoolCourseInfoBeanSmall = null;
         ConstValues.mSchoolClassInfoBean = null;
         ConstValues.mSchoolStudentInfoBean = null;
         Log.w("BroadcastReceiver","onBackPressed:");
         super.onBackPressed();
-    }
-
-    private boolean isWifiMeagerEspOne(){
-        mWifiInfo = mWifiUtil.getWifiManager().getConnectionInfo();
-        if(mWifiUtil.getWifiManager().isWifiEnabled() && mWifiInfo.getSSID().contains("ESP8266")){
-            DialogUtils.showDialogHint(HomeTwoShangKeActivity.this, "请将WIFI连接到其他网络", false, new DialogUtils.ErrorDialogInterface() {
-                @Override
-                public void btnConfirm() {
-                    Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-            });
-            return true;
-        }
-        return false;
-    }
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        mWifiInfo = mWifiUtil.getWifiManager().getConnectionInfo();
-        if(mWifiUtil.getWifiManager().isWifiEnabled() && mWifiInfo.getSSID().contains("ESP8266")){
-            mTvLianjie.setText("已连接");
-            return;
-        }
-        mTvLianjie.setText("未连接");
     }
 
     @Override

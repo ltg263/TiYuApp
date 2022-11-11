@@ -17,10 +17,6 @@ public class ConstValuesHttps {
      * 端口
      */
     public static int PORT = 1001;
-    /**
-     * 总数量
-     */
-    public static byte MESSAGE_NUM_TOTAL = 26;
 
     /**
      * 课程所用所有的球
@@ -89,23 +85,6 @@ public class ConstValuesHttps {
      * 倒计时结束与触发后的状态反馈指令均为
      */
     public static byte MESSAGE_GET_C5 = (byte) 0xC5;
-    /**
-     * 一键启动与关机（默认00）
-     * @param datas
-     * @return
-     */
-    public static byte[] getByteDataB0OrB1(byte[] datas) {
-        List<Byte> lists = new ArrayList<>();
-        for (int i=0;i<datas.length;i++){
-            lists.add(datas[i]);
-            lists.add((byte) 0);
-            lists.add((byte) 0);
-            lists.add((byte) 0);
-            lists.add((byte) 0);
-            lists.add((byte) 0);
-        }
-        return listTobyte(lists);
-    }
 
     /**
      * 发送的数据

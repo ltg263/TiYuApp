@@ -33,7 +33,7 @@ public class ServerActivity extends Activity {
     private boolean isConnected = false;
     private ServerSocket serverSocket=null;
     private static Socket[] client = null;
-    private final int  MAXSIZE = 3; //设置最大连接数
+    private final int  MAXSIZE = 100; //设置最大连接数
     private Integer client_index = 0;
     private InputStream inputStream=null;
     private boolean thread_flag=true;
@@ -60,8 +60,15 @@ public class ServerActivity extends Activity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
-                        send();
+                        for(int i = 0;i<client.length;i++){
+                            try {
+                                writer = client[i].getOutputStream();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            String str = edit_send.getText().toString();
+                            send(str);
+                        }
                     }
                 }).start();
             }
@@ -93,12 +100,13 @@ public class ServerActivity extends Activity {
     public class ReadThread implements Runnable {
         int index;
         public ReadThread(int index){
+            thread_read_flag = true;
             this.index = index;
         }
         public void run() {
             byte[] data = new byte[1024];
             try {
-                while (true) {
+                while (thread_read_flag) {
                     /* 输入流 */
                     inputStream = client[index].getInputStream();
                     int readBytes = inputStream.read(data);
@@ -116,6 +124,7 @@ public class ServerActivity extends Activity {
                 }
             } catch (Exception e) {
                 Log.d(TAG, "ReadThread:while (thread_flag)" + e.getMessage());
+                Log.d(TAG,"from: "+client[index].getRemoteSocketAddress().toString());
                 thread_read_flag = false;
 
             } finally {
@@ -140,13 +149,12 @@ public class ServerActivity extends Activity {
                     client[client_index] = serverSocket.accept();
                     /* 输出流 */
                     writer = client[client_index].getOutputStream();
-                    thread_read_flag = true;
                     /* 开启线程，接收数据 */
                     new Thread(new ReadThread(client_index)).start();
                     client_index ++ ;
                 }
             }catch (Exception e) {
-                Log.d(TAG, e.getMessage());
+                Log.d(TAG, "SocketServerThread:"+e.getMessage());
                 thread_flag = false;
                 thread_read_flag = false;
             }
@@ -160,21 +168,20 @@ public class ServerActivity extends Activity {
                 /* 监听端口 */
                 serverSocket = new ServerSocket(Integer.parseInt(edit_listenport.getText().toString())) ;
                 Toast.makeText(ServerActivity.this,"监听成功：）",Toast.LENGTH_SHORT).show();
+                isConnected = true;
                 /* 开启线程，等待连接 */
+                thread_flag = true;
                 new Thread(new SocketServerThread()).start();
                 /* 更新UI */
                 btn_connect.setText("停止监听");
-                isConnected = true;
-                thread_flag = true;
-                thread_read_flag = true;
             } catch (NumberFormatException e) {
                 // TODO Auto-generated catch block
-                Log.d(TAG,e.getMessage());
+                Log.d(TAG,"listen1:"+e.getMessage());
                 isConnected = false;
                 thread_flag = false;
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-                Log.d(TAG,e.getMessage());
+                Log.d(TAG,"listen2:"+e.getMessage());
                 isConnected = false;
                 thread_flag = false;
             }
@@ -184,12 +191,11 @@ public class ServerActivity extends Activity {
     }
 
     /* 发送按钮处理函数：向输出流写数据 */
-    public void send() {
+    public void send(String str) {
         try {
             /*  向输出流写数据 */
             if(writer!=null){
-                byte[] mData =new byte[]{1,3};
-                writer.write(mData);
+                writer.write(str.getBytes());
                 writer.flush();
             }
             /* 更新UI */
@@ -205,10 +211,11 @@ public class ServerActivity extends Activity {
         // TODO Auto-generated method stub
         isConnected = false;
         thread_flag = false;
+        thread_read_flag = false;
         try {
             /* 关闭socket */
             for(int i=0;i<MAXSIZE;i++){
-                if(client!=null && client[client_index].isConnected()) {
+                if(client!=null && client[client_index]!=null && client[client_index].isConnected()) {
                     client[client_index].shutdownInput();
                     client[client_index].shutdownOutput();
                     client[client_index].getInputStream().close();
@@ -220,7 +227,7 @@ public class ServerActivity extends Activity {
             serverSocket.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            Log.d(TAG,e.getMessage());
+            Log.d(TAG,"onDestroy"+e.getMessage());
         }
         /* 更新UI*/
         btn_connect.setText("开始监听");

@@ -52,7 +52,6 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
     List<SchoolStudentBean> mSchoolStudentBeans;
     HomeTwoTwoListAdapter mHomeTwoTwoListAdapter;
 
-    boolean isWanCheng = false;
     @Override
     public int intiLayout() {
         return R.layout.activity_suiji_yundong;
@@ -137,30 +136,15 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
             @Override
             public void btnConfirm() {
                 DialogUtils.showDialogWanChengSuoYou(HomeOneChuangJianSj_YdActivity.this,
-                        "请断开设备连接\n链接到可用网络","断开连接", new DialogUtils.ErrorDialogInterfaceA() {
+                        "当前模式结束","确定", new DialogUtils.ErrorDialogInterfaceA() {
                     @Override
                     public void btnConfirm(int index) {
-                        ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
-                        if(index==0){
-                            ClientTcpUtils.mClientTcpUtils.sendData_B1();
-                        }
-                        isWanCheng = true;
-                        Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
+                        ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true,index==0);
+                        finish();
                     }
                 });
             }
         });
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if(isWanCheng){
-            ClientTcpUtils.mClientTcpUtils.onDestroy();
-            finish();
-        }
     }
 
     private void getSJData() {

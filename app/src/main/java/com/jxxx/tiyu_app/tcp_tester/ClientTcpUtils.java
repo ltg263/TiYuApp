@@ -5,12 +5,14 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jxxx.tiyu_app.utils.WifiMessageReceiver;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,65 +21,120 @@ import java.util.List;
 public class ClientTcpUtils {
 
     private Context mContext;
-    private Socket socket = null;
-    private OutputStream writer = null;
-    private InputStream reader = null;
     private String TAG = "ClientTcpUtils";
+    private final int  MAXSIZE = 100; //设置最大连接数
+    private static Socket[] client = null;
+    private boolean isConnected = false;
+    private ServerSocket serverSocket=null;
+    private boolean thread_flag=true;
+    private boolean thread_read_flag=true;
+    private Integer client_index = 0;
+    private InputStream inputStream=null;
+
+    private OutputStream writer_ok = null;
 
     public static ClientTcpUtils mClientTcpUtils;
     public ClientTcpUtils(Context mContext) {
         this.mContext = mContext;
-        connect(true);
+        client = new Socket[MAXSIZE];
+        connect();
     }
-    /* 连接按钮处理函数：建立Socket连接 */
-    @SuppressLint("HandlerLeak")
-    public void connect(boolean biaoji) {
-        Log.w("-----","000"+socket);
-        if(socket==null || !socket.isConnected()){
-            new Thread() {
-                public void run(){
-                    try {
-                        if(!biaoji){
-                            Thread.sleep(10000);
-                        }
-                        /* 建立socket */
-                        socket = new Socket(ConstValuesHttps.IPAdr, ConstValuesHttps.PORT);
-                        /* 调试输出 */
-                        Log.i(TAG, "输入输出流获取成功");
-                        reader = socket.getInputStream();
-                        writer = socket.getOutputStream();
-                        if(socket.isConnected()){
-                            Message msg_0 = handler.obtainMessage();
-                            msg_0.what = 0;
-                            handler.sendMessage(msg_0);
-                            Log.i(TAG, "连接成功");
-                        }else {
-                            Log.i(TAG, "连接失败");
-                        }
-                        /* 读数据并更新UI */
-                        byte[] buffer = new byte[1024];
-                        while (socket!=null && socket.isConnected()) {
-                            /* 输入流 */
-                            int len = reader.read(buffer);
-                            if (len > 0) {
-                                Message msg_1 = handler.obtainMessage();
-                                msg_1.what = 1;
-                                msg_1.obj = Arrays.copyOf(buffer,len);
-                                handler.sendMessage(msg_1);
-                            }
-                        }
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
-                    } finally {
-                        Message msg_1_ = handler.obtainMessage();
-                        msg_1_.what = -1;
-                        handler.sendMessage(msg_1_);
+
+    /* 监听按钮处理函数：开始监听端口 */
+    public void connect() {
+        if(!isConnected){
+            try {
+                /* 监听端口 */
+                serverSocket = new ServerSocket(6090) ;
+                Message msg = handler.obtainMessage();
+                msg.what = -2;
+                handler.sendMessage(msg);
+                isConnected = true;
+                /* 开启线程，等待连接 */
+                thread_flag = true;
+                new Thread(new SocketServerThread()).start();
+                /* 更新UI */
+
+            } catch (NumberFormatException e) {
+                // TODO Auto-generated catch block
+                Log.d(TAG,"listen1:"+e.getMessage());
+                isConnected = false;
+                thread_flag = false;
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                Log.d(TAG,"listen2:"+e.getMessage());
+                isConnected = false;
+                thread_flag = false;
+            }
+        }else{
+            onDestroy();
+        }
+    }
+    /* 线程SocketServerThread：监听端口 */
+    public class SocketServerThread implements Runnable {
+        public void run() {
+            Log.d(TAG, "SocketServerThread");
+            boolean isClosed = true;
+            try {
+                while (thread_flag) {
+                    client_index = client_index % MAXSIZE;
+                    Log.d(TAG, "Server opened!");
+                    /* accept（）阻塞，一直监听端口，判断是否与连接 */
+                    client[client_index] = serverSocket.accept();
+                    Log.d(TAG, "Server opened!accept:"+isClosed);
+                    if(isClosed){
+                        Message msg = handler.obtainMessage();
+                        msg.what = 0;
+                        handler.sendMessage(msg);
+                        isClosed = false;
+                    }
+                    /* 输出流 */
+                    writer_ok = client[client_index].getOutputStream();
+                    /* 开启线程，接收数据 */
+                    new Thread(new ReadThread(client_index)).start();
+                    client_index ++ ;
+                }
+            }catch (Exception e) {
+                Log.d(TAG, "SocketServerThread:"+e.getMessage());
+                thread_flag = false;
+                thread_read_flag = false;
+            }
+        }
+    }
+
+    /* 线程ReadThread：从客户端读取数据 */
+    public class ReadThread implements Runnable {
+        int index;
+        public ReadThread(int index){
+            thread_read_flag = true;
+            this.index = index;
+        }
+        public void run() {
+            byte[] data = new byte[1024];
+            try {
+                while (thread_read_flag) {
+                    /* 输入流 */
+                    inputStream = client[index].getInputStream();
+                    int readBytes = inputStream.read(data);
+                    /* 调试输出 */
+                    Log.d(TAG, "index:"+index+" readBytes:" + readBytes + " data:"+ Arrays.toString(Arrays.copyOf(data,readBytes)));
+                    Log.d(TAG,"from: "+client[index].getRemoteSocketAddress().toString());
+                    if (readBytes > 0) {
+                        Message msg = handler.obtainMessage();
+                        msg.what = 1;
+                        msg.obj = Arrays.copyOf(data,readBytes);
+                        handler.sendMessage(msg);
                     }
                 }
-            }.start();
-        }else{
-            /* 关闭socket */
-            onDestroy();
+            } catch (Exception e) {
+                Log.d(TAG, "ReadThread:while (thread_flag)" + e.getMessage());
+            } finally {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    Log.d(TAG, "ReadThread: " + e.getMessage());
+                }
+            }
         }
     }
 
@@ -90,22 +147,26 @@ public class ClientTcpUtils {
             super.handleMessage(msg);
             /* 更新UI */
             switch (msg.what){
+                case -2://监听成功
+                    WifiMessageReceiver.startBroadcast(WifiMessageReceiver.START_BROADCAST_TYPE_CONNECT_JT,null);
+                    break;
                 case -1://断开
                     onDestroy();
                     break;
                 case 0://链接成功
                     if(mErrorDialogInterfac!=null){
-                        mErrorDialogInterfac.btnConfirm("链接成功",null);
+                        mErrorDialogInterfac.btnConfirm("连接成功",null);
                     }
                     WifiMessageReceiver.startBroadcast(WifiMessageReceiver.START_BROADCAST_TYPE_CONNECT,null);
                     break;
                 case 1://数据
                     byte[] v = (byte[]) msg.obj;
                     System.out.println("接收到的总数据长度：" +v.length);
+                    if(!thread_read_flag){
+                        return;
+                    }
                     System.out.println("接收到的总数据(10):" + Arrays.toString(v));
                     System.out.println("接收到的总数据(16):" + BinaryToHexString(v));
-                    System.out.println("原始数据接受(10)-->>"+Arrays.toString(v));
-                    System.out.println("原始数据接受(16)-->>"+BinaryToHexString(v));
                     if(mErrorDialogInterfac!=null){
                         mErrorDialogInterfac.btnConfirm("接收数据",v);
                     }
@@ -128,7 +189,9 @@ public class ClientTcpUtils {
     };
 
     public static String BinaryToHexString(byte[] bytes) {
-
+        if(bytes==null){
+            return "[空]";
+        }
         String hexStr = "0123456789ABCDEF";
 
         String result = "";
@@ -149,22 +212,29 @@ public class ClientTcpUtils {
 
     }
     public void onDestroy() {
+        // TODO Auto-generated method stub
+        isConnected = false;
+        thread_flag = false;
+        thread_read_flag = false;
         try {
             /* 关闭socket */
-            if (reader != null) {
-                reader.close();
+            for(int i=0;i<MAXSIZE;i++){
+                if(client!=null && client[client_index]!=null && client[client_index].isConnected()) {
+                    client[client_index].shutdownInput();
+                    client[client_index].shutdownOutput();
+                    client[client_index].getInputStream().close();
+                    client[client_index].getOutputStream().close();
+                    client[client_index].close();
+                }
             }
-            if (writer != null) {
-                writer.close();
-            }
-            if (socket != null) {
-                socket.close();
-                socket = null;
-            }
-//            connect(false);
+            /* 关闭serversocket*/
+            serverSocket.close();
+            Log.d(TAG,"onDestroy:断开连接");
         } catch (IOException e) {
-            Log.d(TAG,e.getMessage());
+            // TODO Auto-generated catch block
+            Log.d(TAG,"onDestroy"+e.getMessage());
         }
+        /* 更新UI*/
         /* 更新UI */
         WifiMessageReceiver.startBroadcast(WifiMessageReceiver.START_BROADCAST_TYPE_CLOSE,null);
         if(mErrorDialogInterfac!=null){
@@ -229,15 +299,22 @@ public class ClientTcpUtils {
     /**
      * 设置显示的球号 00
      */
-    public void sendData_B3_add00(){
-        byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size()];
-        for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size();i++){
-            data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.get(i);
+    public void sendData_B3_add00(boolean isSocketClose,boolean isShutdown){
+        if(isShutdown){//是关机 ---直接挂机不用制0
+            ClientTcpUtils.mClientTcpUtils.sendData_B1();
+        }else{
+            byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size()];
+            for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size();i++){
+                data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.get(i);
+            }
+            for (int i=0;i<data.length;i++){
+                byte[] data_new = new byte[]{data[i], 0,0,0,0,0};
+                sendData(ConstValuesHttps.MESSAGE_SEND_B3,data_new);
+            }
         }
 
-        for (int i=0;i<data.length;i++){
-            byte[] data_new = new byte[]{data[i], 0,0,0,0,0};
-            sendData(ConstValuesHttps.MESSAGE_SEND_B3,data_new);
+        if(isSocketClose){
+            onDestroy();
         }
     }
 
@@ -263,12 +340,16 @@ public class ClientTcpUtils {
                     byte[] mData = ConstValuesHttps.getByteData(msg,data);
 //                    System.out.println("发送的数据-->>(10)"+Integer.toHexString(mData[6] & 0xFF)+":" + Arrays.toString(mData));
                     System.out.println("发送的数据-->>(16)"+Integer.toHexString(mData[6] & 0xFF)+":" + BinaryToHexString(mData));
-                    try {
-                        writer.write(mData);
-                        writer.flush();
-                    } catch (IOException e) {
-                        System.out.println("发送的数据-->>e"+e);
-                        e.printStackTrace();
+                    for(int i = 0;i<client.length;i++){
+                        if(client[i]!=null){
+                            try {
+                                writer_ok = client[i].getOutputStream();
+                                writer_ok.write(mData);
+                                writer_ok.flush();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
 //                    if(msg!=ConstValuesHttps.MESSAGE_SEND_B0){
 //                        sendData_B0(data[0]);
@@ -293,7 +374,7 @@ public class ClientTcpUtils {
     public ClientTcpUtils(Context mContext,ErrorDialogInterface mErrorDialogInterface) {
         this.mContext = mContext;
         this.mErrorDialogInterfac = mErrorDialogInterface;
-        connect(true);
+        connect();
     }
 
 

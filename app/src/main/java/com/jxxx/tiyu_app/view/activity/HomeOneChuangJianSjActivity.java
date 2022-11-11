@@ -74,8 +74,6 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
     @BindView(R.id.ll_zhixingmingling)
     LinearLayout ll_zhixingmingling;
     WifiMessageReceiver mWifiMessageReceiver;
-    WifiInfo mWifiInfo;
-    WifiUtil mWifiUtil;
     //'sys_course_mode',
     // 'sys_ball_color', //光电球颜色
     // 'sys_plate_color', //光电地板颜色
@@ -140,7 +138,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                 break;
             case R.id.tv_chufa_fangshi:
                 if(StringUtil.isBlank(mTvSelectSb.getText().toString())){
-                    ToastUtil.showShortToast(this,"请先选择链接设备");
+                    ToastUtil.showShortToast(this,"请先选择连接设备");
                     return;
                 }
                 initPopupWindow(mTvChufaFangshi,sys_trigger_mode,null,5);
@@ -214,20 +212,6 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                 }
                 Log.w("sendData","每个队列的球数:"+ sheBeiNum);
                 Log.w("sendData","队列数量:"+ duilieNum);
-
-                mWifiUtil = new WifiUtil(this);
-                mWifiInfo = mWifiUtil.getWifiManager().getConnectionInfo();
-                if(!mWifiUtil.getWifiManager().isWifiEnabled() || !mWifiInfo.getSSID().contains("ESP8266")){
-                    DialogUtils.showDialogHint(this, "请将WIFI连接到ESP8266", false, new DialogUtils.ErrorDialogInterface() {
-                        @Override
-                        public void btnConfirm() {
-                            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        }
-                    });
-                    return;
-                }
                 int time = 0;
                 if(StringUtil.isNotBlank(zhixinshijian)){
                     time = Integer.parseInt(zhixinshijian);
@@ -479,27 +463,34 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
                         if(result.getCode()==200){
                             switch (dictType){
                                 case "sys_course_mode":
+                                    sys_course_mode.clear();
                                     sys_course_mode.addAll(result.getData());
                                     break;
                                 case "sys_ball_color":
+                                    sys_ball_color.clear();
                                     sys_ball_color.add(null);
                                     sys_ball_color.addAll(result.getData());
                                     break;
                                 case "sys_plate_color":
+                                    sys_plate_color.clear();
                                     sys_plate_color.add(null);
                                     sys_plate_color.addAll(result.getData());
                                     break;
                                 case "sys_light_mode":
+                                    sys_light_mode.clear();
                                     sys_light_mode.addAll(result.getData());
                                     sys_light_mode.remove(0);
                                     break;
                                 case "sys_flickering_rate":
+                                    sys_flickering_rate.clear();
                                     sys_flickering_rate.addAll(result.getData());
                                     break;
                                 case "sys_trigger_mode":
+                                    sys_trigger_mode.clear();
                                     sys_trigger_mode.addAll(result.getData());
                                     break;
                                 case "sys_trigger_after":
+                                    sys_trigger_after.clear();
                                     sys_trigger_after.addAll(result.getData());
                                     break;
                             }

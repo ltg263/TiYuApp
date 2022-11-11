@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:layout_gravity="center"
+            android:text="6090"
             android:layout_toRightOf="@+id/text_port"
             android:hint="请输入端口号..." />
 
@@ -82,6 +83,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:inputType="number"
             android:hint="请输入内容..."
             android:gravity="top"
             android:lines="1"

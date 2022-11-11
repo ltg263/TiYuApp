@@ -17,6 +17,7 @@ import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.AuthLoginBean;
 import com.jxxx.tiyu_app.bean.VersionResponse;
+import com.jxxx.tiyu_app.tcp_tester.SelectActivity;
 import com.jxxx.tiyu_app.utils.SharedUtils;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
@@ -66,7 +67,10 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.btn_login)
     public void onClick() {
-
+//        if(true){
+//            startActivity(new Intent(this, SelectActivity.class));
+//            return;
+//        }
         String[] permissions = new String[]{Manifest.permission.ACCESS_WIFI_STATE,
                 Manifest.permission.CHANGE_WIFI_STATE,
                 Manifest.permission.ACCESS_NETWORK_STATE,

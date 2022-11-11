@@ -154,20 +154,16 @@ public class HomeTwoFragment extends BaseFragment{
                     public void btnConfirm(int index) {
                         String title = "";
                         if(index == 0){
-                            title = "请连接到其他网络";
+                            title = "该课程已结束";
                             mPostStudentResults.clear();
                         }else{
-                            title = "请连接到其他可用网络\n成绩将自动上传！";
+                            title = "该课程已结束\n成绩将自动上传！";
                             setPostStudentResults();
                         }
-                        DialogUtils.showDialogWanChengSuoYou(mContext, title,"连接", new DialogUtils.ErrorDialogInterfaceA() {
+                        DialogUtils.showDialogWanChengSuoYou(mContext, title,"确定", new DialogUtils.ErrorDialogInterfaceA() {
                             @Override
                             public void btnConfirm(int index) {
-                                if(index==0){
-                                    ClientTcpUtils.mClientTcpUtils.sendData_B1();
-                                }else{
-                                    ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
-                                }
+                                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true,index==0);
                                 isWanCheng = true;
                                 strataSetFlags();
                             }
@@ -261,10 +257,11 @@ public class HomeTwoFragment extends BaseFragment{
     }
 
     private void strataSetFlags(){
-        Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+//        Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
         isOnClickResume = true;
+        onResume();
     }
 
     boolean isWanCheng = false;
@@ -301,7 +298,7 @@ public class HomeTwoFragment extends BaseFragment{
             }
             return;
         }
-        if(!isWifiMeagerEsp()){
+        if(true){
             //断开连接提交数据
             try {
                 if(mMyReceiver!=null){
@@ -331,39 +328,17 @@ public class HomeTwoFragment extends BaseFragment{
                 if(mPostStudentResults.size()>0){
                     postResultsBatchAdd();
                 }else{
-                    ClientTcpUtils.mClientTcpUtils.onDestroy();
                     MainActivity.indexPos = 0;
                     ((MainActivity)mContext).setOnResume();
-//                    HomeTwoShangKeActivity.startActivityIntentFragment(mContext);
                     isWanCheng = false;
                 }
             }else{
-                ClientTcpUtils.mClientTcpUtils.onDestroy();
                 MainActivity.indexPos = 0;
                 ((MainActivity)mContext).setOnResume();
-//                HomeTwoShangKeActivity.startActivityIntentFragment(mContext);
                 isWanCheng = false;
             }
             isOnClickResume = true;
         }
-    }
-
-    WifiInfo mWifiInfo;
-    WifiUtil mWifiUtil;
-    private boolean isWifiMeagerEsp(){
-        mWifiUtil = new WifiUtil(mContext);
-        mWifiInfo = mWifiUtil.getWifiManager().getConnectionInfo();
-        if(mWifiUtil.getWifiManager().isWifiEnabled() && mWifiInfo.getSSID().contains("ESP8266")){
-            DialogUtils.showDialogHint(mContext, "请将WIFI连接到其他可用网络",
-                    true, new DialogUtils.ErrorDialogInterface() {
-                        @Override
-                        public void btnConfirm() {
-                            strataSetFlags();
-                        }
-                    });
-            return true;
-        }
-        return false;
     }
     private void postResultsBatchAdd() {
         showLoading();
@@ -392,9 +367,9 @@ public class HomeTwoFragment extends BaseFragment{
                     public void onNext(Result result) {
                         if(isResultOk(result)){
                             MainActivity.indexPos = 0;
+                            isWanCheng = false;
                             ((MainActivity)mContext).setOnResume();
 //                            HomeTwoShangKeActivity.startActivityIntentFragment(mContext);
-                            isWanCheng = false;
                         }
                     }
 
@@ -677,14 +652,10 @@ public class HomeTwoFragment extends BaseFragment{
         }
         setPostStudentResults();
         Log.w("BroadcastReceiver","完成全部课程:"+mPostStudentResults.toString());
-        DialogUtils.showDialogWanChengSuoYou(mContext, "所有课程已完成！\n请断开连接，成绩将自动上传！","断开连接", new DialogUtils.ErrorDialogInterfaceA() {
+        DialogUtils.showDialogWanChengSuoYou(mContext, "所有课程已完成！\n成绩将自动上传！","确定", new DialogUtils.ErrorDialogInterfaceA() {
             @Override
             public void btnConfirm(int index) {
-                if(index==0){
-                    ClientTcpUtils.mClientTcpUtils.sendData_B1();
-                }else{
-                    ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
-                }
+                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true,index==0);
                 isWanCheng = true;
                 strataSetFlags();
             }
@@ -740,7 +711,7 @@ public class HomeTwoFragment extends BaseFragment{
             mBallNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getBallNum();
             mPlateNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(HomeTwoXueShengActivity.current_course_section).getPlateNum();
         }
-        ClientTcpUtils.mClientTcpUtils.sendData_B3_add00();
+        ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(false,false);
         DialogUtils.showDialogLianJieSheBei(mContext,false, mBallNum, mPlateNum,
                 new DialogUtils.ErrorDialogInterfaceLianJieSheBei() {
                     @Override

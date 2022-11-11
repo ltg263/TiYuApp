@@ -69,7 +69,7 @@
                     android:background="@drawable/shape_radius_fff"
                     android:drawableEnd="@drawable/ic_jiantou_you_c7"
                     android:padding="10dp"
-                    android:hint="链接设备"
+                    android:hint="连接设备"
                     android:textColor="@color/color_text_theme"
                     android:textSize="@dimen/sp_12" />
 

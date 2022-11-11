@@ -404,7 +404,7 @@ public class DialogUtils {
 
     static int dingguang = 0;
     /**
-     * 链接设备
+     * 连接设备
      */
     public static void showDialogLianJieSheBei(Context context,boolean isShowQiXiao, int mBallNum,int mPlateNum, final ErrorDialogInterfaceLianJieSheBei dialogConfirm) {
 
