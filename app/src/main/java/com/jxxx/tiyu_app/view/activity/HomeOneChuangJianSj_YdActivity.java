@@ -186,15 +186,16 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
             byte[] data = new byte[6];
             if(bytes.length==7){
                 data[0] = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytes[1]);
-                if(bytes[2]==-1){
-                    byte num = (byte) (Math.random()*(7+1));
-                    if(num==0){
-                        num = 2;
-                    }
-                    data[1] = num;
-                }else{
-                    data[1] = bytes[2];
-                }
+//                if(bytes[2]==-1){
+//                    byte num = (byte) (Math.random()*(7+1));
+//                    if(num==0){
+//                        num = 2;
+//                    }
+//                    data[1] = num;
+//                }else{
+//                    data[1] = bytes[2];
+//                }
+                data[1] = bytes[2];
                 data[2] = bytes[3];
                 data[3] = bytes[4];
                 data[4] = bytes[5];
@@ -274,15 +275,16 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                         byte[] data = new byte[6];
                         if(bytel.length==7){
                             data[0] = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(bytel[1]);
-                            if(bytel[2]==-1){
-                                byte num = (byte) (Math.random()*(7+1));
-                                if(num==0){
-                                    num = 2;
-                                }
-                                data[1] = num;
-                            }else{
-                                data[1] = bytel[2];
-                            }
+//                            if(bytel[2]==-1){
+//                                byte num = (byte) (Math.random()*(7+1));
+////                                if(num==0){
+////                                    num = 2;
+////                                }
+////                                data[1] = num;
+//                            }else{
+//                                data[1] = bytel[2];
+//                            }
+                            data[1] = bytel[2];
                             data[2] = bytel[3];
                             data[3] = bytel[4];
                             data[4] = bytel[5];

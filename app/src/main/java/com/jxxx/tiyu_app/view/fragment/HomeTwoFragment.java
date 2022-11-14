@@ -105,6 +105,7 @@ public class HomeTwoFragment extends BaseFragment{
                 DialogUtils.showDialogHint(mContext, "确定重置当前小课程吗?", false, new DialogUtils.ErrorDialogInterface() {
                     @Override
                     public void btnConfirm() {
+                        isWanCheng = false;
                         current_time = 0;
                         current_class_group = 0;
                         if(mPostStudentResults!=null){
@@ -149,6 +150,16 @@ public class HomeTwoFragment extends BaseFragment{
 //                    return;
 //                }
                 Log.w("BroadcastReceiver","完成全部课程:"+mPostStudentResults.toString());
+                if(isWanCheng){
+                    DialogUtils.showDialogWanChengSuoYou(mContext, "所有课程已完成！\n成绩将自动上传！","确定", new DialogUtils.ErrorDialogInterfaceA() {
+                        @Override
+                        public void btnConfirm(int index) {
+                            ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true,index==0);
+                            strataSetFlags();
+                        }
+                    });
+                    return;
+                }
                 DialogUtils.showDialogHintSelect(mContext, new DialogUtils.ErrorDialogInterfaceA() {
                     @Override
                     public void btnConfirm(int index) {
@@ -180,6 +191,10 @@ public class HomeTwoFragment extends BaseFragment{
     }
 
     public boolean startOrStop(boolean isStart){
+        if(isWanCheng){
+            ToastUtil.showShortToast(mContext,"课程已全部完成");
+            return false;
+        }
         this.isStart = isStart;
         if(isStart){
             current_time = 0;
@@ -300,6 +315,7 @@ public class HomeTwoFragment extends BaseFragment{
         }
         if(true){
             //断开连接提交数据
+            isStart = false;
             try {
                 if(mMyReceiver!=null){
                     mContext.unregisterReceiver(mMyReceiver);
@@ -418,7 +434,7 @@ public class HomeTwoFragment extends BaseFragment{
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(!isStart){
+            if(!isStart || isWanCheng){
                 System.out.println("BroadcastReceiver：设备暂停中");
                 return;
             }
@@ -454,7 +470,7 @@ public class HomeTwoFragment extends BaseFragment{
                     //遍历某个学生的球并从Map中获取对应的球号
                     Byte key = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(mSchoolStudentBean.getAllQiuNo().get(q));
                     //如果设备回调的球号包含这个学生控制的球内开始执行逻辑[10,16] [1]
-                    if(qiuhao==key){
+                    if(key!=null && qiuhao==key){
                         mSchoolStudentBean.setPostZjzs(mSchoolStudentBean.getPostZjzs()+1);
                         System.out.println("BroadcastReceiver：" + mSchoolStudentBean.getStudentName()+"：总击中数:"+mSchoolStudentBean.getPostZjzs());
                         setNotifyDataSetChanged_Fragment();
@@ -651,15 +667,16 @@ public class HomeTwoFragment extends BaseFragment{
             return;
         }
         setPostStudentResults();
+        isWanCheng = true;
         Log.w("BroadcastReceiver","完成全部课程:"+mPostStudentResults.toString());
-        DialogUtils.showDialogWanChengSuoYou(mContext, "所有课程已完成！\n成绩将自动上传！","确定", new DialogUtils.ErrorDialogInterfaceA() {
-            @Override
-            public void btnConfirm(int index) {
-                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true,index==0);
-                isWanCheng = true;
-                strataSetFlags();
-            }
-        });
+//        DialogUtils.showDialogWanChengSuoYou(mContext, "所有课程已完成！\n成绩将自动上传！","确定", new DialogUtils.ErrorDialogInterfaceA() {
+//            @Override
+//            public void btnConfirm(int index) {
+//                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true,index==0);
+//                isWanCheng = true;
+//                strataSetFlags();
+//            }
+//        });
     }
 
     /**

@@ -96,6 +96,7 @@ public class HomeOneFragment extends BaseFragment {
     String courseName = null;
     String ageRange = null, contentType = null, category = null,theme = null,processType=null,trainType=null;
     RadioGroupSelectUtils mRadioGroupSelectUtils;
+    String strToken = "";
     @Override
     protected int setLayoutResourceID() {
         return R.layout.fragment_home_one;
@@ -103,6 +104,7 @@ public class HomeOneFragment extends BaseFragment {
 
     @Override
     protected void initView() {
+        strToken = SharedUtils.getToken();
         iv_shanxuan.setSelected(false);
         refreshLayout.setRefreshHeader(new MaterialHeader(mContext).setShowBezierWave(false));
 //        refreshLayout.setEnableRefresh(false);
@@ -291,47 +293,10 @@ public class HomeOneFragment extends BaseFragment {
                 }
                 break;
             case R.id.ll_dajie:
-                page = 1;
-                mRadioGroupSelectUtils.setDaKeJie(true);
-                initDictDataType();
-                iv_shanxuan.setSelected(false);
-                mMRadioGroup.setVisibility(View.GONE);
-                mRbHomeSelect1.setText("年级");
-                mRbHomeSelect2.setText("教学内容");
-                mRbHomeSelect3.setText("大类别");
-                mRbHomeSelect4.setVisibility(View.GONE);
-                mTvDajie.setTextColor(getResources().getColor(R.color.white));
-                mTvXiaojie.setTextColor(getResources().getColor(R.color.white_46));
-                mTvDajie.setTextSize(16);
-                mTvXiaojie.setTextSize(14);
-                mIvDajie.setVisibility(View.VISIBLE);
-                mIvXiaojie.setVisibility(View.INVISIBLE);
-                mRvOneListSmall.setVisibility(View.GONE);
-                mRvOneList.setVisibility(View.VISIBLE);
-                courseName = null;
-                getSchoolCourseList();
+                setDaKeJieDate();
                 break;
             case R.id.ll_xiaojie:
-                page = 1;
-                mRadioGroupSelectUtils.setDaKeJie(false);
-                initDictDataType();
-                iv_shanxuan.setSelected(false);
-                mMRadioGroup.setVisibility(View.GONE);
-                mRbHomeSelect1.setText("年级");
-                mRbHomeSelect2.setText("教学内容");
-                mRbHomeSelect3.setText("流程");
-                mRbHomeSelect4.setText("核心指标");
-                mRbHomeSelect4.setVisibility(View.VISIBLE);
-                mTvDajie.setTextColor(getResources().getColor(R.color.white_46));
-                mTvXiaojie.setTextColor(getResources().getColor(R.color.white));
-                mTvDajie.setTextSize(14);
-                mTvXiaojie.setTextSize(16);
-                mIvDajie.setVisibility(View.INVISIBLE);
-                mIvXiaojie.setVisibility(View.VISIBLE);
-                mRvOneListSmall.setVisibility(View.VISIBLE);
-                mRvOneList.setVisibility(View.GONE);
-                courseName = null;
-                getSchoolCourseListSmall();
+                setXiaoKeJieDate();
                 break;
             case R.id.ll_shaixuan:
                 if(mMRadioGroup.getVisibility()==View.VISIBLE){
@@ -364,6 +329,63 @@ public class HomeOneFragment extends BaseFragment {
 //                startActivity(new Intent(mContext,CeShiShuJuAct.class));
                 startActivity(new Intent(mContext, SelectActivity.class));
                 break;
+        }
+    }
+
+    private void setXiaoKeJieDate() {
+        page = 1;
+        mRadioGroupSelectUtils.setDaKeJie(false);
+        initDictDataType();
+        iv_shanxuan.setSelected(false);
+        mMRadioGroup.setVisibility(View.GONE);
+        mRbHomeSelect1.setText("年级");
+        mRbHomeSelect2.setText("教学内容");
+        mRbHomeSelect3.setText("流程");
+        mRbHomeSelect4.setText("核心指标");
+        mRbHomeSelect4.setVisibility(View.VISIBLE);
+        mTvDajie.setTextColor(getResources().getColor(R.color.white_46));
+        mTvXiaojie.setTextColor(getResources().getColor(R.color.white));
+        mTvDajie.setTextSize(14);
+        mTvXiaojie.setTextSize(16);
+        mIvDajie.setVisibility(View.INVISIBLE);
+        mIvXiaojie.setVisibility(View.VISIBLE);
+        mRvOneListSmall.setVisibility(View.VISIBLE);
+        mRvOneList.setVisibility(View.GONE);
+        courseName = null;
+        getSchoolCourseListSmall();
+    }
+
+    private void setDaKeJieDate() {
+        page = 1;
+        mRadioGroupSelectUtils.setDaKeJie(true);
+        initDictDataType();
+        iv_shanxuan.setSelected(false);
+        mMRadioGroup.setVisibility(View.GONE);
+        mRbHomeSelect1.setText("年级");
+        mRbHomeSelect2.setText("教学内容");
+        mRbHomeSelect3.setText("大类别");
+        mRbHomeSelect4.setVisibility(View.GONE);
+        mTvDajie.setTextColor(getResources().getColor(R.color.white));
+        mTvXiaojie.setTextColor(getResources().getColor(R.color.white_46));
+        mTvDajie.setTextSize(16);
+        mTvXiaojie.setTextSize(14);
+        mIvDajie.setVisibility(View.VISIBLE);
+        mIvXiaojie.setVisibility(View.INVISIBLE);
+        mRvOneListSmall.setVisibility(View.GONE);
+        mRvOneList.setVisibility(View.VISIBLE);
+        courseName = null;
+        getSchoolCourseList();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!strToken.equals(SharedUtils.getToken())){
+            if(mIvDajie.getVisibility()==View.VISIBLE){
+                setDaKeJieDate();
+            }else{
+                setXiaoKeJieDate();
+            }
         }
     }
 

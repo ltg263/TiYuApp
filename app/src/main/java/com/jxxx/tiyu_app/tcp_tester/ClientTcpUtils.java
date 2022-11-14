@@ -269,6 +269,13 @@ public class ClientTcpUtils {
      * 全段配置指令 单个A0 和 A1呼吸灯
      */
     public void sendData_A0_A1_sj(byte msg, byte[] mData){
+        if(mData[1]==-1){
+            byte num = (byte) (Math.random()*(7+1));
+            if(num==0){
+                num = 2;
+            }
+            mData[1] = num;
+        }
         sendData(msg,mData);
     }
 

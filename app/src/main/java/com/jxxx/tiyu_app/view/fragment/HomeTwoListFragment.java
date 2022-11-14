@@ -57,8 +57,10 @@ public class HomeTwoListFragment extends BaseFragment {
     @Override
     protected void initView() {
         String id = getArguments().getString("mMapKey");
-        mHomeTwoTwoListAdapter = new HomeTwoTwoListAdapter(HomeTwoXueShengActivity.mMapSchoolStudentBeans.get(id));
-        mRvTwoList.setAdapter(mHomeTwoTwoListAdapter);
+        if(HomeTwoXueShengActivity.mMapSchoolStudentBeans!=null){
+            mHomeTwoTwoListAdapter = new HomeTwoTwoListAdapter(HomeTwoXueShengActivity.mMapSchoolStudentBeans.get(id));
+            mRvTwoList.setAdapter(mHomeTwoTwoListAdapter);
+        }
     }
 
     @Override
