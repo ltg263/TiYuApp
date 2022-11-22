@@ -280,63 +280,137 @@ public class ClientTcpUtils {
     }
 
     /**
-     * 一键关机
+     * 设置亮度
+     * @param dg:灯光 （可设置为室内00以及室外01两种）
      */
-    public void sendData_B1(){
+    public void sendData_B2(byte dg,SendDataOkInterface mSendDataOkInterface){
+        byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()];
+        for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
+            data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i);
+        }
+        sendDataThreadB2(0,data,dg,mSendDataOkInterface);
+    }
+    private void sendDataThreadB2(int pos, byte[] data,byte dg,SendDataOkInterface mSendDataOkInterface) {
+        if(pos > data.length-1){
+            mSendDataOkInterface.sendDataOk(ConstValuesHttps.MESSAGE_SEND_B2);
+            return;
+        }
+        byte[] data_new = new byte[]{data[pos], dg,0,0,0,0};
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(ConstValuesHttps.THREAD_SLEEP);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                sendData(ConstValuesHttps.MESSAGE_SEND_B2, data_new);
+                sendDataThreadB2(pos+1,data,dg,mSendDataOkInterface);
+            }
+        }).start();
+    }
+
+
+    /**
+     * 设置显示的球号
+     * @param allDate 设备反馈的数据
+     * @param sortNumSet 队列中的球号
+     */
+    public void sendData_B3(byte[] allDate,String[] sortNumSet,SendDataOkInterface mSendDataOkInterface) {
+        int new_ads_pos = ConstValuesHttps.MESSAGE_ALL_TOTAL.size();
+        List<Byte> newData = new ArrayList<>();
+        for(int i = 0;i<allDate.length;i++){
+            if(!ConstValuesHttps.MESSAGE_ALL_TOTAL.contains(allDate[i])){
+                if(sortNumSet.length-1>=ConstValuesHttps.MESSAGE_ALL_TOTAL.size()){
+                    ConstValuesHttps.MESSAGE_ALL_TOTAL.add(allDate[i]);
+                    newData.add(allDate[i]);
+                }
+            }
+        }
+        if(newData.size()>0){
+            byte[] data = new byte[newData.size()];
+            for(int i=0;i<newData.size();i++){
+                data[i] = newData.get(i);
+            }
+            sendDataThreadB3(0,new_ads_pos,data,mSendDataOkInterface);
+        }
+    }
+
+    private void sendDataThreadB3(int pos,int new_ads_pos, byte[] allDate,SendDataOkInterface mSendDataOkInterface) {
+        if(pos > allDate.length-1){
+            mSendDataOkInterface.sendDataOk(ConstValuesHttps.MESSAGE_SEND_B3);
+            return;
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(ConstValuesHttps.THREAD_SLEEP);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                byte new_ads = (byte) (new_ads_pos + pos+1);
+                byte[] data_new = new byte[]{allDate[pos], new_ads,0,0,0,0};
+                ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.put(new_ads,allDate[pos]);
+                sendData(ConstValuesHttps.MESSAGE_SEND_B3, data_new);
+                sendDataThreadB3(pos+1,new_ads_pos,allDate,mSendDataOkInterface);
+            }
+        }).start();
+    }
+
+    /**
+     * 发送完毕的回调
+     */
+    public interface SendDataOkInterface {
+        /**
+         * 确定
+         */
+        public void sendDataOk(byte msg);
+    }
+    public void sendData_B3_add00_all(SendDataOkInterface mSendDataOkInterface) {
+        byte[] data = new byte[101];
+        for(int i=0;i<101;i++){
+            data[i] = (byte) i;
+        }
+        sendDataThreadB1orB3(0,data,ConstValuesHttps.MESSAGE_SEND_B3,false,mSendDataOkInterface);
+    }
+    /**
+     * 设置显示的球号 00
+     */
+    public void sendData_B3_add00(boolean isSocketClose,boolean isShutdown,SendDataOkInterface mSendDataOkInterface){
         byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size()];
         for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size();i++){
             data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.get(i);
         }
-        for (int i=0;i<data.length;i++){
-            byte[] data_new = new byte[]{data[i], 0,0,0,0,0};
-            sendData(ConstValuesHttps.MESSAGE_SEND_B1,data_new);
+        byte msg = ConstValuesHttps.MESSAGE_SEND_B1;
+        if(!isShutdown){//不是关机 ---直接挂机不用制0
+            msg = ConstValuesHttps.MESSAGE_SEND_B3;
         }
+        sendDataThreadB1orB3(0,data,msg,isSocketClose,mSendDataOkInterface);
     }
 
-    /**
-     * 设置亮度
-     * @param ads:地址
-     * @param dg:灯光 （可设置为室内00以及室外01两种）
-     */
-    public void sendData_B2(byte ads,byte dg){
-        byte[] data = new byte[]{ads, dg,0,0,0,0};
-        sendData(ConstValuesHttps.MESSAGE_SEND_B2,data);
-    }
-
-    /**
-     * 设置显示的球号 00
-     */
-    public void sendData_B3_add00(boolean isSocketClose,boolean isShutdown){
-        if(isShutdown){//是关机 ---直接挂机不用制0
-            ClientTcpUtils.mClientTcpUtils.sendData_B1();
-        }else{
-            byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size()];
-            for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.size();i++){
-                data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.get(i);
+    private void sendDataThreadB1orB3(int pos, byte[] data,byte msg,boolean isSocketClose,SendDataOkInterface mSendDataOkInterface) {
+        if(pos > data.length-1){
+            if(isSocketClose){
+                onDestroy();
             }
-            for (int i=0;i<data.length;i++){
-                byte[] data_new = new byte[]{data[i], 0,0,0,0,0};
-                sendData(ConstValuesHttps.MESSAGE_SEND_B3,data_new);
+            mSendDataOkInterface.sendDataOk(msg);
+            return;
+        }
+        byte[] data_new = new byte[]{data[pos], 0,0,0,0,0};
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(ConstValuesHttps.THREAD_SLEEP);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                sendData(msg, data_new);
+                sendDataThreadB1orB3(pos+1,data,msg, isSocketClose,mSendDataOkInterface);
+
             }
-        }
-
-        if(isSocketClose){
-            onDestroy();
-        }
-    }
-
-    /**
-     * 设置显示的球号
-     * @param ads:地址
-     * @param new_ads:新的地址
-     */
-    public void sendData_B3(byte ads,byte new_ads){
-        ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.put(new_ads,ads);
-        byte[] data = new byte[]{ads, new_ads,0,0,0,0};
-        sendData(ConstValuesHttps.MESSAGE_SEND_B3,data);
-
-//        byte[] data_di = new byte[]{ads, 0X07,0,0X3D,0x01,0X03};
-//        sendData(ConstValuesHttps.MESSAGE_SEND_A0,data_di);
+        }).start();
     }
 
     public void sendData(byte msg, byte[] data){

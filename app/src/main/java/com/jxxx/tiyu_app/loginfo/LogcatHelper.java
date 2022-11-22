@@ -138,7 +138,7 @@ public class LogcatHelper {
     }
 
     public String getFileName() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String date = format.format(new Date(System.currentTimeMillis()));
         return date;
     }

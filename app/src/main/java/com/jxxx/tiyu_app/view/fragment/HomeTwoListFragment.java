@@ -1,6 +1,5 @@
 package com.jxxx.tiyu_app.view.fragment;
 
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,14 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.base.BaseFragment;
-import com.jxxx.tiyu_app.bean.PostStudentResults;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
-import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
-import com.jxxx.tiyu_app.utils.SharedUtils;
 import com.jxxx.tiyu_app.view.activity.HomeTwoXueShengActivity;
-import com.jxxx.tiyu_app.view.adapter.HomeTwoOneListAdapter;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoTwoListAdapter;
 
 import java.util.List;
@@ -57,6 +52,7 @@ public class HomeTwoListFragment extends BaseFragment {
     @Override
     protected void initView() {
         String id = getArguments().getString("mMapKey");
+        System.out.println("HomeTwoListFragment1:"+HomeTwoXueShengActivity.mMapSchoolStudentBeans);
         if(HomeTwoXueShengActivity.mMapSchoolStudentBeans!=null){
             mHomeTwoTwoListAdapter = new HomeTwoTwoListAdapter(HomeTwoXueShengActivity.mMapSchoolStudentBeans.get(id));
             mRvTwoList.setAdapter(mHomeTwoTwoListAdapter);
@@ -65,6 +61,7 @@ public class HomeTwoListFragment extends BaseFragment {
 
     @Override
     protected void initData() {
+        System.out.println("HomeTwoListFragment2:"+ConstValues.mSchoolCourseInfoBeanSmall);
         if(ConstValues.mSchoolCourseInfoBean!=null){//大课程信息
             List<SchoolCourseBean.CourseSectionVoListBean> mCourseSectionVoLists = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList();
             if(mCourseSectionVoLists!=null && mCourseSectionVoLists.size()>HomeTwoXueShengActivity.current_course_section){

@@ -1,5 +1,6 @@
 package com.jxxx.tiyu_app.utils;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,12 +18,15 @@ import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.app.MainApplication;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
+import com.jxxx.tiyu_app.utils.view.LoadingDialog;
 import com.jxxx.tiyu_app.utils.view.StepArcView_n;
 import com.jxxx.tiyu_app.view.activity.HomeTwoXueShengActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import butterknife.ViewCollections;
 
 public class WifiMessageReceiver extends BroadcastReceiver {
 
@@ -78,7 +82,6 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         this.mContext = mContext;
         byte mStartBroadcastType = intent.getByteExtra(WifiMessageReceiver.START_BROADCAST_TYPE, (byte) 0X00);
         byte[] startBroadcastData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
-        System.out.println("接收的数据-->>(16)" + ClientTcpUtils.BinaryToHexString(startBroadcastData));
         Log.i("BroadcastReceiver", "onReceive: " + Integer.toHexString(mStartBroadcastType & 0xFF));
         if(mStartBroadcastType == WifiMessageReceiver.START_BROADCAST_TYPE_CLOSE){
             System.out.println("连接已断开");
@@ -107,11 +110,20 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 return;
             }
 //            showDialogXunQiu(mContext,sbNum,true);
-
-            if(dialog.isShowing()){
-                btn_xunqiu.setText("开始寻球");
-                tv_title.setText("恭喜您\n设备已连接成功！");
-            }
+            ClientTcpUtils.mClientTcpUtils.sendData_B3_add00_all(new ClientTcpUtils.SendDataOkInterface() {
+                @Override
+                public void sendDataOk(byte msg) {
+                    ((Activity)mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(dialog.isShowing()){
+                                btn_xunqiu.setText("开始寻球");
+                                tv_title.setText("恭喜您\n设备已连接成功！");
+                            }
+                        }
+                    });
+                }
+            });
         }
         if(mStartBroadcastType == ConstValuesHttps.MESSAGE_GET_C0){
             if(startBroadcastData==null){
@@ -143,6 +155,9 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 }
             }
             startBroadcastData = Arrays.copyOfRange(startBroadcastData, 2, startBroadcastData.length);
+            if(startBroadcastData.length==0){
+                return;
+            }
             ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.clear();
             for(int i = 0;i<startBroadcastData.length;i++){
                 if(!ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.contains(startBroadcastData[i])) {
@@ -153,28 +168,38 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 }
             }
             if(dialog!=null && dialog.isShowing() && btn_xunqiu.getText().toString().equals("正在寻球")){
-                for(int i = 0;i<startBroadcastData.length;i++){
-                    Log.i("BroadcastReceiver", "MESSAGE_ALL_TOTAL: " + ConstValuesHttps.MESSAGE_ALL_TOTAL);
-                    Log.i("BroadcastReceiver", "startBroadcastData: " + startBroadcastData[i]);
-                    Log.i("BroadcastReceiver", "sortNumSet: " + Arrays.toString(sortNumSet));
-                    if(!ConstValuesHttps.MESSAGE_ALL_TOTAL.contains(startBroadcastData[i])){
-                        if(sortNumSet != null && sortNumSet.length-1>=ConstValuesHttps.MESSAGE_ALL_TOTAL.size()){
-                            ConstValuesHttps.MESSAGE_ALL_TOTAL.add(startBroadcastData[i]);
-                            Log.i("BroadcastReceiver", "sendData_B3: " + startBroadcastData[i]);
-                            ClientTcpUtils.mClientTcpUtils.sendData_B3(startBroadcastData[i],
-                                    Byte.parseByte(sortNumSet[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()-1]));
+                if(sortNumSet!=null){
+                    ClientTcpUtils.mClientTcpUtils.sendData_B3(startBroadcastData, sortNumSet,
+                            new ClientTcpUtils.SendDataOkInterface() {
+                        @Override
+                        public void sendDataOk(byte msg) {
+                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(sbNum <= ConstValuesHttps.MESSAGE_ALL_TOTAL.size() && dialog.isShowing()){
+                                        btn_xunqiu.setText("完成寻球");
+                                    }
+                                    tv_sbNum.setText(ConstValuesHttps.MESSAGE_ALL_TOTAL.size()+"/"+sbNum);
+                                    mSvN.setCurrentCount(sbNum,ConstValuesHttps.MESSAGE_ALL_TOTAL.size(),tv_bfb);
+                                }
+                            });
                         }
-                    }
+                    });
                 }
-                if(sbNum <= ConstValuesHttps.MESSAGE_ALL_TOTAL.size() && dialog.isShowing()){
-                    btn_xunqiu.setText("完成寻球");
-                }
-                tv_sbNum.setText(ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.size()+"/"+sbNum);
-                mSvN.setCurrentCount(sbNum,ConstValuesHttps.MESSAGE_ALL_TOTAL.size(),tv_bfb);
             }
         }
         if(mStartBroadcastType== ConstValuesHttps.MESSAGE_GET_C5){
             if(startBroadcastData==null){
+                return;
+            }
+            int to = startBroadcastData.length;
+            for(int i = 0;i<startBroadcastData.length;i++){
+                if(startBroadcastData[i] == -1){
+                    to = i+1;
+                }
+            }
+            startBroadcastData = Arrays.copyOfRange(startBroadcastData, 0,to);
+            if(startBroadcastData.length==0){
                 return;
             }
             Intent mIntent = new Intent("com.jxxx.tiyu_app.view.fragment");
@@ -218,16 +243,25 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                     btn_xunqiu.setText("正在寻球");
                 }
                 if(btn_xunqiu.getText().toString().equals("完成寻球")){
-                    for(int i = 0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
-                        ClientTcpUtils.mClientTcpUtils.sendData_B2(ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i),(byte) dengGuang);
-                    }
-                    isShowCurrentActivity = false;
                     dialog.dismiss();
-                    if(mWifiMessageReceiverInter==null){
-                        mContext.startActivity(new Intent(mContext, HomeTwoXueShengActivity.class));
-                    }else{
-                        mWifiMessageReceiverInter.messageReceiverInter();
-                    }
+                    isShowCurrentActivity = false;
+                    showLoading(mContext);
+                    ClientTcpUtils.mClientTcpUtils.sendData_B2((byte) dengGuang, new ClientTcpUtils.SendDataOkInterface() {
+                        @Override
+                        public void sendDataOk(byte msg) {
+                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    hideLoading();
+                                    if(mWifiMessageReceiverInter==null){
+                                        mContext.startActivity(new Intent(mContext, HomeTwoXueShengActivity.class));
+                                    }else{
+                                        mWifiMessageReceiverInter.messageReceiverInter();
+                                    }
+                                }
+                            });
+                        }
+                    });
                 }
             }
         });
@@ -237,8 +271,20 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         iv_quxiao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true,false);
-                dialog.dismiss();
+//                dialog.dismiss();
+                showLoading(mContext);
+                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true, false,
+                        new ClientTcpUtils.SendDataOkInterface() {
+                    @Override
+                    public void sendDataOk(byte msg) {
+                        ((Activity)mContext).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideLoading();
+                            }
+                        });
+                    }
+                });
             }
         });
         dialog.setCancelable(false);
@@ -247,6 +293,23 @@ public class WifiMessageReceiver extends BroadcastReceiver {
             dialog.show();
         }catch (Exception e){
 
+        }
+    }
+
+    private LoadingDialog mLoading;
+    public void showLoading(Context mContext) {
+        if (mLoading != null && !mLoading.isShowing()) {
+            mLoading.show();
+        } else {
+            mLoading = LoadingDialog.show(mContext, R.string.loading_text, false, null);
+        }
+    }
+
+
+
+    public void hideLoading() {
+        if (mLoading != null && mLoading.isShowing()) {
+            mLoading.dismiss();
         }
     }
 

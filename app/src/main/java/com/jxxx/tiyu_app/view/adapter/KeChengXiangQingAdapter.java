@@ -1,5 +1,6 @@
 package com.jxxx.tiyu_app.view.adapter;
 
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -14,6 +15,12 @@ import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import java.util.List;
 
 public class KeChengXiangQingAdapter extends BaseQuickAdapter<SchoolCourseBean.CourseSectionVoListBean, BaseViewHolder> {
+
+    boolean isShow = true;
+
+    public void setShow(boolean show) {
+        isShow = show;
+    }
 
     public KeChengXiangQingAdapter(@Nullable List<SchoolCourseBean.CourseSectionVoListBean> data) {
         super(R.layout.item_kechengxiangqing, data);
@@ -42,6 +49,10 @@ public class KeChengXiangQingAdapter extends BaseQuickAdapter<SchoolCourseBean.C
         }
         TextView tv_1 = helper.getView(R.id.tv_1);
         TextView tv_2 = helper.getView(R.id.tv_2);
+        if(!isShow){
+            tv_1.setVisibility(View.GONE);
+            tv_2.setVisibility(View.GONE);
+        }
         helper.addOnClickListener(R.id.tv_1);
         helper.addOnClickListener(R.id.tv_2);
         tv_1.setText(String.valueOf(item.getQueueingNum()));

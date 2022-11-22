@@ -1,6 +1,5 @@
 package com.jxxx.tiyu_app.view.activity;
 
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +12,7 @@ import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.SchoolClassRecordBean;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import com.jxxx.tiyu_app.utils.view.StepArcView_n;
-import com.jxxx.tiyu_app.view.adapter.HomeTwoTwoListAdapter;
+import com.jxxx.tiyu_app.view.adapter.HomeBanJiXqAdapter;
 
 import butterknife.BindView;
 import io.reactivex.Observer;
@@ -42,6 +41,10 @@ public class HomeBanJiXqActivity extends BaseActivity {
     TextView mTvType1;
     @BindView(R.id.tv_type_2)
     TextView mTvType2;
+    @BindView(R.id.tv_absenteesNum)
+    TextView mTvAbsenteesNum;
+    @BindView(R.id.tv_traineesNum)
+    TextView mTvTraineesNum;
 
     @Override
     public int intiLayout() {
@@ -51,14 +54,14 @@ public class HomeBanJiXqActivity extends BaseActivity {
     @Override
     public void initView() {
         iv_back.setOnClickListener(v -> finish());
-        tv_title.setText("203班成绩");
-        mSvN.setCurrentCount(100, 70, tv_bfb);
+        tv_title.setText(getIntent().getStringExtra("name"));
     }
 
     @Override
     public void initData() {
         getSchoolClassRecord();
     }
+
     private void getSchoolClassRecord() {
         RetrofitUtil.getInstance().apiService()
                 .getSchoolClassRecord(getIntent().getStringExtra("id"))
@@ -74,7 +77,7 @@ public class HomeBanJiXqActivity extends BaseActivity {
                     public void onNext(Result<SchoolClassRecordBean> result) {
                         if (isResultOk(result) && result.getData() != null) {
                             initDataV(result.getData());
-                            mRvTwoList.setAdapter(new HomeTwoTwoListAdapter(null));
+                            mRvTwoList.setAdapter(new HomeBanJiXqAdapter(result.getData().getStudentResultsList()));
                         }
                     }
 
@@ -91,8 +94,13 @@ public class HomeBanJiXqActivity extends BaseActivity {
     }
 
     private void initDataV(SchoolClassRecordBean data) {
-        GlideImgLoader.loadImageViewRadiusNoCenter(this,data.getImgUrl(),mIvIcon);
+        GlideImgLoader.loadImageViewRadiusNoCenter(this, data.getImgUrl(), mIvIcon);
+        mTvAbsenteesNum.setText(data.getAbsenteesNum());
+        mTvTraineesNum.setText(data.getTraineesNum());
+        mTvName.setText(data.getCourseName());
         mTvUserName.setText(data.getCourseName());
         mTvType1.setText(data.getLabels());
+        mSvN.setCurrentCount(100, 70, tv_bfb);
     }
 }
+

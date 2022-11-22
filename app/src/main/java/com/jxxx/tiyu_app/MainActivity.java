@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
+import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.app.MainApplication;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
@@ -269,6 +270,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void setOnResume() {
+        System.out.println("MainActivity:"+indexPos);
         switch (indexPos){
             case 0:
                 mBnvHomeNavigation.setSelectedItemId(R.id.menu_home_1);

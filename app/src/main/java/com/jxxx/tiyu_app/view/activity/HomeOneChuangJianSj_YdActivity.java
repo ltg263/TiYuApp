@@ -139,8 +139,20 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                         "当前模式结束","确定", new DialogUtils.ErrorDialogInterfaceA() {
                     @Override
                     public void btnConfirm(int index) {
-                        ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true,index==0);
-                        finish();
+                        showLoading();
+                        ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true, index == 0,
+                                new ClientTcpUtils.SendDataOkInterface() {
+                            @Override
+                            public void sendDataOk(byte msg) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideLoading();
+                                        finish();
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }

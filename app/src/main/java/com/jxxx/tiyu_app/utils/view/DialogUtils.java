@@ -357,7 +357,9 @@ public class DialogUtils {
         RecyclerView rv_list = view.findViewById(R.id.rv_list);
         if(mSchoolCourseBean!=null){
             tv_title.setText("默认使用"+mSchoolCourseBean.getBallNum()+"个光电球，"+mSchoolCourseBean.getPlateNum()+"块光电地板");
-            rv_list.setAdapter(new KeChengXiangQingAdapter(mSchoolCourseBean.getCourseSectionVoList()));
+            KeChengXiangQingAdapter mKeChengXiangQingAdapter = new KeChengXiangQingAdapter(mSchoolCourseBean.getCourseSectionVoList());
+            mKeChengXiangQingAdapter.setShow(false);
+            rv_list.setAdapter(mKeChengXiangQingAdapter);
         }
         if(mSchoolCourseBeanSmall!=null){
             view.findViewById(R.id.iv_line).setVisibility(View.INVISIBLE);
@@ -592,7 +594,7 @@ public class DialogUtils {
                 .getInstance()
                 .apkUrl(data.getDownloadPath())
                 .updateTitle("发现新版本:V"+data.getVersionNo())
-                .updateContent("更新内容:"+Html.fromHtml(data.getUpdateContent()))
+                .updateContent("更新内容:"+Html.fromHtml("  <font >" + data.getUpdateContent()+ "</font>  "))
                 .uiConfig(uiConfig)
                 .updateConfig(updateConfig)
                 .setMd5CheckResultListener(new Md5CheckResultListener() {

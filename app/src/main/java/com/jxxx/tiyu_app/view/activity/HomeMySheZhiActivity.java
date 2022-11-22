@@ -5,14 +5,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jxxx.tiyu_app.MainActivity;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.UserInfoProfileBean;
+import com.jxxx.tiyu_app.bean.VersionResponse;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import com.jxxx.tiyu_app.utils.SharedUtils;
+import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
 
 import butterknife.BindView;
@@ -34,6 +37,8 @@ public class HomeMySheZhiActivity extends BaseActivity {
     TextView mTvTuichu;
     @BindView(R.id.tv_age)
     TextView mTvAge;
+    @BindView(R.id.tv_banbenhao)
+    TextView tv_banbenhao;
     @BindView(R.id.tv_schoolName)
     TextView mTvSchoolName;
     @BindView(R.id.iv_head)
@@ -46,7 +51,7 @@ public class HomeMySheZhiActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
+        tv_banbenhao.setText("V:"+ MainActivity.getVersionName(this));
     }
 
     @Override
@@ -55,7 +60,7 @@ public class HomeMySheZhiActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.tv_tuichu,R.id.iv_back, R.id.iv_head})
+    @OnClick({R.id.tv_tuichu,R.id.iv_back, R.id.iv_head,R.id.tv_banbenhao})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
@@ -72,7 +77,44 @@ public class HomeMySheZhiActivity extends BaseActivity {
                 break;
             case R.id.iv_head:
                 break;
+            case R.id.tv_banbenhao:
+                getLast();
+                break;
         }
+    }
+
+    private void getLast() {
+        RetrofitUtil.getInstance().apiService()
+                .getLast("1")
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Result<VersionResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Result<VersionResponse> result) {
+                        if(isResultOk(result)){
+                            if(!result.getData().getVersionNo().equals(
+                                    MainActivity.getVersionName(HomeMySheZhiActivity.this))){
+                                DialogUtils.goUpdating(HomeMySheZhiActivity.this,result.getData());
+                            }else{
+                                ToastUtil.showShortToast(HomeMySheZhiActivity.this,"当前是最新版本");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
     }
 
     private void getSchoolTeacherCurrent() {

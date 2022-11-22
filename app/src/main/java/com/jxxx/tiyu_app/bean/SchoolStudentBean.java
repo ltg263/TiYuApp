@@ -16,6 +16,16 @@ public class SchoolStudentBean {
      */
 
     private int age;
+    private String classId;
+
+    public void setClassId(String classId) {
+        this.classId = classId;
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
     private String className;
     private String classSchedule;
     private int gender;

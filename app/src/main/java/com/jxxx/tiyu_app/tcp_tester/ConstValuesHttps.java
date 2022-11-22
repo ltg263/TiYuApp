@@ -17,6 +17,10 @@ public class ConstValuesHttps {
      * 端口
      */
     public static int PORT = 1001;
+    /**
+     * 线程的等待时长
+     */
+    public static int THREAD_SLEEP = 50;
 
     /**
      * 课程所用所有的球

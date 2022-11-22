@@ -18,7 +18,9 @@ import com.jxxx.tiyu_app.bean.SchoolClassBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
+import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
+import com.jxxx.tiyu_app.utils.view.DialogUtils;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoXueShengAdapter;
 
 import java.util.ArrayList;
@@ -79,16 +81,16 @@ public class HomeTwoXueShengActivity extends BaseActivity {
 
     }
 
-
     @OnClick({R.id.iv_back, R.id.tv_jishi, R.id.btn_kaishiyundong})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                finish();
+                showDialogHint();
                 break;
             case R.id.tv_jishi:
                 break;
             case R.id.btn_kaishiyundong:
+                current_yundong_yikaishi = false;
                 current_course_section = 0;
                 current_course_section_loop_num = 0;
                 initYuDongData();
@@ -98,7 +100,37 @@ public class HomeTwoXueShengActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        showDialogHint();
+    }
+
+    private void showDialogHint() {
+        DialogUtils.showDialogHint(this, "确定要重新选择课程吗？", false, new DialogUtils.ErrorDialogInterface() {
+            @Override
+            public void btnConfirm() {
+                showLoading();
+                ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true, false, new ClientTcpUtils.SendDataOkInterface() {
+                    @Override
+                    public void sendDataOk(byte msg) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideLoading();
+                                startActivity(new Intent(HomeTwoXueShengActivity.this, MainActivity.class));
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     //开始运动前 初始所有数据；
+    /**
+     * 防止创建多个广播
+     */
+    public static boolean current_yundong_yikaishi = false;
     /**
      * Map队列的KEY
      */

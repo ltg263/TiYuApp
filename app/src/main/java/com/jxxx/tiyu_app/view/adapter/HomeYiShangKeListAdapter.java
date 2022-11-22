@@ -20,7 +20,7 @@ public class HomeYiShangKeListAdapter extends BaseQuickAdapter<SchoolClassRecord
 
     @Override
     protected void convert(BaseViewHolder helper,SchoolClassRecordBean item) {
-        helper.addOnClickListener(R.id.tv_type_2);
+//        helper.addOnClickListener(R.id.tv_type_2);
         GlideImgLoader.loadImageViewRadiusNoCenter(mContext,item.getImgUrl(),helper.getView(R.id.iv_icon));
         helper.setText(R.id.tv_name,item.getCourseName()).setText(R.id.tv_type_1,item.getLabels());
     }

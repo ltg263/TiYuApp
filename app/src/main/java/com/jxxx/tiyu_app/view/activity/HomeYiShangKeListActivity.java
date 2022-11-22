@@ -39,6 +39,7 @@ public class HomeYiShangKeListActivity extends BaseActivity {
     TextView tv_not_data;
     ShangKeBanJi_jlAdapter mShangKeBanJi_jlAdapter;
     HomeYiShangKeListAdapter mHomeYiShangKeListAdapter;
+    String name = "";
     @Override
     public int intiLayout() {
         return R.layout.activity_home_yi_shangke_list;
@@ -53,6 +54,7 @@ public class HomeYiShangKeListActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 mShangKeBanJi_jlAdapter.setId(mShangKeBanJi_jlAdapter.getData().get(position).getId());
                 mShangKeBanJi_jlAdapter.notifyDataSetChanged();
+                name = mShangKeBanJi_jlAdapter.getData().get(position).getClassName();
                 getSchoolClassRecordList(mShangKeBanJi_jlAdapter.getData().get(position).getId());
             }
         });
@@ -63,6 +65,7 @@ public class HomeYiShangKeListActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent mIntent = new Intent(HomeYiShangKeListActivity.this,HomeBanJiXqActivity.class);
                 mIntent.putExtra("id",mHomeYiShangKeListAdapter.getData().get(position).getId());
+                mIntent.putExtra("name",name);
                 startActivity(mIntent);
             }
         });
@@ -90,6 +93,7 @@ public class HomeYiShangKeListActivity extends BaseActivity {
                     public void onNext(Result<List<SchoolClassBean>> result) {
                         if(isResultOk(result) && result.getData()!=null){
                             if(result.getData().size()>0){
+                                name = result.getData().get(0).getClassName();
                                 mShangKeBanJi_jlAdapter.setId(result.getData().get(0).getId());
                                 getSchoolClassRecordList(result.getData().get(0).getId());
                             }

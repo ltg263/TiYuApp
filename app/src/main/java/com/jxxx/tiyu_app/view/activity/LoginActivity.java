@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
 
@@ -37,6 +38,8 @@ public class LoginActivity extends BaseActivity {
     EditText mEtUser;
     @BindView(R.id.et_pas)
     EditText mEtPas;
+    @BindView(R.id.tv_user_type)
+    TextView tv_user_type;
 
     public static void startActivityIntent(Context mContext) {
         mContext.startActivity(new Intent(mContext, LoginActivity.class));
@@ -62,7 +65,14 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+        switch (ConstValues.BANBEN_TYPE){
+            case 1:
+                tv_user_type.setText("用户登录(中小学)");
+                break;
+            case 2:
+                tv_user_type.setText("用户登录(幼教)");
+                break;
+        }
     }
 
     @OnClick(R.id.btn_login)

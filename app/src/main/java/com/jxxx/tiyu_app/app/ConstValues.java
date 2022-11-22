@@ -16,6 +16,12 @@ public class ConstValues {
      * 应用名称
      */
     public static String APPNAME_ENGLISH = "TiYuApp";
+    /**
+     * 版本
+     * 1 中小学
+     * 2 幼教
+     */
+    public static int BANBEN_TYPE = 1;
 
     /**
      * 文件夹父路径
@@ -35,7 +41,8 @@ public class ConstValues {
      * 服务器后台地址
      */
 //    public static final String BASE_URL = "http://192.168.2.146:8080/";
-    public static final String BASE_URL = "http://mingzhou.nbqichen.com:8888/prod-api/";
+    public static String BASE_URL = "";
+//    public static  String BASE_URL = "http://mingzhou.nbqichen.com:8888/prod-api/";
 //    public static final String BASE_URL = "http://kindergarten.nbqichen.com:8888/prod-api/";
 
     //默认连接超时时间

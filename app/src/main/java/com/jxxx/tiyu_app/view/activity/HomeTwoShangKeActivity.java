@@ -19,7 +19,13 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.util.JavaBeanInfo;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.jxxx.tiyu_app.MainActivity;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
@@ -31,6 +37,7 @@ import com.jxxx.tiyu_app.bean.PostStudentResults;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
+import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
@@ -127,11 +134,9 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 switch (view.getId()){
                     case R.id.tv_2:
                         list.clear();
-                        list.add("1");
-                        list.add("2");
-                        list.add("3");
-                        list.add("4");
-                        list.add("5");
+                        for(int i=0;i<50;i++){
+                            list.add(String.valueOf(i+1));
+                        }
                         CustomPopWindow.initPopupWindow(HomeTwoShangKeActivity.this, view, list,
                                 new CustomPopWindow.PopWindowInterface() {
                                     @Override
@@ -142,10 +147,10 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                                 });
                         break;
                     case R.id.tv_1:
-                        if(true){
-                            postSmallCourseCopyQueue((TextView) view,"", mCourseSectionVoListBean.getSmallCourseId(),"2");
-                            return;
-                        }
+//                        if(true){
+//                            postSmallCourseCopyQueue((TextView) view,"", mCourseSectionVoListBean.getSmallCourseId(),"2");
+//                            return;
+//                        }
                         list.clear();
                         for(int i=0;i<queueNum;i++){
                             list.add((i+1)+"");
@@ -156,12 +161,24 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                         CustomPopWindow.initPopupWindow(HomeTwoShangKeActivity.this,view, list,
                                 new CustomPopWindow.PopWindowInterface() {
                                     @Override
-                                    public void getPosition(int position) {
-                                           int pos = Integer.parseInt(((TextView) view).getText().toString());
-                                            if(pos < position+2){
-                                                postSmallCourseCopyQueue((TextView) view,list.get(position),
-                                                        mCourseSectionVoListBean.getSmallCourseId(),list.get(position));
-                                            }
+                                    public void getPosition(int pos) {
+//                                        int pos = Integer.parseInt(((TextView) view).getText().toString());
+//                                        if(pos < position+2){
+                                        ((TextView) view).setText(list.get(pos));
+                                        postSmallCourseCopyQueue(mCourseSectionVoListBean.getSmallCourseId(),list.get(pos),position);
+//                                        }
+//                                        String mActionInfo = mCourseSectionVoListBean.getSmallCourseVo().getActionInfo();
+//                                        JSONArray mJSONArray =  JSONArray.parseArray(mActionInfo);
+//                                        Log.w("mActionInfo","mActionInfo"+mActionInfo);
+//                                        if(mJSONArray.size()-1<position){
+//                                            ToastUtil.showShortToast(HomeTwoShangKeActivity.this,"错误队列");
+//                                            return;
+//                                        }
+//                                        Log.w("mActionInfo","mJSONArray.get(position):"+mJSONArray.get(position));
+//                                        JSONObject mJSONObject = JSONObject.parseObject(mJSONArray.getJSONObject(position).toJSONString());
+//                                        mJSONObject.put("groupNo",mJSONArray.size());
+//                                        mJSONArray.add(mJSONObject);
+//                                        Log.w("mActionInfo","mJSONArray"+mJSONArray.toJSONString());
                                     }
                                 });
                         break;
@@ -169,7 +186,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
             }
         });
     }
-    private void postSmallCourseCopyQueue(TextView tv_1,String str,String smallCourseId,String num) {
+    private void postSmallCourseCopyQueue(String smallCourseId,String num,int pos) {
         showLoading();
         SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoListBean = new SchoolCourseBean.CourseSectionVoListBean();
         mCourseSectionVoListBean.setId(smallCourseId);
@@ -178,21 +195,25 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 .postSmallCourseCopyQueue(smallCourseId,num)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Result>() {
+                .subscribe(new Observer<Result<SchoolCourseBean.CourseSectionVoListBean>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(Result result) {
-                        if(isResultOk(result)){
-                            getSchoolCourseDetail();
+                    public void onNext(Result<SchoolCourseBean.CourseSectionVoListBean> result) {
+                        Log.w("postSmallCourseCopyQueue","onNext");
+                        if(isResultOk(result) && result.getData()!=null){
+//                            ConstValues.mSchoolCourseInfoBean = result.getData();
+                            mKeChengXiangQingAdapter.getData().set(pos,result.getData());
+                            mKeChengXiangQingAdapter.notifyDataSetChanged();
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        Log.w("postSmallCourseCopyQueue","onError");
                         hideLoading();
                     }
 
@@ -386,7 +407,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                onBackPressed();
+                finish();
                 break;
             case R.id.btn_kaishishangke:
 //            case R.id.tv_lianjie:
@@ -471,16 +492,6 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                         hideLoading();
                     }
                 });
-    }
-
-    @Override
-    public void onBackPressed() {
-        ConstValues.mSchoolCourseInfoBean = null;
-        ConstValues.mSchoolCourseInfoBeanSmall = null;
-        ConstValues.mSchoolClassInfoBean = null;
-        ConstValues.mSchoolStudentInfoBean = null;
-        Log.w("BroadcastReceiver","onBackPressed:");
-        super.onBackPressed();
     }
 
     @Override

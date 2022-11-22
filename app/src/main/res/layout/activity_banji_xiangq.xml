@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/tongyong_bj_theme"
     android:orientation="vertical">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,147 +26,152 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/quan_ju_top_title"
             android:gravity="center"
-            android:text="203班成绩"
+            android:text="已上课"
+            android:layout_marginBottom="10dp"
             android:textColor="@color/color_ffffff"
             android:textSize="16sp" />
-
-
-        <TextView
-            android:id="@+id/tv_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_title"
-            android:layout_marginTop="15dp"
-            android:gravity="center_vertical"
-            android:padding="15dp"
-            android:text="总人数0人"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
-        <com.jxxx.tiyu_app.utils.view.SquareRelativeLayout
-            android:id="@+id/srl"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
-            android:layout_alignTop="@id/tv_user_name"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="15dp">
-
-            <com.jxxx.tiyu_app.utils.view.StepArcView_n
-                android:id="@+id/sv_n"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/tv_bfb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="100%"
-                android:textColor="@color/white"
-                android:textSize="26dp" />
-
-        </com.jxxx.tiyu_app.utils.view.SquareRelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/srl"
-            android:orientation="horizontal"
-            android:paddingVertical="15dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_banji"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="0"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_14" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:text="完成人数"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_12" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="0"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_14" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:text="超时人数"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_12" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_three_3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="0"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_14" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:text="未到人数"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_12" />
-            </LinearLayout>
-
-        </LinearLayout>
-
     </RelativeLayout>
 
     <androidx.core.widget.NestedScrollView
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"
         android:scrollbars="none">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/bj_circle_three_x">
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center_vertical"
+                    android:padding="15dp"
+                    android:text="总人数0人"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <com.jxxx.tiyu_app.utils.view.SquareRelativeLayout
+                    android:id="@+id/srl"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_alignTop="@id/tv_user_name"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginTop="15dp">
+
+                    <com.jxxx.tiyu_app.utils.view.StepArcView_n
+                        android:id="@+id/sv_n"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <TextView
+                        android:id="@+id/tv_bfb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="100%"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+
+                </com.jxxx.tiyu_app.utils.view.SquareRelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/srl"
+                    android:orientation="horizontal"
+                    android:paddingVertical="10dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_absenteesNum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:text="完成人数"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:text="超时人数"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_three_3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_traineesNum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_14" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:text="未到人数"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_12" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -226,6 +230,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_toEndOf="@id/iv_icon"
                     android:paddingBottom="5dp"
+                    android:visibility="invisible"
                     android:text="每组4人  |  共4个步骤"
                     android:textColor="@color/color_333333"
                     android:textSize="@dimen/dp_10" />

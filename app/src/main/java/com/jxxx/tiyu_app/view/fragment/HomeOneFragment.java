@@ -210,7 +210,6 @@ public class HomeOneFragment extends BaseFragment {
                     HomeTwoShangKeActivity.startActivityIntent(mContext,mHomeOneAdapter.getData().get(position).getId(),false);
                 }
                 if(view.getId()==R.id.tv_kssk){
-
                     if(mHomeOneAdapter.getData().get(position).getCourseSectionVoList().size()==0){
                         return;
                     }
@@ -352,6 +351,7 @@ public class HomeOneFragment extends BaseFragment {
         mRvOneListSmall.setVisibility(View.VISIBLE);
         mRvOneList.setVisibility(View.GONE);
         courseName = null;
+        refreshLayout.setNoMoreData(false);
         getSchoolCourseListSmall();
     }
 
@@ -374,6 +374,7 @@ public class HomeOneFragment extends BaseFragment {
         mRvOneListSmall.setVisibility(View.GONE);
         mRvOneList.setVisibility(View.VISIBLE);
         courseName = null;
+        refreshLayout.setNoMoreData(false);
         getSchoolCourseList();
     }
 
