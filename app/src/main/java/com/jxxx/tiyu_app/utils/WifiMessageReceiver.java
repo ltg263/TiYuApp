@@ -271,7 +271,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
         iv_quxiao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                dialog.dismiss();
+                dialog.dismiss();
                 showLoading(mContext);
                 ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true, false,
                         new ClientTcpUtils.SendDataOkInterface() {
