@@ -98,7 +98,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tv_absenteesNum"
+                            android:id="@+id/tv_traineesNum"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -151,7 +151,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/tv_traineesNum"
+                            android:id="@+id/tv_absenteesNum"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
@@ -243,6 +243,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:padding="15dp"
+                android:visibility="gone"
                 android:text="综合成绩"
                 android:textColor="@color/color_000000"
                 android:textSize="16sp"
@@ -251,6 +252,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginHorizontal="15dp"
                 android:background="@drawable/btn_shape_theme"
                 android:orientation="vertical">

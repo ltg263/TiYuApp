@@ -356,7 +356,8 @@ public class DialogUtils {
         TextView tv_type =  view.findViewById(R.id.tv_type);
         RecyclerView rv_list = view.findViewById(R.id.rv_list);
         if(mSchoolCourseBean!=null){
-            tv_title.setText("默认使用"+mSchoolCourseBean.getBallNum()+"个光电球，"+mSchoolCourseBean.getPlateNum()+"块光电地板");
+            tv_title.setText("默认使用"+mSchoolCourseBean.getCourseSectionVoList().get(0).getBallNum()+"个光电球，"
+                    +mSchoolCourseBean.getCourseSectionVoList().get(0).getPlateNum()+"块光电地板");
             KeChengXiangQingAdapter mKeChengXiangQingAdapter = new KeChengXiangQingAdapter(mSchoolCourseBean.getCourseSectionVoList());
             mKeChengXiangQingAdapter.setShow(false);
             rv_list.setAdapter(mKeChengXiangQingAdapter);

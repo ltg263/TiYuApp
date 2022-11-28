@@ -100,7 +100,10 @@ public class HomeBanJiXqActivity extends BaseActivity {
         mTvName.setText(data.getCourseName());
         mTvUserName.setText(data.getCourseName());
         mTvType1.setText(data.getLabels());
-        mSvN.setCurrentCount(100, 70, tv_bfb);
+        double zrs = Double.parseDouble(data.getTraineesNum());
+        double wcrs = Double.parseDouble(data.getAbsenteesNum());
+        int b = (int) (zrs/wcrs*100.0);
+        mSvN.setCurrentCount(100, b, tv_bfb);
     }
 }
 

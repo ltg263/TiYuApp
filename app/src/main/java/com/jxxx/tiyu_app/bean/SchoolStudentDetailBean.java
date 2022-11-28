@@ -1,79 +1,39 @@
 package com.jxxx.tiyu_app.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SchoolStudentDetailBean {
 
-
     /**
-     * age : 0
-     * birthday :
-     * classId : 0
-     * gender : 0
-     * height : 0
-     * id : 0
-     * imgUrl :
-     * parentPhone :
-     * schoolId : 0
-     * studentClassRecords : [{"classRecord":{"classDate":"","classId":0,"classSceduleCardId":0,"courseId":0,"courseName":"","id":0,"imgUrl":"","labels":"","smallCourseId":0,"teacherId":0},"classRecordId":0,"id":0,"status":0,"studentId":0,"studentResultsList":[{"courseId":0,"createTime":"","finishTimes":0,"id":0,"smallCourseId":0,"speed":0,"studentId":0,"studentName":"","timeUse":0,"times":0}]}]
-     * studentName :
-     * studentNo :
-     * weight : 0
+     * id : 240
+     * schoolId : 8
+     * classId : 57
+     * studentName : 施瑾睿
+     * studentNo : shxj04216
+     * gender : 1
+     * age : 8
+     * birthday : 2014-05-19 00:00:00
+     * height : 143.00
+     * weight : 63.00
+     * imgUrl : null
+     * parentPhone : 13156484534
+     * studentClassRecords : [{"id":4729,"studentId":240,"classRecordId":271,"status":1,"classRecord":null,"studentResultsList":[{"id":1936,"studentId":240,"courseId":null,"smallCourseId":115,"timeUse":"22.00","times":1,"createTime":"2022-11-21 12:03:21","speed":"11.00","finishTimes":2,"studentName":"施瑾睿","courseName":null,"timeNode":null,"motionFrequency":[],"smallCourseVo":null,"highestFrequency":null,"averageFrequency":null,"minimumFrequency":null,"className":null}],"courseName":"课程二","imgUrl":"http://mingzhou.nbqichen.com:8888/assets/icon_course.png","labels":"三年级 | 课内 | 主教材 | 心肺耐力"},{"id":4765,"studentId":240,"classRecordId":272,"status":1,"classRecord":null,"studentResultsList":[{"id":1954,"studentId":240,"courseId":null,"smallCourseId":115,"timeUse":"0.00","times":0,"createTime":"2022-11-21 12:30:03","speed":"0.00","finishTimes":0,"studentName":"施瑾睿","courseName":null,"timeNode":null,"motionFrequency":[],"smallCourseVo":null,"highestFrequency":null,"averageFrequency":null,"minimumFrequency":null,"className":null}],"courseName":"课程二","imgUrl":"http://mingzhou.nbqichen.com:8888/assets/icon_course.png","labels":"三年级 | 课内 | 主教材 | 心肺耐力"},{"id":4801,"studentId":240,"classRecordId":273,"status":1,"classRecord":null,"studentResultsList":[{"id":1972,"studentId":240,"courseId":null,"smallCourseId":109,"timeUse":"44.00","times":1,"createTime":"2022-11-21 14:19:54","speed":"8.00","finishTimes":5,"studentName":"施瑾睿","courseName":null,"timeNode":null,"motionFrequency":[],"smallCourseVo":null,"highestFrequency":null,"averageFrequency":null,"minimumFrequency":null,"className":null}],"courseName":"课程一","imgUrl":"http://mingzhou.nbqichen.com:8888/assets/icon_course.png","labels":"三年级 | 课内 | 搭配教材 | 心肺耐力"},{"id":4837,"studentId":240,"classRecordId":274,"status":1,"classRecord":null,"studentResultsList":[{"id":1990,"studentId":240,"courseId":null,"smallCourseId":115,"timeUse":"29.00","times":1,"createTime":"2022-11-21 14:48:33","speed":"14.00","finishTimes":2,"studentName":"施瑾睿","courseName":null,"timeNode":null,"motionFrequency":[],"smallCourseVo":null,"highestFrequency":null,"averageFrequency":null,"minimumFrequency":null,"className":null}],"courseName":"课程二","imgUrl":"http://mingzhou.nbqichen.com:8888/assets/icon_course.png","labels":"三年级 | 课内 | 主教材 | 心肺耐力"},{"id":4873,"studentId":240,"classRecordId":275,"status":1,"classRecord":null,"studentResultsList":[{"id":2008,"studentId":240,"courseId":null,"smallCourseId":115,"timeUse":"21.00","times":1,"createTime":"2022-11-21 14:49:57","speed":"10.00","finishTimes":2,"studentName":"施瑾睿","courseName":null,"timeNode":null,"motionFrequency":[],"smallCourseVo":null,"highestFrequency":null,"averageFrequency":null,"minimumFrequency":null,"className":null}],"courseName":"课程二","imgUrl":"http://mingzhou.nbqichen.com:8888/assets/icon_course.png","labels":"三年级 | 课内 | 主教材 | 心肺耐力"},{"id":4909,"studentId":240,"classRecordId":276,"status":1,"classRecord":null,"studentResultsList":[{"id":2026,"studentId":240,"courseId":null,"smallCourseId":115,"timeUse":"22.00","times":1,"createTime":"2022-11-21 18:19:22","speed":"11.00","finishTimes":2,"studentName":"施瑾睿","courseName":null,"timeNode":null,"motionFrequency":[],"smallCourseVo":null,"highestFrequency":null,"averageFrequency":null,"minimumFrequency":null,"className":null}],"courseName":"课程二","imgUrl":"http://mingzhou.nbqichen.com:8888/assets/icon_course.png","labels":"三年级 | 课内 | 主教材 | 心肺耐力"},{"id":4997,"studentId":240,"classRecordId":279,"status":1,"classRecord":null,"studentResultsList":[{"id":2080,"studentId":240,"courseId":null,"smallCourseId":109,"timeUse":"37.00","times":1,"createTime":"2022-11-21 18:21:29","speed":"4.00","finishTimes":8,"studentName":"施瑾睿","courseName":null,"timeNode":null,"motionFrequency":[],"smallCourseVo":null,"highestFrequency":null,"averageFrequency":null,"minimumFrequency":null,"className":null}],"courseName":"课程一","imgUrl":"http://mingzhou.nbqichen.com:8888/assets/icon_course.png","labels":"三年级 | 课内 | 搭配教材 | 心肺耐力"},{"id":5342,"studentId":240,"classRecordId":288,"status":1,"classRecord":null,"studentResultsList":[{"id":2368,"studentId":240,"courseId":null,"smallCourseId":115,"timeUse":"0.00","times":0,"createTime":"2022-11-23 09:42:16","speed":"0.00","finishTimes":1,"studentName":"施瑾睿","courseName":null,"timeNode":null,"motionFrequency":[],"smallCourseVo":null,"highestFrequency":null,"averageFrequency":null,"minimumFrequency":null,"className":null}],"courseName":"课程二","imgUrl":"http://mingzhou.nbqichen.com:8888/assets/icon_course.png","labels":"三年级 | 课内 | 主教材 | 心肺耐力"}]
      */
 
-    private int age;
-    private String birthday;
-    private String classId;
-    private int gender;
-    private String height;
     private String id;
-    private String imgUrl;
-    private String parentPhone;
     private String schoolId;
+    private String classId;
     private String studentName;
     private String studentNo;
+    private String gender;
+    private String age;
+    private String birthday;
+    private String height;
     private String weight;
+    private String imgUrl;
+    private String parentPhone;
     private List<StudentClassRecordsBean> studentClassRecords;
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getClassId() {
-        return classId;
-    }
-
-    public void setClassId(String classId) {
-        this.classId = classId;
-    }
-
-    public int getGender() {
-        return gender;
-    }
-
-    public void setGender(int gender) {
-        this.gender = gender;
-    }
-
-    public String getHeight() {
-        return height;
-    }
-
-    public void setHeight(String height) {
-        this.height = height;
-    }
 
     public String getId() {
         return id;
@@ -83,28 +43,20 @@ public class SchoolStudentDetailBean {
         this.id = id;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-
-    public String getParentPhone() {
-        return parentPhone;
-    }
-
-    public void setParentPhone(String parentPhone) {
-        this.parentPhone = parentPhone;
-    }
-
     public String getSchoolId() {
         return schoolId;
     }
 
     public void setSchoolId(String schoolId) {
         this.schoolId = schoolId;
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public void setClassId(String classId) {
+        this.classId = classId;
     }
 
     public String getStudentName() {
@@ -123,12 +75,60 @@ public class SchoolStudentDetailBean {
         this.studentNo = studentNo;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
     public String getWeight() {
         return weight;
     }
 
     public void setWeight(String weight) {
         this.weight = weight;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public String getParentPhone() {
+        return parentPhone;
+    }
+
+    public void setParentPhone(String parentPhone) {
+        this.parentPhone = parentPhone;
     }
 
     public List<StudentClassRecordsBean> getStudentClassRecords() {
@@ -141,36 +141,26 @@ public class SchoolStudentDetailBean {
 
     public static class StudentClassRecordsBean {
         /**
-         * classRecord : {"classDate":"","classId":0,"classSceduleCardId":0,"courseId":0,"courseName":"","id":0,"imgUrl":"","labels":"","smallCourseId":0,"teacherId":0}
-         * classRecordId : 0
-         * id : 0
-         * status : 0
-         * studentId : 0
-         * studentResultsList : [{"courseId":0,"createTime":"","finishTimes":0,"id":0,"smallCourseId":0,"speed":0,"studentId":0,"studentName":"","timeUse":0,"times":0}]
+         * id : 4729
+         * studentId : 240
+         * classRecordId : 271
+         * status : 1
+         * classRecord : null
+         * studentResultsList : [{"id":1936,"studentId":240,"courseId":null,"smallCourseId":115,"timeUse":"22.00","times":1,"createTime":"2022-11-21 12:03:21","speed":"11.00","finishTimes":2,"studentName":"施瑾睿","courseName":null,"timeNode":null,"motionFrequency":[],"smallCourseVo":null,"highestFrequency":null,"averageFrequency":null,"minimumFrequency":null,"className":null}]
+         * courseName : 课程二
+         * imgUrl : http://mingzhou.nbqichen.com:8888/assets/icon_course.png
+         * labels : 三年级 | 课内 | 主教材 | 心肺耐力
          */
 
-        private ClassRecordBean classRecord;
-        private String classRecordId;
         private String id;
-        private String status;
         private String studentId;
+        private String classRecordId;
+        private String status;
+        private String classRecord;
+        private String courseName;
+        private String imgUrl;
+        private String labels;
         private List<StudentResultsListBean> studentResultsList;
-
-        public ClassRecordBean getClassRecord() {
-            return classRecord;
-        }
-
-        public void setClassRecord(ClassRecordBean classRecord) {
-            this.classRecord = classRecord;
-        }
-
-        public String getClassRecordId() {
-            return classRecordId;
-        }
-
-        public void setClassRecordId(String classRecordId) {
-            this.classRecordId = classRecordId;
-        }
 
         public String getId() {
             return id;
@@ -178,14 +168,6 @@ public class SchoolStudentDetailBean {
 
         public void setId(String id) {
             this.id = id;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
         }
 
         public String getStudentId() {
@@ -196,6 +178,54 @@ public class SchoolStudentDetailBean {
             this.studentId = studentId;
         }
 
+        public String getClassRecordId() {
+            return classRecordId;
+        }
+
+        public void setClassRecordId(String classRecordId) {
+            this.classRecordId = classRecordId;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getClassRecord() {
+            return classRecord;
+        }
+
+        public void setClassRecord(String classRecord) {
+            this.classRecord = classRecord;
+        }
+
+        public String getCourseName() {
+            return courseName;
+        }
+
+        public void setCourseName(String courseName) {
+            this.courseName = courseName;
+        }
+
+        public String getImgUrl() {
+            return imgUrl;
+        }
+
+        public void setImgUrl(String imgUrl) {
+            this.imgUrl = imgUrl;
+        }
+
+        public String getLabels() {
+            return labels;
+        }
+
+        public void setLabels(String labels) {
+            this.labels = labels;
+        }
+
         public List<StudentResultsListBean> getStudentResultsList() {
             return studentResultsList;
         }
@@ -204,159 +234,53 @@ public class SchoolStudentDetailBean {
             this.studentResultsList = studentResultsList;
         }
 
-        public static class ClassRecordBean {
-            /**
-             * classDate :
-             * classId : 0
-             * classSceduleCardId : 0
-             * courseId : 0
-             * courseName :
-             * id : 0
-             * imgUrl :
-             * labels :
-             * smallCourseId : 0
-             * teacherId : 0
-             */
-
-            private String classDate;
-            private String classId;
-            private String classSceduleCardId;
-            private String courseId;
-            private String courseName;
-            private String id;
-            private String imgUrl;
-            private String labels;
-            private String smallCourseId;
-            private String teacherId;
-
-            public String getClassDate() {
-                return classDate;
-            }
-
-            public void setClassDate(String classDate) {
-                this.classDate = classDate;
-            }
-
-            public String getClassId() {
-                return classId;
-            }
-
-            public void setClassId(String classId) {
-                this.classId = classId;
-            }
-
-            public String getClassSceduleCardId() {
-                return classSceduleCardId;
-            }
-
-            public void setClassSceduleCardId(String classSceduleCardId) {
-                this.classSceduleCardId = classSceduleCardId;
-            }
-
-            public String getCourseId() {
-                return courseId;
-            }
-
-            public void setCourseId(String courseId) {
-                this.courseId = courseId;
-            }
-
-            public String getCourseName() {
-                return courseName;
-            }
-
-            public void setCourseName(String courseName) {
-                this.courseName = courseName;
-            }
-
-            public String getId() {
-                return id;
-            }
-
-            public void setId(String id) {
-                this.id = id;
-            }
-
-            public String getImgUrl() {
-                return imgUrl;
-            }
-
-            public void setImgUrl(String imgUrl) {
-                this.imgUrl = imgUrl;
-            }
-
-            public String getLabels() {
-                return labels;
-            }
-
-            public void setLabels(String labels) {
-                this.labels = labels;
-            }
-
-            public String getSmallCourseId() {
-                return smallCourseId;
-            }
-
-            public void setSmallCourseId(String smallCourseId) {
-                this.smallCourseId = smallCourseId;
-            }
-
-            public String getTeacherId() {
-                return teacherId;
-            }
-
-            public void setTeacherId(String teacherId) {
-                this.teacherId = teacherId;
-            }
-        }
-
         public static class StudentResultsListBean {
             /**
-             * courseId : 0
-             * createTime :
-             * finishTimes : 0
-             * id : 0
-             * smallCourseId : 0
-             * speed : 0
-             * studentId : 0
-             * studentName :
-             * timeUse : 0
-             * times : 0
+             * id : 1936
+             * studentId : 240
+             * courseId : null
+             * smallCourseId : 115
+             * timeUse : 22.00
+             * times : 1
+             * createTime : 2022-11-21 12:03:21
+             * speed : 11.00
+             * finishTimes : 2
+             * studentName : 施瑾睿
+             * courseName : null
+             * timeNode : null
+             * motionFrequency : []
+             * smallCourseVo : null
+             * highestFrequency : null
+             * averageFrequency : null
+             * minimumFrequency : null
+             * className : null
              */
 
-            private String courseId;
-            private String createTime;
-            private String finishTimes;
             private String id;
-            private String smallCourseId;
-            private String speed;
             private String studentId;
+            private String courseId;
+            private String smallCourseId;
+            private int timeUse;
+            private int times;
+            private String createTime;
+            private double speed;
+            private int finishTimes;
             private String studentName;
-            private String timeUse;
-            private String times;
+            private String courseName;
+            private String timeNode;
+            private String smallCourseVo;
+            private String highestFrequency;
+            private String averageFrequency;
+            private String minimumFrequency;
+            private String className;
+            private List<Float> motionFrequency;
 
-            public String getCourseId() {
-                return courseId;
+            public void setMotionFrequency(List<Float> motionFrequency) {
+                this.motionFrequency = motionFrequency;
             }
 
-            public void setCourseId(String courseId) {
-                this.courseId = courseId;
-            }
-
-            public String getCreateTime() {
-                return createTime;
-            }
-
-            public void setCreateTime(String createTime) {
-                this.createTime = createTime;
-            }
-
-            public String getFinishTimes() {
-                return finishTimes;
-            }
-
-            public void setFinishTimes(String finishTimes) {
-                this.finishTimes = finishTimes;
+            public List<Float> getMotionFrequency() {
+                return motionFrequency;
             }
 
             public String getId() {
@@ -365,22 +289,6 @@ public class SchoolStudentDetailBean {
 
             public void setId(String id) {
                 this.id = id;
-            }
-
-            public String getSmallCourseId() {
-                return smallCourseId;
-            }
-
-            public void setSmallCourseId(String smallCourseId) {
-                this.smallCourseId = smallCourseId;
-            }
-
-            public String getSpeed() {
-                return speed;
-            }
-
-            public void setSpeed(String speed) {
-                this.speed = speed;
             }
 
             public String getStudentId() {
@@ -391,6 +299,62 @@ public class SchoolStudentDetailBean {
                 this.studentId = studentId;
             }
 
+            public String getCourseId() {
+                return courseId;
+            }
+
+            public void setCourseId(String courseId) {
+                this.courseId = courseId;
+            }
+
+            public String getSmallCourseId() {
+                return smallCourseId;
+            }
+
+            public void setSmallCourseId(String smallCourseId) {
+                this.smallCourseId = smallCourseId;
+            }
+
+            public int getTimeUse() {
+                return timeUse;
+            }
+
+            public void setTimeUse(int timeUse) {
+                this.timeUse = timeUse;
+            }
+
+            public int getTimes() {
+                return times;
+            }
+
+            public void setTimes(int times) {
+                this.times = times;
+            }
+
+            public String getCreateTime() {
+                return createTime;
+            }
+
+            public void setCreateTime(String createTime) {
+                this.createTime = createTime;
+            }
+
+            public double getSpeed() {
+                return speed;
+            }
+
+            public void setSpeed(double speed) {
+                this.speed = speed;
+            }
+
+            public int getFinishTimes() {
+                return finishTimes;
+            }
+
+            public void setFinishTimes(int finishTimes) {
+                this.finishTimes = finishTimes;
+            }
+
             public String getStudentName() {
                 return studentName;
             }
@@ -399,20 +363,60 @@ public class SchoolStudentDetailBean {
                 this.studentName = studentName;
             }
 
-            public String getTimeUse() {
-                return timeUse;
+            public String getCourseName() {
+                return courseName;
             }
 
-            public void setTimeUse(String timeUse) {
-                this.timeUse = timeUse;
+            public void setCourseName(String courseName) {
+                this.courseName = courseName;
             }
 
-            public String getTimes() {
-                return times;
+            public String getTimeNode() {
+                return timeNode;
             }
 
-            public void setTimes(String times) {
-                this.times = times;
+            public void setTimeNode(String timeNode) {
+                this.timeNode = timeNode;
+            }
+
+            public String getSmallCourseVo() {
+                return smallCourseVo;
+            }
+
+            public void setSmallCourseVo(String smallCourseVo) {
+                this.smallCourseVo = smallCourseVo;
+            }
+
+            public String getHighestFrequency() {
+                return highestFrequency;
+            }
+
+            public void setHighestFrequency(String highestFrequency) {
+                this.highestFrequency = highestFrequency;
+            }
+
+            public String getAverageFrequency() {
+                return averageFrequency;
+            }
+
+            public void setAverageFrequency(String averageFrequency) {
+                this.averageFrequency = averageFrequency;
+            }
+
+            public String getMinimumFrequency() {
+                return minimumFrequency;
+            }
+
+            public void setMinimumFrequency(String minimumFrequency) {
+                this.minimumFrequency = minimumFrequency;
+            }
+
+            public String getClassName() {
+                return className;
+            }
+
+            public void setClassName(String className) {
+                this.className = className;
             }
         }
     }

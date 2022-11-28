@@ -176,6 +176,7 @@ public class HomeTwoXueShengActivity extends BaseActivity {
                     mSchoolStudentBean.setCurrentStepNo(0);
                     mSchoolStudentBean.setPostWccs(0);
                     mSchoolStudentBean.setPostZjzs(0);
+                    mSchoolStudentBean.setCurrentTime(new ArrayList<>());
                     mSchoolStudentBean.setPostZys(0);
                     mSchoolStudentBean.setPostPjsd(0);
                     List<SchoolCourseBeanSmallActionInfoJson> json = JSON.parseArray(actionInfo,SchoolCourseBeanSmallActionInfoJson.class);

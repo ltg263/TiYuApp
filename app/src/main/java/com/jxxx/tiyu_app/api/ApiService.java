@@ -7,6 +7,7 @@ import com.jxxx.tiyu_app.bean.CourseTypeListAllBean;
 import com.jxxx.tiyu_app.bean.DictDataTypeBean;
 import com.jxxx.tiyu_app.bean.PostStudentBean;
 import com.jxxx.tiyu_app.bean.PostStudentResults;
+import com.jxxx.tiyu_app.bean.SceduleCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
 import com.jxxx.tiyu_app.bean.SchoolClassRecordBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
@@ -79,6 +80,20 @@ public interface ApiService {
     Observable<Result<SchoolCourseBean>> getSchoolCourseQueryCourse();
 
     /**
+     * 查询备课列表
+     * @return
+     */
+    @GET("school/sceduleCourse/list")
+    Observable<Result<List<SceduleCourseBean>>> getSceduleCourseList(@Query("teacherId") String teacherId,
+                                                                     @Query("schoolId") String schoolId,
+                                                                     @Query("courseName") String courseName,
+                                                                     @Query("ageRange") String ageRange,
+                                                                     @Query("contentType") String contentType,
+                                                                     @Query("category") String category,
+                                                                     @Query("theme") String theme,
+                                                                     @Query("pageNum") int pageNum, @Query("pageSize") int pageSize);
+
+    /**
      * 查询大课程列表
      * @return
      */
@@ -98,6 +113,13 @@ public interface ApiService {
      */
     @GET("school/class/list")
     Observable<Result<List<SchoolClassBean>>> getSchoolClassList(@Query("teacherId") String teacherId,@Query("schoolId") String schoolId,@Query("pageNum") int pageNum,@Query("pageSize") int pageSize);
+
+    /**
+     * 查询班级列表
+     * @return
+     */
+    @GET("school/class/{id}")
+    Observable<Result<SchoolClassBean>> getSchoolClassId(@Path("id") String id);
 
     /**
      * 查询学生列表

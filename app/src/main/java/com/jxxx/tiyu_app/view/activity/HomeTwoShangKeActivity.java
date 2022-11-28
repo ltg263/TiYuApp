@@ -35,6 +35,7 @@ import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.PostStudentResults;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
+import com.jxxx.tiyu_app.bean.SchoolClassRecordBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
@@ -48,6 +49,7 @@ import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.WifiMessageReceiver;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
 import com.jxxx.tiyu_app.utils.view.StepArcView_n;
+import com.jxxx.tiyu_app.view.adapter.HomeBanJiXqAdapter;
 import com.jxxx.tiyu_app.view.adapter.KeChengXiangQingAdapter;
 import com.jxxx.tiyu_app.view.adapter.KeChengXiangQingAdapterSmall;
 import com.jxxx.tiyu_app.view.adapter.ShangKeBanJiAdapter;
@@ -86,15 +88,19 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     TextView tv_shu;
     @BindView(R.id.tv_grade)
     TextView tv_grade;
+    @BindView(R.id.tv_1)
+    TextView tv_1;
     @BindView(R.id.btn_kaishishangke)
     TextView btn_kaishishangke;
     ShangKeBanJiAdapter mShangKeBanJiAdapter;
     KeChengXiangQingAdapter mKeChengXiangQingAdapter;
     KeChengXiangQingAdapterSmall mKeChengXiangQingAdapterSmall;
     boolean isSmallCourse;
+    String mClassId,mClassName;
     private WifiMessageReceiver mWifiMessageReceiver;
     List<String> list = new ArrayList<>();
     int queueNum = 0;
+    Intent mIntent;
     @Override
     public int intiLayout() {
         return R.layout.activity_home_two_shangke;
@@ -106,7 +112,14 @@ public class HomeTwoShangKeActivity extends BaseActivity {
         ConstValues.mSchoolCourseInfoBeanSmall = null;
         ConstValues.mSchoolClassInfoBean = null;
         ConstValues.mSchoolStudentInfoBean = null;
-        isSmallCourse = getIntent().getBooleanExtra("isSmallCourse",false);
+        ConstValues.classSceduleCardId = null;
+        mIntent = getIntent();
+        isSmallCourse = mIntent.getBooleanExtra("isSmallCourse",false);
+        if(!isSmallCourse){
+            ConstValues.classSceduleCardId = mIntent.getStringExtra("classSceduleCardId");
+            mClassName = mIntent.getStringExtra("mClassName");
+            mClassId = mIntent.getStringExtra("classId");
+        }
         mKeChengXiangQingAdapter = new KeChengXiangQingAdapter(null);
         rv_list.setAdapter(mKeChengXiangQingAdapter);
         mKeChengXiangQingAdapterSmall = new KeChengXiangQingAdapterSmall(null);
@@ -257,6 +270,13 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     @Override
     public void initData() {
         showLoading();
+        //备课进入
+        if(StringUtil.isNotBlank(ConstValues.classSceduleCardId)){
+            tv_1.setText("");
+            mTvBanji.setText("共"+1+"个班");
+            getSchoolClassId();
+            return;
+        }
         RetrofitUtil.getInstance().apiService()
                 .getSchoolClassList(SharedUtils.singleton().get(ConstValues.TEACHER_ID,""),
                         SharedUtils.singleton().get(ConstValues.SCHOOL_ID,""),0, ConstValues.PAGE_SIZE)
@@ -307,10 +327,48 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 });
 
     }
+    private void getSchoolClassId() {
+        RetrofitUtil.getInstance().apiService()
+                .getSchoolClassId(mClassId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Result<SchoolClassBean>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Result<SchoolClassBean> result) {
+                        if (isResultOk(result) && result.getData() != null) {
+                            SchoolClassBean mSchoolClassBean = result.getData();
+                            ConstValues.mSchoolClassInfoBean = mSchoolClassBean;
+                            mShangKeBanJiAdapter.addData(mSchoolClassBean);
+                            mShangKeBanJiAdapter.setId(mSchoolClassBean.getId());
+                            getSchoolStudentList(mSchoolClassBean.getId());
+                            queueNum = mSchoolClassBean.getQueueNum();
+                            tv_grade.setText(mSchoolClassBean.getClassName()+"班级队列数"+mSchoolClassBean.getQueueNum()
+                                    +"，队列最大人数"+mSchoolClassBean.getQueuePersonNum());
+                            getSchoolStudentList(mClassId);
+                            getSchoolCourseDetail();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        hideLoading();
+                    }
+                });
+    }
 
     private void getSchoolCourseDetail() {
         RetrofitUtil.getInstance().apiService()
-                .getSchoolCourseDetail(getIntent().getStringExtra("id"))
+                .getSchoolCourseDetail(mIntent.getStringExtra("id"))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result<SchoolCourseBean>>() {
@@ -349,7 +407,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
 
     private void getSchoolSmallCourseDetail() {
         RetrofitUtil.getInstance().apiService()
-                .getSchoolSmallCourseDetail(getIntent().getStringExtra("id"))
+                .getSchoolSmallCourseDetail(mIntent.getStringExtra("id"))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result<SchoolCourseBeanSmall>>() {
@@ -543,6 +601,15 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 });
     }
 
+    public static void startActivityIntentBk(Context mContext,String id,String classId,String mClassName,String classSceduleCardId,boolean isSmallCourse){
+        Intent mIntent = new Intent(mContext, HomeTwoShangKeActivity.class);
+        mIntent.putExtra("id",id);
+        mIntent.putExtra("classSceduleCardId",classSceduleCardId);
+        mIntent.putExtra("classId",classId);
+        mIntent.putExtra("mClassName",mClassName);
+        mIntent.putExtra("isSmallCourse",isSmallCourse);
+        mContext.startActivity(mIntent);
+    }
     public static void startActivityIntent(Context mContext,String id,boolean isSmallCourse){
         Intent mIntent = new Intent(mContext, HomeTwoShangKeActivity.class);
         mIntent.putExtra("id",id);

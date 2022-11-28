@@ -1,5 +1,7 @@
 package com.jxxx.tiyu_app.bean;
 
+import java.util.List;
+
 public class PostStudentResults {
     @Override
     public String toString() {
@@ -18,6 +20,7 @@ public class PostStudentResults {
                 ", finishTimes='" + finishTimes + '\'' +
                 ", speed='" + speed + '\'' +
                 ", lassGroupId='" + lassGroupId + '\'' +
+                ", timeNode='" + timeNode + '\'' +
                 '}';
     }
 
@@ -116,6 +119,15 @@ public class PostStudentResults {
     private String finishTimes;//打击次数
     private String speed;//	平均用时
     private String lassGroupId;//	队列的ID
+    private List<Long> timeNode;//	按压的时间
+
+    public void setTimeNode(List<Long> timeNode) {
+        this.timeNode = timeNode;
+    }
+
+    public List<Long> getTimeNode() {
+        return timeNode;
+    }
 
     public void setLassGroupId(String lassGroupId) {
         this.lassGroupId = lassGroupId;

@@ -90,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
-                android:text="科目成绩"
+                android:text="训练记录"
                 android:textColor="@color/color_000000"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -99,8 +99,16 @@
                 android:id="@+id/view_pager"
                 android:layout_width="wrap_content"
                 android:layout_height="120dp"
-                android:overScrollMode="never" />
+                android:overScrollMode="never"
+                android:visibility="gone" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_list"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginHorizontal="15dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -124,24 +132,6 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="完成次数"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="平均频率"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
                     android:text="平均速度"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
@@ -151,7 +141,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="完成率"
+                    android:text="击中次数"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="完成次数"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
@@ -166,6 +165,7 @@
                 android:paddingVertical="15dp">
 
                 <TextView
+                    android:id="@+id/tv_timeUse"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -175,6 +175,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/tv_speed"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -183,16 +184,9 @@
                     android:textColor="@color/color_text_theme"
                     android:textSize="12sp" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="0次/秒"
-                    android:textColor="@color/color_text_theme"
-                    android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/tv_finishTimes"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -202,6 +196,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/tv_times"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -214,9 +209,9 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginVertical="30dp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="30dp"
                 android:background="@drawable/shape_radius_2f3079">
 
                 <LinearLayout
@@ -225,6 +220,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_margin="15dp"
+                    android:visibility="gone"
                     android:background="@drawable/shape_radius_fff_5"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="5dp">
@@ -239,7 +235,7 @@
 
                     <ImageView
                         android:id="@+id/iv_shanxuan"
-                        android:layout_width="12dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="12dp"
                         android:layout_marginTop="7dp"
                         android:scaleType="center"
@@ -250,7 +246,7 @@
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/line_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="160dp"
                     android:layout_alignParentBottom="true" />
 
             </RelativeLayout>

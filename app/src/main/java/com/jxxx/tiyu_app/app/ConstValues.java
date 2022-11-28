@@ -58,4 +58,5 @@ public class ConstValues {
     public static SchoolCourseBeanSmall mSchoolCourseInfoBeanSmall = null;//小课程信息
     public static SchoolClassBean mSchoolClassInfoBean = null;//班级信息
     public static List<SchoolStudentBean> mSchoolStudentInfoBean = null;//班级学生的信息
+    public static String classSceduleCardId = null;//课程表的ID
 }

@@ -16,7 +16,7 @@
 
     <LinearLayout
         android:id="@+id/ll"
-        android:layout_width="110dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/iv_img"
         android:layout_alignBottom="@id/iv_img"

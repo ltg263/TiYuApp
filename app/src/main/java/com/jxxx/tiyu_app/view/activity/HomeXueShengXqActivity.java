@@ -8,19 +8,21 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
-import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.bean.SchoolStudentDetailBean;
 import com.jxxx.tiyu_app.utils.ChartHelper;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import com.jxxx.tiyu_app.utils.StringUtil;
+import com.jxxx.tiyu_app.view.adapter.HomeXueShengXqAdapter;
 import com.jxxx.tiyu_app.view.fragment.HomeBanJiFragment;
 
 import java.util.ArrayList;
@@ -49,7 +51,18 @@ public class HomeXueShengXqActivity extends BaseActivity {
     TextView mTvUserAge;
     @BindView(R.id.line_chart)
     LineChart mLineChart;
+    @BindView(R.id.rv_list)
+    RecyclerView rv_list;
+    @BindView(R.id.tv_timeUse)
+    TextView mTvTimeUse;
+    @BindView(R.id.tv_speed)
+    TextView mTvSpeed;
+    @BindView(R.id.tv_finishTimes)
+    TextView mTvFinishTimes;
+    @BindView(R.id.tv_times)
+    TextView mTvTimes;
     private List<Entry> mData = new ArrayList<>();
+    HomeXueShengXqAdapter mHomeXueShengXqAdapter;
 
     @Override
     public int intiLayout() {
@@ -59,26 +72,32 @@ public class HomeXueShengXqActivity extends BaseActivity {
     @Override
     public void initView() {
         mTvTitle.setText("同学详情");
-        List<String> lists = new ArrayList<>();
-        lists.add("");
-        lists.add("");
-        lists.add("");
-        lists.add("");
-        lists.add("");
-        initVP(lists);
 
-        ChartHelper.initChart(mData, mLineChart, -1);
-        ChartHelper.addEntry(mData, mLineChart, 100);
-        ChartHelper.addEntry(mData, mLineChart, 110);
-        ChartHelper.addEntry(mData, mLineChart, 160);
-        ChartHelper.addEntry(mData, mLineChart, 120);
-        ChartHelper.addEntry(mData, mLineChart, 10);
-        ChartHelper.addEntry(mData, mLineChart, 120);
-        ChartHelper.addEntry(mData, mLineChart, 10);
-        ChartHelper.addEntry(mData, mLineChart, 120);
-        ChartHelper.addEntry(mData, mLineChart, 10);
-        ChartHelper.addEntry(mData, mLineChart, 120);
-        ChartHelper.addEntry(mData, mLineChart, 100);
+        mHomeXueShengXqAdapter = new HomeXueShengXqAdapter(null);
+        rv_list.setAdapter(mHomeXueShengXqAdapter);
+//        initVP(lists);
+        mHomeXueShengXqAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                List<SchoolStudentDetailBean.StudentClassRecordsBean.StudentResultsListBean> mStudentResultsList
+                        = mHomeXueShengXqAdapter.getData().get(position).getStudentResultsList();
+                if(mStudentResultsList !=null && mStudentResultsList.size()>0){
+                    mTvTimeUse.setText(mStudentResultsList.get(0).getTimeUse()+"s");
+                    mTvTimes.setText(mStudentResultsList.get(0).getTimes()+"次");
+                    mTvFinishTimes.setText(mStudentResultsList.get(0).getFinishTimes()+"次");
+                    mTvSpeed.setText(mStudentResultsList.get(0).getSpeed()+"s");
+                    ChartHelper.initChart(mData, mLineChart, mStudentResultsList.get(0).getTimeUse());
+                    List<Float> mMotionFrequency = mStudentResultsList.get(0).getMotionFrequency();
+                    if(mMotionFrequency!=null && mMotionFrequency.size()>0){
+                        for(int i=0;i<mMotionFrequency.size();i++){
+                            ChartHelper.addEntry(mData, mLineChart, mMotionFrequency.get(i));
+                        }
+                    }
+                }else{
+                    ChartHelper.initChart(mData, mLineChart, 10);
+                }
+            }
+        });
     }
 
     @Override
@@ -89,6 +108,7 @@ public class HomeXueShengXqActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result<SchoolStudentDetailBean>>() {
+
                     @Override
                     public void onSubscribe(Disposable d) {
 
@@ -98,11 +118,36 @@ public class HomeXueShengXqActivity extends BaseActivity {
                     public void onNext(Result<SchoolStudentDetailBean> result) {
                         if (isResultOk(result) && result.getData() != null) {
                             GlideImgLoader.loadImageViewRadiusNoCenter(HomeXueShengXqActivity.this, result.getData().getImgUrl(), mIvHead);
-                            mTvUserNo.setText("学号："+result.getData().getStudentNo());
-                            mTvUserName.setText("姓名："+result.getData().getStudentName());
-                            mTvUserAge.setText("年龄："+result.getData().getAge()+"岁");
-                            if(StringUtil.isNotBlank(result.getData().getWeight())){
-                                mTvUserAge.setText("年龄："+result.getData().getAge()+"岁  体重："+StringUtil.getValue(result.getData().getWeight())+"公斤");
+                            mTvUserNo.setText("学号：" + result.getData().getStudentNo());
+                            mTvUserName.setText("姓名：" + result.getData().getStudentName());
+                            mTvUserAge.setText("年龄：" + result.getData().getAge() + "岁");
+
+                            ChartHelper.initChart(mData, mLineChart, 10);
+                            if (StringUtil.isNotBlank(result.getData().getWeight())) {
+                                mTvUserAge.setText("年龄：" + result.getData().getAge() + "岁  体重：" + StringUtil.getValue(result.getData().getWeight()) + "公斤");
+                            }
+                            if (result.getData().getStudentClassRecords() != null && result.getData().getStudentClassRecords().size()>0) {
+                                mHomeXueShengXqAdapter.setNewData(result.getData().getStudentClassRecords());
+                                if(result.getData().getStudentClassRecords().get(0).getStudentResultsList() !=null
+                                        &&result.getData().getStudentClassRecords().get(0).getStudentResultsList().size()>0){
+
+                                    ChartHelper.initChart(mData, mLineChart, result.getData()
+                                            .getStudentClassRecords().get(0).getStudentResultsList().get(0).getTimeUse());
+                                    mTvTimeUse.setText(result.getData().getStudentClassRecords().get(0)
+                                            .getStudentResultsList().get(0).getTimeUse()+"s");
+                                    mTvTimes.setText(result.getData().getStudentClassRecords().get(0)
+                                            .getStudentResultsList().get(0).getTimes()+"次");
+                                    mTvFinishTimes.setText(result.getData().getStudentClassRecords().get(0)
+                                            .getStudentResultsList().get(0).getFinishTimes()+"次");
+                                    mTvSpeed.setText(result.getData().getStudentClassRecords().get(0)
+                                            .getStudentResultsList().get(0).getSpeed()+"s");
+                                    List<Float> mMotionFrequency = result.getData().getStudentClassRecords().get(0).getStudentResultsList().get(0).getMotionFrequency();
+                                    if(mMotionFrequency!=null && mMotionFrequency.size()>0){
+                                        for(int i=0;i<mMotionFrequency.size();i++){
+                                            ChartHelper.addEntry(mData, mLineChart, mMotionFrequency.get(i));
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

@@ -84,7 +84,20 @@ public class SchoolStudentBean {
     private int postWccs;
     private int postZjzs;
     private long postZys;
+    private List<Long> currentTime;
     private double postPjsd;
+
+    public void setCurrentTime(List<Long> currentTime) {
+        this.currentTime = currentTime;
+    }
+
+    public void addCurrentTime(Long time) {
+        currentTime.add(time);
+    }
+
+    public List<Long> getCurrentTime() {
+        return currentTime;
+    }
 
     public void setSteps(List<SchoolCourseBeanSmallActionInfoJson.StepsBean> steps) {
         this.steps = steps;
