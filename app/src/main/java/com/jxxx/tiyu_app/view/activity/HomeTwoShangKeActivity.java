@@ -1,44 +1,25 @@
 package com.jxxx.tiyu_app.view.activity;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.WifiInfo;
-import android.provider.Settings;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.util.JavaBeanInfo;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.jxxx.tiyu_app.MainActivity;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.app.ConstValues;
-import com.jxxx.tiyu_app.app.MainApplication;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.PostStudentResults;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
-import com.jxxx.tiyu_app.bean.SchoolClassRecordBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
-import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
@@ -48,15 +29,11 @@ import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.WifiMessageReceiver;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
-import com.jxxx.tiyu_app.utils.view.StepArcView_n;
-import com.jxxx.tiyu_app.view.adapter.HomeBanJiXqAdapter;
 import com.jxxx.tiyu_app.view.adapter.KeChengXiangQingAdapter;
 import com.jxxx.tiyu_app.view.adapter.KeChengXiangQingAdapterSmall;
 import com.jxxx.tiyu_app.view.adapter.ShangKeBanJiAdapter;
-import com.jxxx.tiyu_app.wifi.WifiUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
