@@ -6,11 +6,11 @@ public class PostStudentResults {
     @Override
     public String toString() {
         return "PostStudentResults{" +
-                "classDate='" + classDate + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", beginTime='" + beginTime + '\'' +
+//                "classDate='" + classDate + '\'' +
+//                ", endTime='" + endTime + '\'' +
+//                ", beginTime='" + beginTime + '\'' +
                 ", classId='" + classId + '\'' +
-                ", classSceduleCardId='" + classSceduleCardId + '\'' +
+//                ", classSceduleCardId='" + classSceduleCardId + '\'' +
                 ", teacherId='" + teacherId + '\'' +
                 ", courseId='" + courseId + '\'' +
                 ", smallCourseId='" + smallCourseId + '\'' +

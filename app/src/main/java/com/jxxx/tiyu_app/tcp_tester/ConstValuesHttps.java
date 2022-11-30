@@ -86,9 +86,14 @@ public class ConstValuesHttps {
     public static byte MESSAGE_GET_C0 = (byte) 0xC0;
 
     /**
-     * 倒计时结束与触发后的状态反馈指令均为
+     * 触发后的状态反馈指令均为
      */
     public static byte MESSAGE_GET_C5 = (byte) 0xC5;
+
+    /**
+     * 倒计时结束的状态反馈指令均为
+     */
+    public static byte MESSAGE_GET_C6 = (byte) 0xC6;
 
     /**
      * 发送的数据

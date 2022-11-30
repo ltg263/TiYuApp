@@ -17,6 +17,7 @@ import com.jxxx.tiyu_app.app.ConstValues;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.PostStudentResults;
+import com.jxxx.tiyu_app.bean.SceduleCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
@@ -67,6 +68,8 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     TextView tv_grade;
     @BindView(R.id.tv_1)
     TextView tv_1;
+    @BindView(R.id.tv_xunhuancishu)
+    TextView tv_xunhuancishu;
     @BindView(R.id.btn_kaishishangke)
     TextView btn_kaishishangke;
     ShangKeBanJiAdapter mShangKeBanJiAdapter;
@@ -275,6 +278,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                                 mIv.setVisibility(View.GONE);
                                 rv_list.setVisibility(View.GONE);
                                 rv_list_small.setVisibility(View.VISIBLE);
+                                tv_xunhuancishu.setVisibility(View.VISIBLE);
                                 getSchoolSmallCourseDetail();
                             }else{
                                 getSchoolCourseDetail();
@@ -327,7 +331,52 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                             tv_grade.setText(mSchoolClassBean.getClassName()+"班级队列数"+mSchoolClassBean.getQueueNum()
                                     +"，队列最大人数"+mSchoolClassBean.getQueuePersonNum());
                             getSchoolStudentList(mClassId);
-                            getSchoolCourseDetail();
+                            getSchoolSceduleCourseDetail();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        hideLoading();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        hideLoading();
+                    }
+                });
+    }
+
+    private void getSchoolSceduleCourseDetail() {
+        RetrofitUtil.getInstance().apiService()
+                .getSchoolSceduleCourseDetail(mIntent.getStringExtra("id"))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Result<SceduleCourseBean>>() {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Result<SceduleCourseBean> result) {
+                        if(isResultOk(result) && result.getData()!=null){
+                            SchoolCourseBean mData = result.getData().getCourse();
+                            List<SchoolCourseBean.CourseSectionVoListBean> mCourseSectionVoList =  mData.getCourseSectionVoList();
+                            mCourseSectionVoList.clear();
+                            mCourseSectionVoList.addAll(result.getData().getSectionList());
+                            mData.setCourseSectionVoList(mCourseSectionVoList);
+                            ConstValues.mSchoolCourseInfoBean = mData;
+                            mKeChengXiangQingAdapter.setNewData(mData.getCourseSectionVoList());
+                            if(mData.getCourseSectionVoList().size()==0){
+                                btn_kaishishangke.setText("无法上课");
+                            }
+                            tv_shu.setText("本节课使用"+mData.getBallNum()+"个光电球，"+mData+"块光电地板");
+                            if(mData.getCourseSectionVoList()!=null && mData.getCourseSectionVoList().size()>0){
+                                tv_shu.setText("本节课使用"+mData.getCourseSectionVoList().get(0).getBallNum()+"个光电球，"
+                                        +mData.getCourseSectionVoList().get(0).getPlateNum()+"块光电地板");
+                            }
                         }
                     }
 
@@ -388,9 +437,6 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result<SchoolCourseBeanSmall>>() {
-
-
-
                     @Override
                     public void onSubscribe(Disposable d) {
 
@@ -400,6 +446,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                     public void onNext(Result<SchoolCourseBeanSmall> result) {
                         if(isResultOk(result)){
                             ConstValues.mSchoolCourseInfoBeanSmall = result.getData();
+                            ConstValues.mSchoolCourseInfoBeanSmall.setLoopNum(1);
                             if(ConstValues.mSchoolCourseInfoBeanSmall!=null){
                                 List<SchoolCourseBeanSmall.StepGroupsBean> mStepGroups = ConstValues.mSchoolCourseInfoBeanSmall.getStepGroups();
                                 List<SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean> mCourseSteps = new ArrayList<>();
@@ -438,11 +485,25 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 });
     }
 
-    @OnClick({R.id.iv_back, R.id.tv_lianjie,R.id.btn_kaishishangke})
+    @OnClick({R.id.iv_back, R.id.tv_lianjie,R.id.tv_xunhuancishu,R.id.btn_kaishishangke})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
                 finish();
+                break;
+            case R.id.tv_xunhuancishu:
+                list.clear();
+                for(int i=0;i<50;i++){
+                    list.add(String.valueOf(i+1));
+                }
+                CustomPopWindow.initPopupWindow(HomeTwoShangKeActivity.this, view, list,
+                        new CustomPopWindow.PopWindowInterface() {
+                            @Override
+                            public void getPosition(int position) {
+                                tv_xunhuancishu.setText(list.get(position));
+                                ConstValues.mSchoolCourseInfoBeanSmall.setLoopNum(Integer.parseInt(list.get(position)));
+                            }
+                        });
                 break;
             case R.id.btn_kaishishangke:
 //            case R.id.tv_lianjie:
@@ -475,11 +536,6 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                     ToastUtil.showLongStrToast(this,"班级学生的信息获取失败");
                     return;
                 }
-
-                SharedUtils.singleton().put("postSchoolClassRecord_time",
-                        StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss"));
-                HomeTwoXueShengActivity.current_course_section = 0;
-                HomeTwoXueShengActivity.current_course_section_loop_num = 0;
                 lianjie();
                 break;
         }
@@ -545,17 +601,20 @@ public class HomeTwoShangKeActivity extends BaseActivity {
         ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
         int mBallNum;
         int mPlateNum;
+        int totalDuration;
         if(isSmallCourse){
             mBallNum = ConstValues.mSchoolCourseInfoBeanSmall.getBallNum();
             mPlateNum = ConstValues.mSchoolCourseInfoBeanSmall.getPlateNum();
+            totalDuration = 0;
         }else{
             mBallNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getBallNum();
             mPlateNum =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getPlateNum();
+            totalDuration =  ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getTotalDuration();
         }
-        DialogUtils.showDialogLianJieSheBei(this,true, mBallNum, mPlateNum,
+        DialogUtils.showDialogLianJieSheBei(this,true, mBallNum, mPlateNum,totalDuration,
                 new DialogUtils.ErrorDialogInterfaceLianJieSheBei() {
                     @Override
-                    public void lianJieNum(int guangQiu, int guangBan, int dengGuang) {
+                    public void lianJieNum(int guangQiu, int guangBan, int dengGuang,int totalDuration) {
                         if(guangQiu==-1 && guangBan==-1 && dengGuang==-1){
 //                            if(mWifiMessageReceiver!=null){
 //                                unregisterReceiver(mWifiMessageReceiver);
@@ -564,6 +623,12 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                             return;
                         }
                         int sbNum = guangQiu+guangBan;
+                        HomeTwoXueShengActivity.current_course_section = 0;
+                        if(isSmallCourse){
+                            ConstValues.mSchoolCourseInfoBeanSmall.setTotalDuration(totalDuration);
+                        }else{
+                            ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).setTotalDuration(totalDuration);
+                        }
 //                        int sbNum = 3;
                         /**
                          * 广播动态注册

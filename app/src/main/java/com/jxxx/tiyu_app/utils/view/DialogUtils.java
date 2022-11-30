@@ -409,7 +409,7 @@ public class DialogUtils {
     /**
      * 连接设备
      */
-    public static void showDialogLianJieSheBei(Context context,boolean isShowQiXiao, int mBallNum,int mPlateNum, final ErrorDialogInterfaceLianJieSheBei dialogConfirm) {
+    public static void showDialogLianJieSheBei(Context context,boolean isShowQiXiao, int mBallNum,int mPlateNum, int totalDuration,final ErrorDialogInterfaceLianJieSheBei dialogConfirm) {
 
         final Dialog dialog5 = new Dialog(context, R.style.selectorDialog);
         final View view = LayoutInflater.from(context).inflate(R.layout.dialog_lianjieshebei, null);
@@ -418,6 +418,8 @@ public class DialogUtils {
         ImageView iv_quxiao = view.findViewById(R.id.iv_quxiao);
         EditText et_guangqiu_num = view.findViewById(R.id.et_guangqiu_num);
         EditText et_dianban_num = view.findViewById(R.id.et_dianban_num);
+        EditText et_zdsc = view.findViewById(R.id.et_zdsc);
+        et_zdsc.setText(totalDuration+"");
         et_guangqiu_num.setText(mBallNum+"");
         et_dianban_num.setText(mPlateNum+"");
 //        et_guangqiu_num.setText("此堂课使用"+mBallNum+"个");
@@ -498,8 +500,14 @@ public class DialogUtils {
 //                        return;
                     }
                     dialog5.dismiss();
+                    int finalTotalDuration;
+                    if(StringUtil.isBlank(et_zdsc.getText().toString())){
+                        finalTotalDuration = 0;
+                    }else{
+                        finalTotalDuration = Integer.parseInt(et_zdsc.getText().toString());
+                    }
                     dialogConfirm.lianJieNum(StringUtil.isNotBlank(guangqiuNum)?Integer.parseInt(guangqiuNum):finalMBallNum
-                            ,StringUtil.isNotBlank(dianbanNum)?Integer.parseInt(dianbanNum):finalMPlateNum, dingguang);
+                            ,StringUtil.isNotBlank(dianbanNum)?Integer.parseInt(dianbanNum):finalMPlateNum, dingguang,finalTotalDuration);
                 }
             }
         });
@@ -509,7 +517,7 @@ public class DialogUtils {
         iv_quxiao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogConfirm.lianJieNum(-1,-1,-1);
+                dialogConfirm.lianJieNum(-1,-1,-1,0);
                 dialog5.dismiss();
             }
         });
@@ -560,7 +568,7 @@ public class DialogUtils {
         /**
          * 确定
          */
-        public void lianJieNum(int guangQiu,int guangBan,int dingguang);
+        public void lianJieNum(int guangQiu,int guangBan,int dingguang,int totalDuration);
     }
     public interface ErrorDialogInterfaceA {
         /**

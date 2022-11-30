@@ -33,5 +33,9 @@ public class HomeBanJiXqAdapter extends BaseQuickAdapter<SchoolClassRecordBean.S
                 .setTextColor(R.id.tv_4,mContext.getResources().getColor(R.color.color_000000))
                 .setText(R.id.tv_5, item.getSpeed()+"s")
                 .setTextColor(R.id.tv_5,mContext.getResources().getColor(R.color.color_000000));
+
+        if(true){//不考虑总反馈次数
+            helper.setGone(R.id.tv_6,false);
+        }
     }
 }

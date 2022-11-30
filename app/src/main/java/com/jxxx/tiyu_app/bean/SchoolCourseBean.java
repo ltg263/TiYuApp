@@ -172,9 +172,18 @@ public class SchoolCourseBean {
         private int loopNum;
         private int ballNum;
         private int plateNum;
+        private int totalDuration;
         private String smallCourseId;
         private String sortNum;
         private SchoolCourseBeanSmall smallCourseVo;
+
+        public void setTotalDuration(int totalDuration) {
+            this.totalDuration = totalDuration;
+        }
+
+        public int getTotalDuration() {
+            return totalDuration;
+        }
 
         public void setBallNum(int ballNum) {
             this.ballNum = ballNum;

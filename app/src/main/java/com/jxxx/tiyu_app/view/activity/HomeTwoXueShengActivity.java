@@ -20,6 +20,8 @@ import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
+import com.jxxx.tiyu_app.utils.SharedUtils;
+import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoXueShengAdapter;
 
@@ -50,7 +52,6 @@ public class HomeTwoXueShengActivity extends BaseActivity {
     TextView mTvJishi;
     @BindView(R.id.btn_kaishiyundong)
     Button mBtnKaishiyundong;
-
     @Override
     public int intiLayout() {
         return R.layout.activity_home_two_xuesheng;
@@ -59,17 +60,20 @@ public class HomeTwoXueShengActivity extends BaseActivity {
     @Override
     public void initView() {
         //课程信息
+        current_course_total_duration = 0;
         if(ConstValues.mSchoolCourseInfoBean!=null){
             GlideImgLoader.loadImageViewRadiusNoCenter(this,ConstValues.mSchoolCourseInfoBean.getImgUrl(),mIvIcon);
             mTvName.setText(ConstValues.mSchoolCourseInfoBean.getCourseName());
             mTvType1.setText(ConstValues.mSchoolCourseInfoBean.getLables().replace(",", "|"));
             mTvType2.setText("共" + ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().size() + "个小节");
+            current_course_total_duration = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getTotalDuration()*60;
         }
         if(ConstValues.mSchoolCourseInfoBeanSmall!=null){
             GlideImgLoader.loadImageViewRadiusNoCenter(this,ConstValues.mSchoolCourseInfoBeanSmall.getImgUrl(),mIvIcon);
             mTvName.setText(ConstValues.mSchoolCourseInfoBeanSmall.getCourseName());
             mTvType1.setText(ConstValues.mSchoolCourseInfoBeanSmall.getLables().replace(",", "|"));
             mTvType2.setText("共"+ConstValues.mSchoolCourseInfoBeanSmall.getQueueNum()+"个队列  |  共" + ConstValues.mSchoolCourseInfoBeanSmall.getStepNum() + "个步骤");
+            current_course_total_duration = ConstValues.mSchoolCourseInfoBeanSmall.getTotalDuration()*60;
         }
         //班级信息
         mTvTitle.setText(ConstValues.mSchoolClassInfoBean.getClassName());
@@ -94,6 +98,12 @@ public class HomeTwoXueShengActivity extends BaseActivity {
                 current_course_section = 0;
                 current_course_section_loop_num = 0;
                 initYuDongData();
+                //记录当前课程开始的时间
+                SharedUtils.singleton().put(STRATA_JISHI_SHANGKE,0);
+                SharedUtils.singleton().put("postSchoolClassRecord_time",StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss"));
+                if(current_course_total_duration > 0){
+                    SharedUtils.singleton().put(STRATA_JISHI_SHANGKE,System.currentTimeMillis());
+                }
                 MainActivity.indexPos = 1;
                 startActivity(new Intent(this, MainActivity.class));
                 break;
@@ -128,6 +138,10 @@ public class HomeTwoXueShengActivity extends BaseActivity {
 
     //开始运动前 初始所有数据；
     /**
+     * 开始计时上课
+     */
+    public static String STRATA_JISHI_SHANGKE = "strata_jishi_shangke";
+    /**
      * 防止创建多个广播
      */
     public static boolean current_yundong_yikaishi = false;
@@ -148,9 +162,17 @@ public class HomeTwoXueShengActivity extends BaseActivity {
      */
     public static int current_course_section = 0;
     /**
+     * 当前小节课程环执行的次数
+     */
+    public static int current_course_section_num = 0;
+    /**
      * 当前小节课程的中步骤循环执行的次数
      */
     public static  int current_course_section_loop_num = 0;
+    /**
+     * 小节课程的总时长
+     */
+    public static  int current_course_total_duration = 0;
 
 
     public static boolean initYuDongData() {
@@ -158,11 +180,12 @@ public class HomeTwoXueShengActivity extends BaseActivity {
         if(ConstValues.mSchoolCourseInfoBean!=null){
             SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoList = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(current_course_section);
             actionInfo = mCourseSectionVoList.getSmallCourseVo().getActionInfo();
-            current_course_section_loop_num = mCourseSectionVoList.getLoopNum();
+            current_course_section_num = mCourseSectionVoList.getLoopNum();
         }else{
-            current_course_section_loop_num = 1;
             actionInfo = ConstValues.mSchoolCourseInfoBeanSmall.getActionInfo();
+            current_course_section_num = ConstValues.mSchoolCourseInfoBeanSmall.getLoopNum();
         }
+        current_course_section_loop_num = 1;
         mDataList.clear();
         mMapKey_id.clear();
         mMapSchoolStudentBeans = new HashMap<>();
@@ -174,8 +197,10 @@ public class HomeTwoXueShengActivity extends BaseActivity {
                         && !ConstValues.mSchoolStudentInfoBean.get(j).isAskForLeave()){
                     SchoolStudentBean mSchoolStudentBean = ConstValues.mSchoolStudentInfoBean.get(j);
                     mSchoolStudentBean.setCurrentStepNo(0);
+                    mSchoolStudentBean.setPostDqbz(0);
                     mSchoolStudentBean.setPostWccs(0);
                     mSchoolStudentBean.setPostZjzs(0);
+                    mSchoolStudentBean.setPostZfks(0);
                     mSchoolStudentBean.setCurrentTime(new ArrayList<>());
                     mSchoolStudentBean.setPostZys(0);
                     mSchoolStudentBean.setPostPjsd(0);

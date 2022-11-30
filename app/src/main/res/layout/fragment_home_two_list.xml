@@ -108,6 +108,16 @@
             android:text="平均速度"
             android:textColor="@color/white"
             android:textSize="12sp" />
+<!--        //不考虑总反馈次数-->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="总反馈数"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

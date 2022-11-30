@@ -1,6 +1,8 @@
 package com.jxxx.tiyu_app.view.fragment;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,6 +26,7 @@ import com.jxxx.tiyu_app.MainActivity;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
 import com.jxxx.tiyu_app.app.ConstValues;
+import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.BaseFragment;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.SceduleCourseBean;
@@ -236,20 +239,16 @@ public class HomeOneFragment extends BaseFragment {
                     ToastUtil.showShortToast(mContext,"无绑定班级");
                     return;
                 }
-                String mCourseId = mSceduleCourseBean.getCourse().getId();
+                String id = mSceduleCourseBean.getId();
                 String mClassId = mSceduleCourseBean.getClassScheduleCard().getClassId();
                 String mClassName = mSceduleCourseBean.getClassScheduleCard().getClassName();
-                String mClassSceduleCardId = mSceduleCourseBean.getClassScheduleCardId();
+                String mClassSceduleCardId = mSceduleCourseBean.getId();
                 if(view.getId()==R.id.tv_kcxq){
-                    HomeTwoShangKeActivity.startActivityIntentBk(mContext,mCourseId,mClassId,mClassName,mClassSceduleCardId,false);
+                    HomeTwoShangKeActivity.startActivityIntentBk(mContext,id,mClassId,mClassName,mClassSceduleCardId,false);
                 }
                 if(view.getId()==R.id.tv_kssk){
-                    DialogUtils.showDialogKeChengXiangQing(mContext, mSceduleCourseBean.getCourse(),null, new DialogUtils.ErrorDialogInterfaceA() {
-                        @Override
-                        public void btnConfirm(int index) {
-                            HomeTwoShangKeActivity.startActivityIntentBk(mContext,mCourseId,mClassId,mClassName,mClassSceduleCardId,false);
-                        }
-                    });
+                    ((BaseActivity)mContext).showLoading();
+                    getSchoolSceduleCourseDetail(mContext,id,mClassId,mClassName,mClassSceduleCardId);
                 }
             }
         });
@@ -287,6 +286,47 @@ public class HomeOneFragment extends BaseFragment {
             }
         });
         getSceduleCourseList();
+    }
+    public static void getSchoolSceduleCourseDetail(Context mContext, String id, String mClassId, String mClassName, String mClassSceduleCardId) {
+        RetrofitUtil.getInstance().apiService()
+                .getSchoolSceduleCourseDetail(id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Result<SceduleCourseBean>>() {
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Result<SceduleCourseBean> result) {
+                        if(result.getCode()==200 && result.getData()!=null){
+                            SchoolCourseBean mData = result.getData().getCourse();
+                            List<SchoolCourseBean.CourseSectionVoListBean> mCourseSectionVoList =  mData.getCourseSectionVoList();
+                            mCourseSectionVoList.clear();
+                            mCourseSectionVoList.addAll(result.getData().getSectionList());
+                            mData.setCourseSectionVoList(mCourseSectionVoList);
+                            DialogUtils.showDialogKeChengXiangQing(mContext, mData,
+                                    null, new DialogUtils.ErrorDialogInterfaceA() {
+                                @Override
+                                public void btnConfirm(int index) {
+                                    HomeTwoShangKeActivity.startActivityIntentBk(mContext,id,mClassId,mClassName,mClassSceduleCardId,false);
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ((BaseActivity)mContext).hideLoading();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        ((BaseActivity)mContext).hideLoading();
+                    }
+                });
     }
     private void getSchoolSmallCourseDetail(String id) {
         showLoading();

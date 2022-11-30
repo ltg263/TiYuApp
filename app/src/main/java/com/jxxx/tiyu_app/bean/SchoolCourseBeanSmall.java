@@ -31,10 +31,12 @@ public class SchoolCourseBeanSmall {
     private String courseName;
     private int ballNum;
     private int plateNum;
+    private int totalDuration;
     private String imgUrl;
     private String videoUrl;
     private String courseSectionId;
     private String lables;
+    private int loopNum;
     private int groupNum;
     private int queueNum;
     private String queueInfo;
@@ -47,6 +49,22 @@ public class SchoolCourseBeanSmall {
     private String actionInfo;
     private String sortNumSet;
     private List<StepGroupsBean> stepGroups;
+
+    public void setTotalDuration(int totalDuration) {
+        this.totalDuration = totalDuration;
+    }
+
+    public int getTotalDuration() {
+        return totalDuration;
+    }
+
+    public void setLoopNum(int loopNum) {
+        this.loopNum = loopNum;
+    }
+
+    public int getLoopNum() {
+        return loopNum;
+    }
 
     public void setQueueNum(int queueNum) {
         this.queueNum = queueNum;

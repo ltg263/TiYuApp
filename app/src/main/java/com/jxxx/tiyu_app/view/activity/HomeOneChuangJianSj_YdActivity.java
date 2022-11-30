@@ -168,6 +168,7 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
             mSchoolStudentBean.setStudentName(i+"队列");
             mSchoolStudentBean.setPostWccs(0);
             mSchoolStudentBean.setPostZjzs(0);
+            mSchoolStudentBean.setPostZfks(0);
             mSchoolStudentBean.setPostZys(0);
             mSchoolStudentBean.setPostPjsd(0);
             for(int j=0;j<sheBeiNum;j++){//5
@@ -267,6 +268,7 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
             }
             System.out.println("BroadcastReceiver：current_time：" + current_time);
             byte[] mData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
+            byte mStartBroadcastType = intent.getByteExtra(WifiMessageReceiver.START_BROADCAST_TYPE, (byte) 0X00);
             startBroadcastData.clear();
             for(int i=0;i<mData.length;i++){
                 startBroadcastData.add(mData[i]);
@@ -301,7 +303,10 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                             data[3] = bytel[4];
                             data[4] = bytel[5];
                             data[5] = bytel[6];
-                            mSchoolStudentBeans.get(i).setPostZjzs(mSchoolStudentBeans.get(i).getPostZjzs()+1);
+                            if(mStartBroadcastType == ConstValuesHttps.MESSAGE_GET_C5){
+                                mSchoolStudentBeans.get(i).setPostZjzs(mSchoolStudentBeans.get(i).getPostZjzs()+1);
+                            }
+                            mSchoolStudentBeans.get(i).setPostZfks(mSchoolStudentBeans.get(i).getPostZfks()+1);
                             mHomeTwoTwoListAdapter.notifyDataSetChanged();
                             ClientTcpUtils.mClientTcpUtils.sendData_A0_A1_sj(bytel[0],data);
                         }else{

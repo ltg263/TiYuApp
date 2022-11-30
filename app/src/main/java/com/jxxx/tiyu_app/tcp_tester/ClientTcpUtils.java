@@ -179,6 +179,10 @@ public class ClientTcpUtils {
                             byte[] data_c5 = Arrays.copyOfRange(v, 2, v.length-1);
                             WifiMessageReceiver.startBroadcast(ConstValuesHttps.MESSAGE_GET_C5,data_c5);
                         }
+                        if(v[1] == ConstValuesHttps.MESSAGE_GET_C6){
+                            byte[] data_c6 = Arrays.copyOfRange(v, 2, v.length-1);
+                            WifiMessageReceiver.startBroadcast(ConstValuesHttps.MESSAGE_GET_C6,data_c6);
+                        }
                     }else{
                         System.out.println("接收到的总数据:错误数据");
                     }
@@ -284,10 +288,12 @@ public class ClientTcpUtils {
      * @param dg:灯光 （可设置为室内00以及室外01两种）
      */
     public void sendData_B2(byte dg,SendDataOkInterface mSendDataOkInterface){
-        byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()];
-        for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
-            data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i);
-        }
+//        byte[] data = new byte[ConstValuesHttps.MESSAGE_ALL_TOTAL.size()];
+//        for(int i=0;i<ConstValuesHttps.MESSAGE_ALL_TOTAL.size();i++){
+//            data[i] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(i);
+//        }
+        byte[] data = new byte[1];
+        data[0] = ConstValuesHttps.MESSAGE_ALL_TOTAL.get(0);
         sendDataThreadB2(0,data,dg,mSendDataOkInterface);
     }
     private void sendDataThreadB2(int pos, byte[] data,byte dg,SendDataOkInterface mSendDataOkInterface) {

@@ -23,6 +23,7 @@ import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.CourseTypeListAllBean;
 import com.jxxx.tiyu_app.bean.DictDataTypeBean;
+import com.jxxx.tiyu_app.bean.SceduleCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.VersionResponse;
 import com.jxxx.tiyu_app.utils.StringUtil;
@@ -142,17 +143,35 @@ public class MainActivity extends BaseActivity {
                 .getSchoolCourseQueryCourse()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Result<SchoolCourseBean>>() {
+                .subscribe(new Observer<Result<SceduleCourseBean>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(Result<SchoolCourseBean> result) {
+                    public void onNext(Result<SceduleCourseBean> result) {
                         if(isResultOk(result)){
                             if(result.getData()!=null){
-                                showDialogKaiShiShangKe(result.getData());
+                                SceduleCourseBean mSceduleCourseBean = result.getData();
+                                if(mSceduleCourseBean.getCourse()==null){
+                                    ToastUtil.showShortToast(MainActivity.this,"无绑定大课程");
+                                    return;
+                                }
+                                if(mSceduleCourseBean.getCourse().getCourseSectionVoList().size()==0){
+                                    ToastUtil.showShortToast(MainActivity.this,"无绑定小课程");
+                                    return;
+                                }
+                                if(mSceduleCourseBean.getClassScheduleCard()==null){
+                                    ToastUtil.showShortToast(MainActivity.this,"无绑定班级");
+                                    return;
+                                }
+                                String id = mSceduleCourseBean.getId();
+                                String mClassId = mSceduleCourseBean.getClassScheduleCard().getClassId();
+                                String mClassName = mSceduleCourseBean.getClassScheduleCard().getClassName();
+                                String mClassSceduleCardId = mSceduleCourseBean.getId();
+                                HomeOneFragment.getSchoolSceduleCourseDetail(MainActivity.this,
+                                        id,mClassId,mClassName,mClassSceduleCardId);
                             }
                         }
                     }
@@ -165,15 +184,6 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onComplete() {
                         hideLoading();
-                    }
-                });
-    }
-    private void showDialogKaiShiShangKe(SchoolCourseBean mSchoolCourseBean) {
-        DialogUtils.showDialogKaiShiShangKe(this, mSchoolCourseBean,
-                new DialogUtils.ErrorDialogInterfaceA() {
-                    @Override
-                    public void btnConfirm(int index) {
-                        HomeTwoShangKeActivity.startActivityIntent(MainActivity.this,mSchoolCourseBean.getId(),false);
                     }
                 });
     }
@@ -218,7 +228,6 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if(indexPos!=1){
-                    ToastUtil.showShortToast(MainActivity.this,"请先连接课程");
                     getSchoolCourseQueryCourse();
                     return;
                 }

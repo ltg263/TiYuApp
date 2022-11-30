@@ -81,11 +81,29 @@ public class SchoolStudentBean {
     }
 
     private List<SchoolCourseBeanSmallActionInfoJson.StepsBean> steps;
-    private int postWccs;
-    private int postZjzs;
-    private long postZys;
-    private List<Long> currentTime;
-    private double postPjsd;
+    private int postDqbz;//当前步骤循环的次数
+    private int postWccs;//完成次数
+    private int postZjzs;//总击中数
+    private int postZfks;//总反馈数
+    private long postZys;//总用时
+    private List<Long> currentTime;////击中的当前时间
+    private double postPjsd;//平局速度
+
+    public void setPostDqbz(int postDqbz) {
+        this.postDqbz = postDqbz;
+    }
+
+    public int getPostDqbz() {
+        return postDqbz;
+    }
+
+    public void setPostZfks(int postZfks) {
+        this.postZfks = postZfks;
+    }
+
+    public int getPostZfks() {
+        return postZfks;
+    }
 
     public void setCurrentTime(List<Long> currentTime) {
         this.currentTime = currentTime;

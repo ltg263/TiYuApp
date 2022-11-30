@@ -49,6 +49,12 @@ public interface ApiService {
      */
     @POST("school/classRecord")
     Observable<Result> postResultsBatchAdd(@Body PostStudentBean mPostStudentBean);
+    /**
+     * 批量添加学生成绩
+     * @return
+     */
+    @POST("school/classRecord/addList")
+    Observable<Result> postResultsBatchAdds(@Body List<PostStudentBean> mPostStudentBeans);
 
     /**
      * 新增上课记录
@@ -77,7 +83,7 @@ public interface ApiService {
      * @return
      */
     @GET("school/course/queryCourse")
-    Observable<Result<SchoolCourseBean>> getSchoolCourseQueryCourse();
+    Observable<Result<SceduleCourseBean>> getSchoolCourseQueryCourse();
 
     /**
      * 查询备课列表
@@ -92,6 +98,13 @@ public interface ApiService {
                                                                      @Query("category") String category,
                                                                      @Query("theme") String theme,
                                                                      @Query("pageNum") int pageNum, @Query("pageSize") int pageSize);
+
+    /**
+     * 查询备课详情
+     * @return
+     */
+    @GET("school/sceduleCourse/{id}")
+    Observable<Result<SceduleCourseBean>> getSchoolSceduleCourseDetail(@Path("id") String id);
 
     /**
      * 查询大课程列表
@@ -141,6 +154,7 @@ public interface ApiService {
      */
     @GET("school/course/{id}")
     Observable<Result<SchoolCourseBean>> getSchoolCourseDetail(@Path("id") String id);
+
 
     /**
      * 查询上课记录列表

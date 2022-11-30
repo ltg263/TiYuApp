@@ -75,11 +75,45 @@
             android:textSize="12sp" />
 
         <TextView
+            android:id="@+id/tv_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginHorizontal="15dp"
+            android:text="请设置总时长"
+            android:textColor="@color/color_000000"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_4_zs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="5dp"
+            android:text="(总时长为0时,默认为课程循环次数)"
+            android:textColor="@color/red40"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/et_zdsc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:background="@drawable/shape_radius_line_828df1"
+            android:hint="请输入总时长"
+            android:inputType="number"
+            android:maxLength="3"
+            android:padding="10dp"
+            android:textCursorDrawable="@drawable/shape_edit_cursor"
+            android:textSize="12sp" />
+
+        <TextView
             android:id="@+id/tv_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:text="请选择灯光模式"
+            android:visibility="gone"
             android:textColor="@color/color_000000"
             android:textSize="14sp" />
 
@@ -87,6 +121,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView

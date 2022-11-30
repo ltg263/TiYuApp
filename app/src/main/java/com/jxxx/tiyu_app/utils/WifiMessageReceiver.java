@@ -188,7 +188,8 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 }
             }
         }
-        if(mStartBroadcastType== ConstValuesHttps.MESSAGE_GET_C5){
+        if(mStartBroadcastType== ConstValuesHttps.MESSAGE_GET_C5
+                || mStartBroadcastType== ConstValuesHttps.MESSAGE_GET_C6){
             if(startBroadcastData==null){
                 return;
             }
@@ -203,6 +204,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 return;
             }
             Intent mIntent = new Intent("com.jxxx.tiyu_app.view.fragment");
+            mIntent.putExtra(START_BROADCAST_TYPE, mStartBroadcastType);
             mIntent.putExtra(START_BROADCAST_DATA, startBroadcastData);
             MainApplication.getContext().sendBroadcast(mIntent);
         }
@@ -245,6 +247,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 if(btn_xunqiu.getText().toString().equals("完成寻球")){
                     dialog.dismiss();
                     isShowCurrentActivity = false;
+                      //不使用灯光模式
                     showLoading(mContext);
                     ClientTcpUtils.mClientTcpUtils.sendData_B2((byte) dengGuang, new ClientTcpUtils.SendDataOkInterface() {
                         @Override

@@ -1,5 +1,7 @@
 package com.jxxx.tiyu_app.bean;
 
+import java.util.List;
+
 public class SceduleCourseBean {
 
     /**
@@ -18,7 +20,7 @@ public class SceduleCourseBean {
     private String classScheduleCardId;
     private String courseId;
     private String orderDate;
-    private SchoolCourseBeanSmall sectionList;
+    private List<SchoolCourseBean.CourseSectionVoListBean> sectionList;
     private ClassScheduleCardBean classScheduleCard;
     private String teacherId;
     private SchoolCourseBean course;
@@ -56,11 +58,11 @@ public class SceduleCourseBean {
         this.orderDate = orderDate;
     }
 
-    public SchoolCourseBeanSmall getSectionList() {
+    public List<SchoolCourseBean.CourseSectionVoListBean> getSectionList() {
         return sectionList;
     }
 
-    public void setSectionList(SchoolCourseBeanSmall sectionList) {
+    public void setSectionList(List<SchoolCourseBean.CourseSectionVoListBean> sectionList) {
         this.sectionList = sectionList;
     }
 
