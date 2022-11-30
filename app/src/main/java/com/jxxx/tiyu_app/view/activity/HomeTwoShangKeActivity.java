@@ -179,27 +179,28 @@ public class HomeTwoShangKeActivity extends BaseActivity {
             }
         });
     }
-    private void postSmallCourseCopyQueue(String smallCourseId,String num,int pos) {
+    private void postSmallCourseCopyQueue(String mSmallCourseId,String num,int pos) {
         showLoading();
         SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoListBean = new SchoolCourseBean.CourseSectionVoListBean();
-        mCourseSectionVoListBean.setId(smallCourseId);
+        mCourseSectionVoListBean.setId(mSmallCourseId);
         mCourseSectionVoListBean.setNum(num);
         RetrofitUtil.getInstance().apiService()
-                .postSmallCourseCopyQueue(smallCourseId,num)
+                .postSmallCourseCopyQueue(mSmallCourseId,num)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Result<SchoolCourseBean.CourseSectionVoListBean>>() {
+                .subscribe(new Observer<Result<SchoolCourseBeanSmall>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(Result<SchoolCourseBean.CourseSectionVoListBean> result) {
+                    public void onNext(Result<SchoolCourseBeanSmall> result) {
                         Log.w("postSmallCourseCopyQueue","onNext");
                         if(isResultOk(result) && result.getData()!=null){
 //                            ConstValues.mSchoolCourseInfoBean = result.getData();
-                            mKeChengXiangQingAdapter.getData().set(pos,result.getData());
+                            mKeChengXiangQingAdapter.getData().get(pos).setQueueingNum(Integer.parseInt(num));
+                            mKeChengXiangQingAdapter.getData().get(pos).setSmallCourseVo(result.getData());
                             mKeChengXiangQingAdapter.notifyDataSetChanged();
                         }
                     }
