@@ -256,6 +256,16 @@ public class MainActivity extends BaseActivity {
             mHomeTwoFragment.startOrStop(false);
         }
     }
+
+    public void setFragmentStart(){
+        if(ConstValues.BANBEN_TYPE == 1){
+            return;
+        }
+        boolean isStart = mHomeTwoFragment.startOrStop(true);
+        if(isStart){
+            ma_iv_index.getDrawable().setLevel(1);
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();

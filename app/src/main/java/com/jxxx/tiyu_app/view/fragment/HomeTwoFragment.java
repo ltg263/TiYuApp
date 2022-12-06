@@ -475,6 +475,11 @@ public class HomeTwoFragment extends BaseFragment {
                         tv_jishi.setText(StringUtil.getValue(current_time));
                     }
                 });
+                if(isDurationOk_type()==0){
+                    ToastUtil.showShortToast(mContext, "当前课程时间已结束");
+                    isStart = false;
+                    ((MainActivity) mContext).setFragmentStartOrStop();
+                }
             }
         }
     };
@@ -487,11 +492,65 @@ public class HomeTwoFragment extends BaseFragment {
         if(HomeTwoXueShengActivity.current_course_total_duration > 0){
             long strataTime = SharedUtils.singleton().get(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,0L)/1000;
             long currentTime = System.currentTimeMillis()/1000;
+            int wccs_ccg = 0;//当前排最大的完成次数
+            boolean isBuTong = false;//每排都是一直的 false
+            if(current_class_group == 0) {
+                wccs_ccg = ((HomeTwoListFragment) fragments.get(0))
+                        .getHomeTwoTwoListAdapter().getData().get(current_class_group).getPostWccs();
+                for (int a = 0; a < fragments.size(); a++) {
+                    HomeTwoListFragment f = (HomeTwoListFragment) fragments.get(a);
+                    if (f != null && f.getHomeTwoTwoListAdapter() != null) {
+                        List<SchoolStudentBean> mData = f.getHomeTwoTwoListAdapter().getData();
+                        if(mData.get(current_class_group).getPostWccs() != wccs_ccg){
+                            isBuTong = true;
+                        }
+                        if (mData.get(current_class_group).getPostWccs() > wccs_ccg) {
+                            wccs_ccg = mData.get(current_class_group).getPostWccs();
+                        }
+                    }
+                }
+            }
             if(currentTime-strataTime > HomeTwoXueShengActivity.current_course_total_duration){
+                for (int i = 0; i < fragments.size(); i++) {
+                    HomeTwoListFragment mFragment = (HomeTwoListFragment) fragments.get(i);
+                    if (mFragment != null && current_time!=0) {
+                        HomeTwoTwoListAdapter mHomeTwoTwoListAdapter = mFragment.getHomeTwoTwoListAdapter();
+                        if (mHomeTwoTwoListAdapter != null) {
+                            List<SchoolStudentBean> mData = mHomeTwoTwoListAdapter.getData();
+                            if(mData.size()>current_class_group){
+                                SchoolStudentBean mSchoolStudentBean = mData.get(current_class_group);
+                                if(mSchoolStudentBean.getSteps()!=null){
+                                    if(current_class_group > 0){
+                                        int wccs = mData.get(0).getPostWccs();
+                                        if(mSchoolStudentBean.getPostWccs() < wccs){
+                                            mSchoolStudentBean.setPostZys(mSchoolStudentBean.getPostZys()+current_time);
+                                            if(mSchoolStudentBean.getPostZjzs()!=0){
+                                                double pjsd = 1D * mSchoolStudentBean.getPostZys()/ mSchoolStudentBean.getPostZjzs() ;
+                                                Log.w("BroadcastReceiver", "pjsd:" + StringUtil.getValue(pjsd));
+                                                mSchoolStudentBean.setPostPjsd(Double.parseDouble(StringUtil.getValue(pjsd)));
+                                            }
+                                        }
+                                    }else{
+                                        if(!isBuTong || mSchoolStudentBean.getPostWccs() < wccs_ccg){
+                                            mSchoolStudentBean.setPostZys(mSchoolStudentBean.getPostZys()+current_time);
+                                            if(mSchoolStudentBean.getPostZjzs()!=0){
+                                                double pjsd = 1D * mSchoolStudentBean.getPostZys()/ mSchoolStudentBean.getPostZjzs() ;
+                                                Log.w("BroadcastReceiver", "pjsd:" + StringUtil.getValue(pjsd));
+                                                mSchoolStudentBean.setPostPjsd(Double.parseDouble(StringUtil.getValue(pjsd)));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        setNotifyDataSetChanged_Fragment();
+                    }
+                }
+                current_time = 0;
                 System.out.println("BroadcastReceiver：时间已到:"+HomeTwoXueShengActivity.current_course_total_duration);
                 return 0;
             }
-            System.out.println("BroadcastReceiver：时间未到还剩："+(currentTime-strataTime)+"秒");
+            System.out.println("BroadcastReceiver：时间未到还剩："+(HomeTwoXueShengActivity.current_course_total_duration-(currentTime-strataTime))+"秒");
             return 1;
         }
         return 2;
@@ -597,7 +656,7 @@ public class HomeTwoFragment extends BaseFragment {
                 setNotifyDataSetChanged_Fragment();
                 if (mSchoolStudentBean.getPostDqbz() >= HomeTwoXueShengActivity.current_course_section_loop_num) {
                     mSchoolStudentBean.setPostZys(mSchoolStudentBean.getPostZys()+current_time);
-                    double pjsd = 1D * mSchoolStudentBean.getPostZys()/ mSchoolStudentBean.getPostZjzs() ;
+                    double pjsd = 1D * mSchoolStudentBean.getPostZys()/ mSchoolStudentBean.getPostZjzs();
                     Log.w("BroadcastReceiver", "pjsd:" + StringUtil.getValue(pjsd));
                     mSchoolStudentBean.setPostPjsd(Double.parseDouble(StringUtil.getValue(pjsd)));
                     System.out.println("BroadcastReceiver：duiBiXueShengStep()已完成：" + mSchoolStudentBean.getStudentName());
@@ -648,6 +707,7 @@ public class HomeTwoFragment extends BaseFragment {
         System.out.println("BroadcastReceiver：已全部完成");
         current_class_group++;
         if (current_class_group_max > current_class_group) {
+            ((MainActivity) mContext).setFragmentStart();
             ToastUtil.showShortToast(mContext, "第" + current_class_group + "排已全部完成");
         } else {
             current_class_group = 0;
@@ -666,12 +726,14 @@ public class HomeTwoFragment extends BaseFragment {
                     ToastUtil.showShortToast(mContext, "已全部完成");
                     showDialogKaiShiShangKeXiaYiJie(false);
                 }else if(isDurationOk_type()==1){
+                    ((MainActivity) mContext).setFragmentStart();
                     ToastUtil.showShortToast(mContext, "已全部第" + current_course_section_num_yx + "次循环");
                 }else{
                     if (HomeTwoXueShengActivity.current_course_section_num == current_course_section_num_yx) {
                         ToastUtil.showShortToast(mContext, "已全部完成");
                         showDialogKaiShiShangKeXiaYiJie(false);
                     } else {
+                        ((MainActivity) mContext).setFragmentStart();
                         ToastUtil.showShortToast(mContext, "已全部第" + current_course_section_num_yx + "次循环");
                     }
                 }

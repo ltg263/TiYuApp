@@ -201,7 +201,13 @@ public class HomeTwoShangKeActivity extends BaseActivity {
 //                            ConstValues.mSchoolCourseInfoBean = result.getData();
                             mKeChengXiangQingAdapter.getData().get(pos).setQueueingNum(Integer.parseInt(num));
                             mKeChengXiangQingAdapter.getData().get(pos).setSmallCourseVo(result.getData());
+                            mKeChengXiangQingAdapter.getData().get(pos).setBallNum(result.getData().getBallNum());
+                            mKeChengXiangQingAdapter.getData().get(pos).setPlateNum(result.getData().getPlateNum());
                             mKeChengXiangQingAdapter.notifyDataSetChanged();
+                            if(pos==0){
+                                tv_shu.setText("本节课使用"+mKeChengXiangQingAdapter.getData().get(0).getBallNum()+"个光电球，"
+                                        +mKeChengXiangQingAdapter.getData().get(0).getPlateNum()+"块光电地板");
+                            }
                         }
                     }
 
