@@ -146,17 +146,17 @@ public class HomeTwoFragment extends BaseFragment {
                             showLoading();
                             ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true, index == 0,
                                     new ClientTcpUtils.SendDataOkInterface() {
-                                @Override
-                                public void sendDataOk(byte msg) {
-                                    ((Activity)mContext).runOnUiThread(new Runnable() {
                                         @Override
-                                        public void run() {
-                                            hideLoading();
-                                            strataSetFlags();
+                                        public void sendDataOk(byte msg) {
+                                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    hideLoading();
+                                                    strataSetFlags();
+                                                }
+                                            });
                                         }
                                     });
-                                }
-                            });
                         }
                     });
                     return;
@@ -178,18 +178,18 @@ public class HomeTwoFragment extends BaseFragment {
                                 showLoading();
                                 ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true, index == 0,
                                         new ClientTcpUtils.SendDataOkInterface() {
-                                    @Override
-                                    public void sendDataOk(byte msg) {
-                                        ((Activity)mContext).runOnUiThread(new Runnable() {
                                             @Override
-                                            public void run() {
-                                                hideLoading();
-                                                isWanCheng = true;
-                                                strataSetFlags();
+                                            public void sendDataOk(byte msg) {
+                                                ((Activity)mContext).runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        hideLoading();
+                                                        isWanCheng = true;
+                                                        strataSetFlags();
+                                                    }
+                                                });
                                             }
                                         });
-                                    }
-                                });
                             }
                         });
                     }
@@ -469,48 +469,48 @@ public class HomeTwoFragment extends BaseFragment {
             if (isStart) {
                 current_time++;
                 heartHandler.postDelayed(hearRunable, 1000);
+                if(isDurationOk_type()==0){
+                    ToastUtil.showShortToast(mContext, "当前课程时间已结束");
+                    isStart = false;
+                    ((MainActivity) mContext).setFragmentStartOrStop();
+                }
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         tv_jishi.setText(StringUtil.getValue(current_time));
                     }
                 });
-                if(isDurationOk_type()==0){
-                    ToastUtil.showShortToast(mContext, "当前课程时间已结束");
-                    isStart = false;
-                    ((MainActivity) mContext).setFragmentStartOrStop();
-                }
             }
         }
     };
 
     /**
      * 检测时间是否已完成
-     * return:0:完成；1：未完成；2：费时长模式
+     * return:0:完成；1：未完成；2：非时长模式
      */
     private int isDurationOk_type(){
         if(HomeTwoXueShengActivity.current_course_total_duration > 0){
-            long strataTime = SharedUtils.singleton().get(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,0L)/1000;
-            long currentTime = System.currentTimeMillis()/1000;
-            int wccs_ccg = 0;//当前排最大的完成次数
-            boolean isBuTong = false;//每排都是一直的 false
-            if(current_class_group == 0) {
-                wccs_ccg = ((HomeTwoListFragment) fragments.get(0))
-                        .getHomeTwoTwoListAdapter().getData().get(current_class_group).getPostWccs();
-                for (int a = 0; a < fragments.size(); a++) {
-                    HomeTwoListFragment f = (HomeTwoListFragment) fragments.get(a);
-                    if (f != null && f.getHomeTwoTwoListAdapter() != null) {
-                        List<SchoolStudentBean> mData = f.getHomeTwoTwoListAdapter().getData();
-                        if(mData.get(current_class_group).getPostWccs() != wccs_ccg){
-                            isBuTong = true;
-                        }
-                        if (mData.get(current_class_group).getPostWccs() > wccs_ccg) {
-                            wccs_ccg = mData.get(current_class_group).getPostWccs();
+            long strataTime = SharedUtils.singleton().get(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,0L);
+            long currentTime = System.currentTimeMillis()/1000L;
+            if(currentTime-strataTime > HomeTwoXueShengActivity.current_course_total_duration){
+                int wccs_ccg = 0;//当前排最大的完成次数
+                boolean isBuTong = false;//每排都是一直的 false
+                if(current_class_group == 0) {
+                    wccs_ccg = ((HomeTwoListFragment) fragments.get(0))
+                            .getHomeTwoTwoListAdapter().getData().get(current_class_group).getPostWccs();
+                    for (int a = 0; a < fragments.size(); a++) {
+                        HomeTwoListFragment f = (HomeTwoListFragment) fragments.get(a);
+                        if (f != null && f.getHomeTwoTwoListAdapter() != null) {
+                            List<SchoolStudentBean> mData = f.getHomeTwoTwoListAdapter().getData();
+                            if(mData.get(current_class_group).getPostWccs() != wccs_ccg){
+                                isBuTong = true;
+                            }
+                            if (mData.get(current_class_group).getPostWccs() > wccs_ccg) {
+                                wccs_ccg = mData.get(current_class_group).getPostWccs();
+                            }
                         }
                     }
                 }
-            }
-            if(currentTime-strataTime > HomeTwoXueShengActivity.current_course_total_duration){
                 for (int i = 0; i < fragments.size(); i++) {
                     HomeTwoListFragment mFragment = (HomeTwoListFragment) fragments.get(i);
                     if (mFragment != null && current_time!=0) {
@@ -568,14 +568,6 @@ public class HomeTwoFragment extends BaseFragment {
             byte mStartBroadcastType = intent.getByteExtra(WifiMessageReceiver.START_BROADCAST_TYPE, (byte) 0X00);
             byte[] mData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
             System.out.println("BroadcastReceiver："+mStartBroadcastType+"球号：" + Arrays.toString(mData));
-
-            if(isDurationOk_type()==0){
-                ToastUtil.showShortToast(mContext, "当前课程时间已结束");
-                isStart = false;
-                ((MainActivity) mContext).setFragmentStartOrStop();
-                return;
-            }
-
             for (int i = 0; i < mData.length; i++) {
                 getMapKayYunDong(mData[i], 0,mStartBroadcastType);
             }
@@ -715,17 +707,11 @@ public class HomeTwoFragment extends BaseFragment {
             if (ConstValues.mSchoolCourseInfoBean != null || ConstValues.mSchoolCourseInfoBeanSmall != null) {
                 System.out.println("BroadcastReceiver：current_course_section_num"+HomeTwoXueShengActivity.current_course_section_num);
                 System.out.println("BroadcastReceiver：current_course_section_num_yx"+current_course_section_num_yx);
-
-                if(isDurationOk_type()==0){
-                    ToastUtil.showShortToast(mContext, "当前课程时间已结束");
-                    isStart = false;
-                    ((MainActivity) mContext).setFragmentStartOrStop();
-                    return;
-                }
-                if(isDurationOk_type()==0){
-                    ToastUtil.showShortToast(mContext, "已全部完成");
-                    showDialogKaiShiShangKeXiaYiJie(false);
-                }else if(isDurationOk_type()==1){
+//                if(isDurationOk_type()==0){
+//                    ToastUtil.showShortToast(mContext, "已全部完成");
+//                    showDialogKaiShiShangKeXiaYiJie(false);
+//                }else
+                if(isDurationOk_type()==1){
                     ((MainActivity) mContext).setFragmentStart();
                     ToastUtil.showShortToast(mContext, "已全部第" + current_course_section_num_yx + "次循环");
                 }else{
@@ -802,17 +788,17 @@ public class HomeTwoFragment extends BaseFragment {
                                             showLoading();
                                             ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(false, false,
                                                     new ClientTcpUtils.SendDataOkInterface() {
-                                                @Override
-                                                public void sendDataOk(byte msg) {
-                                                    ((Activity)mContext).runOnUiThread(new Runnable() {
                                                         @Override
-                                                        public void run() {
-                                                            hideLoading();
-                                                            lianjie();
+                                                        public void sendDataOk(byte msg) {
+                                                            ((Activity)mContext).runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    hideLoading();
+                                                                    lianjie();
+                                                                }
+                                                            });
                                                         }
                                                     });
-                                                }
-                                            });
                                         }
                                     }
                                 });

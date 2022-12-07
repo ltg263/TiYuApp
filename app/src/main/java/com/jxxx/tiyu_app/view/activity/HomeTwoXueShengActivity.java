@@ -102,7 +102,7 @@ public class HomeTwoXueShengActivity extends BaseActivity {
                 SharedUtils.singleton().put(STRATA_JISHI_SHANGKE,0);
                 SharedUtils.singleton().put("postSchoolClassRecord_time",StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss"));
                 if(current_course_total_duration > 0){
-                    SharedUtils.singleton().put(STRATA_JISHI_SHANGKE,System.currentTimeMillis());
+                    SharedUtils.singleton().put(STRATA_JISHI_SHANGKE,System.currentTimeMillis()/1000L);
                 }
                 MainActivity.indexPos = 1;
                 startActivity(new Intent(this, MainActivity.class));

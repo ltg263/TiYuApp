@@ -261,10 +261,25 @@ public class MainActivity extends BaseActivity {
         if(ConstValues.BANBEN_TYPE == 1){
             return;
         }
-        boolean isStart = mHomeTwoFragment.startOrStop(true);
-        if(isStart){
-            ma_iv_index.getDrawable().setLevel(1);
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean isStart = mHomeTwoFragment.startOrStop(true);
+                        if(isStart){
+                            ma_iv_index.getDrawable().setLevel(1);
+                        }
+                    }
+                });
+            }
+        }).start();
     }
     @Override
     public void onResume() {
