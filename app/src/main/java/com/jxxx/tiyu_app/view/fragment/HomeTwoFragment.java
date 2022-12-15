@@ -648,9 +648,11 @@ public class HomeTwoFragment extends BaseFragment {
                 setNotifyDataSetChanged_Fragment();
                 if (mSchoolStudentBean.getPostDqbz() >= HomeTwoXueShengActivity.current_course_section_loop_num) {
                     mSchoolStudentBean.setPostZys(mSchoolStudentBean.getPostZys()+current_time);
-                    double pjsd = 1D * mSchoolStudentBean.getPostZys()/ mSchoolStudentBean.getPostZjzs();
-                    Log.w("BroadcastReceiver", "pjsd:" + StringUtil.getValue(pjsd));
-                    mSchoolStudentBean.setPostPjsd(Double.parseDouble(StringUtil.getValue(pjsd)));
+                    if(mSchoolStudentBean.getPostZjzs()!=0){
+                        double pjsd = 1D * mSchoolStudentBean.getPostZys()/ mSchoolStudentBean.getPostZjzs();
+                        Log.w("BroadcastReceiver", "pjsd:" + StringUtil.getValue(pjsd));
+                        mSchoolStudentBean.setPostPjsd(Double.parseDouble(StringUtil.getValue(pjsd)));
+                    }
                     System.out.println("BroadcastReceiver：duiBiXueShengStep()已完成：" + mSchoolStudentBean.getStudentName());
                     setNotifyDataSetChanged_Fragment();
                     isAllOk();
@@ -857,7 +859,12 @@ public class HomeTwoFragment extends BaseFragment {
                             mPostStudentResult.setBeginTime(SharedUtils.singleton().get("postSchoolClassRecord_time", ""));
                             mPostStudentResult.setClassDate(SharedUtils.singleton().get("postSchoolClassRecord_time", ""));
                             mPostStudentResult.setTimeUse(mSchoolStudentBean.getPostZys() + "");
-                            mPostStudentResult.setSpeed(mSchoolStudentBean.getPostPjsd() + "");
+                            if(mSchoolStudentBean.getPostPjsd()!=Double.POSITIVE_INFINITY
+                                && mSchoolStudentBean.getPostPjsd()!=Double.NEGATIVE_INFINITY){
+                                mPostStudentResult.setSpeed(mSchoolStudentBean.getPostPjsd() + "");
+                            }else{
+                                mPostStudentResult.setSpeed("0");
+                            }
                             mPostStudentResult.setTimes(mSchoolStudentBean.getPostWccs() + "");
                             mPostStudentResult.setFinishTimes(mSchoolStudentBean.getPostZjzs() + "");
                             mPostStudentResult.setTimeNode(mSchoolStudentBean.getCurrentTime());
