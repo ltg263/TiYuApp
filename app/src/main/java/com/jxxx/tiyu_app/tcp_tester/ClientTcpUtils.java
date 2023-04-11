@@ -232,7 +232,9 @@ public class ClientTcpUtils {
                 }
             }
             /* 关闭serversocket*/
-            serverSocket.close();
+            if(serverSocket!=null){
+                serverSocket.close();
+            }
             Log.d(TAG,"onDestroy:断开连接");
         } catch (IOException e) {
             // TODO Auto-generated catch block

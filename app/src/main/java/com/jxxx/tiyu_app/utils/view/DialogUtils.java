@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.jxxx.tiyu_app.bean.DictDataTypeBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
 import com.jxxx.tiyu_app.bean.VersionResponse;
+import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
@@ -66,6 +68,41 @@ public class DialogUtils {
             public void onClick(View v) {
                 if(dialogConfirm!=null){
                     dialogConfirm.btnConfirm();
+                }
+                dialog5.dismiss();
+            }
+        });
+        dialog5.setCancelable(false);
+        dialog5.setContentView(view);
+        dialog5.show();
+    }
+    public static void showDialogQieHuanDl(Context context, String num, final ErrorDialogInterfaceA dialogConfirm) {
+
+        final Dialog dialog5 = new Dialog(context, R.style.selectorDialog);
+        final View view = LayoutInflater.from(context).inflate(R.layout.dialog_hine, null);
+        TextView bt_ok = (TextView) view.findViewById(R.id.bt_confirm);
+        TextView suanle = (TextView) view.findViewById(R.id.bt_suanle);
+        view.findViewById(R.id.tv_title).setVisibility(View.GONE);
+        view.findViewById(R.id.ll_duilie).setVisibility(View.VISIBLE);
+        TextView tv_dl = (TextView) view.findViewById(R.id.tv_dl);
+        EditText et_dl = (EditText) view.findViewById(R.id.et_dl);
+        tv_dl.setText("该课程队列数："+num);
+        suanle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog5.dismiss();
+            }
+        });
+        bt_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dialogConfirm!=null){
+                    String str = et_dl.getText().toString();
+                    if(StringUtil.isBlank(str)){
+                        ToastUtil.showShortToast(context,"请输入每个队列的人数");
+                        return;
+                    }
+                    dialogConfirm.btnConfirm(Integer.parseInt(str));
                 }
                 dialog5.dismiss();
             }
@@ -419,6 +456,29 @@ public class DialogUtils {
         EditText et_guangqiu_num = view.findViewById(R.id.et_guangqiu_num);
         EditText et_dianban_num = view.findViewById(R.id.et_dianban_num);
         EditText et_zdsc = view.findViewById(R.id.et_zdsc);
+        ImageView iv_select = view.findViewById(R.id.iv_select);
+        ImageView iv_select_ddl = view.findViewById(R.id.iv_select_ddl);
+        TextView tv_select_ddl = view.findViewById(R.id.tv_select_ddl);
+        iv_select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iv_select.setSelected(!iv_select.isSelected());
+                iv_select_ddl.setSelected(false);
+                if(iv_select.isSelected()){
+                    iv_select_ddl.setVisibility(View.VISIBLE);
+                    tv_select_ddl.setVisibility(View.VISIBLE);
+                }else{
+                    iv_select_ddl.setVisibility(View.INVISIBLE);
+                    tv_select_ddl.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        iv_select_ddl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iv_select_ddl.setSelected(!iv_select_ddl.isSelected());
+            }
+        });
         et_zdsc.setText(totalDuration+"");
         et_guangqiu_num.setText(mBallNum+"");
         et_dianban_num.setText(mPlateNum+"");
@@ -505,6 +565,11 @@ public class DialogUtils {
                         finalTotalDuration = 0;
                     }else{
                         finalTotalDuration = Integer.parseInt(et_zdsc.getText().toString());
+                    }
+                    ConstValuesHttps.IS_AUTO = iv_select.isSelected();
+                    ConstValuesHttps.IS_AUTO_DAN_DUILIE = false;
+                    if(iv_select.isSelected()){
+                        ConstValuesHttps.IS_AUTO_DAN_DUILIE = iv_select_ddl.isSelected();
                     }
                     dialogConfirm.lianJieNum(StringUtil.isNotBlank(guangqiuNum)?Integer.parseInt(guangqiuNum):finalMBallNum
                             ,StringUtil.isNotBlank(dianbanNum)?Integer.parseInt(dianbanNum):finalMPlateNum, dingguang,finalTotalDuration);

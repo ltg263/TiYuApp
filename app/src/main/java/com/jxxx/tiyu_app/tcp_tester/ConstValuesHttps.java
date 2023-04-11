@@ -44,7 +44,6 @@ public class ConstValuesHttps {
      */
     public static byte MESSAGE_END = (byte) 0xFF;
 
-
     /******↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓向服务端发送的指令↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*******/
 
     /**
@@ -94,6 +93,21 @@ public class ConstValuesHttps {
      * 倒计时结束的状态反馈指令均为
      */
     public static byte MESSAGE_GET_C6 = (byte) 0xC6;
+
+    /**
+     * 是否自动执行
+     */
+    public static boolean IS_AUTO = false;
+
+    /**
+     * 是否单队列循环
+     */
+    public static boolean IS_AUTO_DAN_DUILIE = false;
+
+    /**
+     * 是否课程队列形式
+     */
+    public static boolean IS_BANJI_DUILIE = false;
 
     /**
      * 发送的数据

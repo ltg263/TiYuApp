@@ -191,6 +191,8 @@ public interface ApiService {
                                                                              @Query("contentType") String contentType,
                                                                              @Query("processType") String processType,
                                                                              @Query("trainType") String trainType,
+                                                                             @Query("status") String status,
+                                                                             @Query("publicFlag") String publicFlag,
                                                                              @Query("pageNum") int pageNum,@Query("pageSize") int pageSize);
 
     /**

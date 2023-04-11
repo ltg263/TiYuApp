@@ -14,6 +14,7 @@ import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import com.jxxx.tiyu_app.view.activity.HomeTwoXueShengActivity;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoTwoListAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,9 +34,10 @@ public class HomeTwoListFragment extends BaseFragment {
     RecyclerView mRvTwoList;
     HomeTwoTwoListAdapter mHomeTwoTwoListAdapter;
 
-    public void setNotifyDataSetChanged(int pos){
+    public void setNotifyDataSetChanged(int pos, List<Integer> current_class_group_lists){
         if(mHomeTwoTwoListAdapter!=null){
             mHomeTwoTwoListAdapter.setCurrentPos(pos);
+            mHomeTwoTwoListAdapter.setCurrent_class_group_lists(current_class_group_lists);
             mHomeTwoTwoListAdapter.notifyDataSetChanged();
         }
     }
@@ -52,9 +54,11 @@ public class HomeTwoListFragment extends BaseFragment {
     @Override
     protected void initView() {
         String id = getArguments().getString("mMapKey");
+        int pos = getArguments().getInt("pos",0);
         System.out.println("HomeTwoListFragment1:"+HomeTwoXueShengActivity.mMapSchoolStudentBeans);
         if(HomeTwoXueShengActivity.mMapSchoolStudentBeans!=null){
             mHomeTwoTwoListAdapter = new HomeTwoTwoListAdapter(HomeTwoXueShengActivity.mMapSchoolStudentBeans.get(id));
+            mHomeTwoTwoListAdapter.setPos(pos);
             mRvTwoList.setAdapter(mHomeTwoTwoListAdapter);
         }
     }

@@ -17,11 +17,11 @@ public class ConstValues {
      */
     public static String APPNAME_ENGLISH = "TiYuApp";
     /**
-     * 版本
+     * 修改版本信息
      * 1 中小学
      * 2 幼教
      */
-    public static int BANBEN_TYPE = 1;
+    public static int BANBEN_TYPE = 2;
 
     /**
      * 文件夹父路径

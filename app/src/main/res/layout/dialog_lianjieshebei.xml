@@ -74,25 +74,31 @@
             android:textCursorDrawable="@drawable/shape_edit_cursor"
             android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/tv_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginHorizontal="15dp"
-            android:text="请设置总时长"
-            android:textColor="@color/color_000000"
-            android:textSize="14sp" />
-        <TextView
-            android:id="@+id/tv_4_zs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="5dp"
-            android:text="(总时长为0时,默认为课程循环次数)"
-            android:textColor="@color/red40"
-            android:textSize="12sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginVertical="15dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:text="请设置总时长"
+                android:textColor="@color/color_000000"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_4_zs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:text="(总时长为0时,默认为课程循环次数)"
+                android:textColor="@color/red40"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
 
         <EditText
             android:id="@+id/et_zdsc"
@@ -113,16 +119,16 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:text="请选择灯光模式"
-            android:visibility="gone"
             android:textColor="@color/color_000000"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/btn_1"
@@ -158,23 +164,61 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
                 android:layout_weight="1"
-                android:visibility="gone"
                 android:background="@drawable/shape_radius_line_828df1"
                 android:gravity="center"
                 android:padding="10dp"
                 android:text="低"
                 android:textColor="@color/color_999999"
                 android:textCursorDrawable="@drawable/shape_edit_cursor"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_marginVertical="15dp"
+            android:gravity="center"
+            android:layout_marginStart="15dp"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/iv_select"
+                android:layout_width="25dp"
+                android:padding="2dp"
+                android:layout_height="25dp"
+                android:src="@drawable/home_select_yuan_dui" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/color_text_theme"
+                android:text="开启自动开始"/>
+            <ImageView
+                android:id="@+id/iv_select_ddl"
+                android:layout_width="25dp"
+                android:padding="2dp"
+                android:layout_marginStart="15dp"
+                android:layout_height="25dp"
+                android:visibility="invisible"
+                android:src="@drawable/home_select_yuan_dui" />
+            <TextView
+                android:id="@+id/tv_select_ddl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="@dimen/sp_14"
+                android:visibility="invisible"
+                android:textColor="@color/color_text_theme"
+                android:text="开启单队列循环"/>
+
+        </LinearLayout>
         <Button
             android:id="@+id/btn_lianjie"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="30dp"
             android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/btn_shape_theme"
             android:text="开始连接"
             android:textColor="@color/white" />

@@ -26,6 +26,7 @@ import com.jxxx.tiyu_app.bean.DictDataTypeBean;
 import com.jxxx.tiyu_app.bean.SceduleCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.VersionResponse;
+import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
@@ -258,7 +259,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void setFragmentStart(){
-        if(ConstValues.BANBEN_TYPE == 1){
+        if(!ConstValuesHttps.IS_AUTO){
             return;
         }
         new Thread(new Runnable() {

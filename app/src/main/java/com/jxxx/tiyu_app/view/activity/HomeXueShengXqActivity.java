@@ -71,7 +71,7 @@ public class HomeXueShengXqActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        mTvTitle.setText("同学详情");
+        mTvTitle.setText("学生详情");
 
         mHomeXueShengXqAdapter = new HomeXueShengXqAdapter(null);
         rv_list.setAdapter(mHomeXueShengXqAdapter);

@@ -6,14 +6,28 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
+import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.view.activity.HomeTwoXueShengActivity;
 
 import java.util.List;
 
 public class HomeTwoTwoListAdapter extends BaseQuickAdapter<SchoolStudentBean, BaseViewHolder> {
-
+    int pos = 0;
     int mCurrentPos = 0;
+    List<Integer> current_class_group_lists;
+
+    public void setPos(int pos) {
+        this.pos = pos;
+    }
+
+    public int getPos() {
+        return pos;
+    }
+
+    public void setCurrent_class_group_lists(List<Integer> current_class_group_lists) {
+        this.current_class_group_lists = current_class_group_lists;
+    }
 
     public void setCurrentPos(int currentPos) {
         mCurrentPos = currentPos;
@@ -43,13 +57,24 @@ public class HomeTwoTwoListAdapter extends BaseQuickAdapter<SchoolStudentBean, B
                     .setText(R.id.tv_5,"-")
                     .setText(R.id.tv_6,"-");
         }
-        if(item.getLists()==null && helper.getLayoutPosition()==mCurrentPos){
-            helper.setTextColor(R.id.tv_1,mContext.getResources().getColor(R.color.color_text_theme))
-                    .setTextColor(R.id.tv_2,mContext.getResources().getColor(R.color.color_text_theme))
-                    .setTextColor(R.id.tv_3,mContext.getResources().getColor(R.color.color_text_theme))
-                    .setTextColor(R.id.tv_4,mContext.getResources().getColor(R.color.color_text_theme))
-                    .setTextColor(R.id.tv_5,mContext.getResources().getColor(R.color.color_text_theme))
-                    .setTextColor(R.id.tv_6,mContext.getResources().getColor(R.color.color_text_theme));
+        if(!ConstValuesHttps.IS_AUTO_DAN_DUILIE){
+            if(item.getLists()==null && helper.getLayoutPosition()==mCurrentPos){
+                helper.setTextColor(R.id.tv_1,mContext.getResources().getColor(R.color.color_text_theme))
+                        .setTextColor(R.id.tv_2,mContext.getResources().getColor(R.color.color_text_theme))
+                        .setTextColor(R.id.tv_3,mContext.getResources().getColor(R.color.color_text_theme))
+                        .setTextColor(R.id.tv_4,mContext.getResources().getColor(R.color.color_text_theme))
+                        .setTextColor(R.id.tv_5,mContext.getResources().getColor(R.color.color_text_theme))
+                        .setTextColor(R.id.tv_6,mContext.getResources().getColor(R.color.color_text_theme));
+            }
+        }else{
+            if(current_class_group_lists!=null && current_class_group_lists.size()> pos && current_class_group_lists.get(pos) == helper.getLayoutPosition()){
+                helper.setTextColor(R.id.tv_1,mContext.getResources().getColor(R.color.color_text_theme))
+                        .setTextColor(R.id.tv_2,mContext.getResources().getColor(R.color.color_text_theme))
+                        .setTextColor(R.id.tv_3,mContext.getResources().getColor(R.color.color_text_theme))
+                        .setTextColor(R.id.tv_4,mContext.getResources().getColor(R.color.color_text_theme))
+                        .setTextColor(R.id.tv_5,mContext.getResources().getColor(R.color.color_text_theme))
+                        .setTextColor(R.id.tv_6,mContext.getResources().getColor(R.color.color_text_theme));
+            }
         }
         if(item.getLists()==null && item.getPostWccs()>= HomeTwoXueShengActivity.current_course_section_num && HomeTwoXueShengActivity.current_course_total_duration==0){
             helper.setTextColor(R.id.tv_1,mContext.getResources().getColor(R.color.red40))

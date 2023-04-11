@@ -154,6 +154,11 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                     sortNumSet = ConstValues.mSchoolCourseInfoBeanSmall.getSortNumSet().split(",");
                 }
             }
+            String str = Integer.toHexString(startBroadcastData[0] & 0xFF)+ Integer.toHexString(startBroadcastData[1] & 0xFF);
+
+            int lightness = Integer.parseInt(str, 16);
+            Log.w("lightness","lightness"+lightness);
+            SharedUtils.singleton().put("lightness",lightness);
             startBroadcastData = Arrays.copyOfRange(startBroadcastData, 2, startBroadcastData.length);
             if(startBroadcastData.length==0){
                 return;

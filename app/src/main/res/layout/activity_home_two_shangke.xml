@@ -75,18 +75,19 @@
                     android:textSize="@dimen/sp_12" />
 
                 <TextView
-                    android:id="@+id/tv_lianjie"
+                    android:id="@+id/tv_qiehuan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@id/tv_1"
+                    android:layout_alignBottom="@id/tv_1"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="15dp"
+                    android:drawablePadding="5dp"
                     android:background="@drawable/shape_radius_1555c2"
-                    android:drawableStart="@drawable/ic_shebei_lj"
+                    android:drawableStart="@drawable/ic_qiehuan"
                     android:gravity="center"
-                    android:paddingHorizontal="10dp"
+                    android:paddingHorizontal="5dp"
                     android:paddingVertical="5dp"
-                    android:text="未连接"
+                    android:text="班级队列"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_12" />
 

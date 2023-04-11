@@ -633,7 +633,7 @@ public class HomeOneFragment extends BaseFragment {
         RetrofitUtil.getInstance().apiService()
                 .getSchoolCourseListSmall(SharedUtils.singleton().get(ConstValues.TEACHER_ID,""),
                         SharedUtils.singleton().get(ConstValues.SCHOOL_ID,""),
-                        null,courseName,ageRange,contentType,processType,trainType,
+                        null,courseName,ageRange,contentType,processType,trainType,"1","0",
                         page,ConstValues.PAGE_SIZE)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())

@@ -104,9 +104,18 @@ public class SchoolClassBean {
          * studentIds : 
          */
 
+        private boolean isNotClassDl = false;//是否按照班级的队列
         private String classId;
         private String id;
         private String studentIds;
+
+        public void setNotClassDl(boolean notClassDl) {
+            isNotClassDl = notClassDl;
+        }
+
+        public boolean isNotClassDl() {
+            return isNotClassDl;
+        }
 
         public String getClassId() {
             return classId;

@@ -1,4 +1,5 @@
 <resources>
+<!--    修改版本信息-->
 <!--    <string name="app_name">明洲_幼教</string>-->
     <string name="app_name">明洲_中小学</string>
     <string name="loading_text">请稍候...</string>

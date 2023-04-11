@@ -27,6 +27,7 @@ public class HomeTwoXueShengAdapter extends BaseQuickAdapter<SchoolClassBean.Cla
 
     @Override
     protected void convert(BaseViewHolder helper, SchoolClassBean.ClassGroupListBean item) {
+        RecyclerView rv_list = helper.getView(R.id.rv_list);
         helper.setText(R.id.tv_name,"队列："+(helper.getLayoutPosition()+1));
         List<String> mStudentIds = Arrays.asList(item.getStudentIds().split(","));
         List<SchoolStudentBean> mSchoolStudentBeans = new ArrayList<>();
@@ -36,7 +37,6 @@ public class HomeTwoXueShengAdapter extends BaseQuickAdapter<SchoolClassBean.Cla
                 mSchoolStudentBeans.add(ConstValues.mSchoolStudentInfoBean.get(i));
             }
         }
-        RecyclerView rv_list = helper.getView(R.id.rv_list);
 
 //        List<String> list = new ArrayList<>();
 //        list.add("闪烁灯");
@@ -48,6 +48,9 @@ public class HomeTwoXueShengAdapter extends BaseQuickAdapter<SchoolClassBean.Cla
         mHomeTwoXueShengAdapter_z.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if(item.isNotClassDl()){
+                    return;
+                }
                 mHomeTwoXueShengAdapter_z.getData().get(position).setAskForLeave(!mHomeTwoXueShengAdapter_z.getData().get(position).isAskForLeave());
                 mHomeTwoXueShengAdapter_z.notifyDataSetChanged();
             }

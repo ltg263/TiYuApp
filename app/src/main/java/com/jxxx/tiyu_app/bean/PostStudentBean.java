@@ -39,6 +39,16 @@ public class PostStudentBean {
     private String teacherId;
     private String updateBy;
     private String updateTime;
+    private String lightness;
+
+    public void setLightness(String lightness) {
+        this.lightness = lightness;
+    }
+
+    public String getLightness() {
+        return lightness;
+    }
+
     private List<PostStudentResults> studentResultsList;
 
     @Override
@@ -59,6 +69,7 @@ public class PostStudentBean {
                 ", teacherId='" + teacherId + '\'' +
                 ", updateBy='" + updateBy + '\'' +
                 ", updateTime='" + updateTime + '\'' +
+                ", lightness='" + lightness + '\'' +
                 ", studentResultsList=" + studentResultsList +
                 '}';
     }

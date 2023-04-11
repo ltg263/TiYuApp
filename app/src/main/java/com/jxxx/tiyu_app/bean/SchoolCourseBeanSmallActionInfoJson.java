@@ -13,6 +13,16 @@ public class SchoolCourseBeanSmallActionInfoJson {
 
     private int groupNo;
     private List<StepsBean> steps;
+    private List<Byte> sortNumSet;//单独步骤中用到的所有球号
+
+
+    public void setSortNumSet(List<Byte> sortNumSet) {
+        this.sortNumSet = sortNumSet;
+    }
+
+    public List<Byte> getSortNumSet() {
+        return sortNumSet;
+    }
 
     public int getGroupNo() {
         return groupNo;
@@ -40,7 +50,6 @@ public class SchoolCourseBeanSmallActionInfoJson {
         private int stepNoOkNum;//执行过的数量 sets
         private List<List<Byte>> sets;
         private List<List<Byte>> sets_cz = new ArrayList<>();
-
 
         public void setStepNoOkNum(int stepNoOkNum) {
             this.stepNoOkNum = stepNoOkNum;

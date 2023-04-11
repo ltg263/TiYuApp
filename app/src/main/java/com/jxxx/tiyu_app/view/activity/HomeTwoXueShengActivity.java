@@ -1,7 +1,9 @@
 package com.jxxx.tiyu_app.view.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,19 +15,27 @@ import com.alibaba.fastjson.JSON;
 import com.jxxx.tiyu_app.MainActivity;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.app.ConstValues;
+import com.jxxx.tiyu_app.app.MainApplication;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
+import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
 import com.jxxx.tiyu_app.utils.SharedUtils;
 import com.jxxx.tiyu_app.utils.StringUtil;
+import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoXueShengAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -146,7 +156,7 @@ public class HomeTwoXueShengActivity extends BaseActivity {
      */
     public static boolean current_yundong_yikaishi = false;
     /**
-     * Map队列的KEY
+     * 学生队列的KEY
      */
     public static List<String> mMapKey_id = new ArrayList<>();
     /**
@@ -174,6 +184,89 @@ public class HomeTwoXueShengActivity extends BaseActivity {
      */
     public static  int current_course_total_duration = 0;
 
+    /**
+     * 是否支持单队列循环
+     * @return
+     */
+    public static boolean isNotYuDong(){
+        if(!ConstValuesHttps.IS_AUTO_DAN_DUILIE) {
+            if (ConstValues.mSchoolCourseInfoBean != null) {
+                List<SchoolCourseBean.CourseSectionVoListBean> mCourseSectionVoList = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList();
+                for (int i = 0; i < mCourseSectionVoList.size(); i++) {
+                    String mActionInfo = mCourseSectionVoList.get(i).getSmallCourseVo().getActionInfo();
+                    Log.w("mActionInfo","mActionInfo:"+mActionInfo);
+                    if (StringUtil.isBlank(mActionInfo)) {
+                        return false;
+                    }
+                    try {
+                        JSON.parseArray(mActionInfo, SchoolCourseBeanSmallActionInfoJson.class);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.w("mActionInfo","Exception:"+e);
+                        return false;
+                    }
+                }
+
+            } else {
+                String mActionInfo = ConstValues.mSchoolCourseInfoBeanSmall.getActionInfo();
+                Log.w("mActionInfo","mActionInfo:"+mActionInfo);
+                if (StringUtil.isBlank(mActionInfo)) {
+                    return false;
+                }
+                try {
+                    JSON.parseArray(mActionInfo, SchoolCourseBeanSmallActionInfoJson.class);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.w("mActionInfo","Exception:"+e);
+                    return false;
+                }
+            }
+            return true;
+        }
+        if(ConstValues.mSchoolCourseInfoBean!=null) {
+            List<SchoolCourseBean.CourseSectionVoListBean> mCourseSectionVoList = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList();
+            for(int i = 0;i < mCourseSectionVoList.size();i++){
+                String mActionInfo = mCourseSectionVoList.get(i).getSmallCourseVo().getActionInfo();
+                Log.w("mActionInfo","mActionInfo:"+mActionInfo);
+                if(StringUtil.isBlank(mActionInfo)){
+                    return false;
+                }
+                try {
+                    List<SchoolCourseBeanSmallActionInfoJson> json =
+                            JSON.parseArray(mActionInfo,SchoolCourseBeanSmallActionInfoJson.class);
+                    for(int j = 0;j < json.size();j++){
+                        if(json.get(j).getSortNumSet()==null){
+                            return false;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.w("mActionInfo","Exception:"+e);
+                    return false;
+                }
+            }
+
+        }else{
+            String mActionInfo = ConstValues.mSchoolCourseInfoBeanSmall.getActionInfo();
+            if(StringUtil.isBlank(mActionInfo)){
+                return false;
+            }
+            try {
+                List<SchoolCourseBeanSmallActionInfoJson> json =
+                        JSON.parseArray(mActionInfo,SchoolCourseBeanSmallActionInfoJson.class);
+                for(int j = 0;j < json.size();j++){
+                    if(json.get(j).getSortNumSet()==null){
+                        return false;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.w("mActionInfo","Exception:"+e);
+                return false;
+            }
+        }
+        return true;
+    }
 
     public static boolean initYuDongData() {
         String actionInfo = null;
@@ -193,8 +286,9 @@ public class HomeTwoXueShengActivity extends BaseActivity {
         for (int i=0;i<mClassGroupLists.size();i++){
             List<SchoolStudentBean> mSchoolStudentBeans= new ArrayList<>();
             for(int j=0;j<ConstValues.mSchoolStudentInfoBean.size();j++){
-                if(mClassGroupLists.get(i).getStudentIds().contains(ConstValues.mSchoolStudentInfoBean.get(j).getId())
-                        && !ConstValues.mSchoolStudentInfoBean.get(j).isAskForLeave()){
+                List<String>  mStudentIds = Arrays.asList(mClassGroupLists.get(i).getStudentIds().split(","));
+                String id = ConstValues.mSchoolStudentInfoBean.get(j).getId();
+                if(mStudentIds.contains(id) && !ConstValues.mSchoolStudentInfoBean.get(j).isAskForLeave()){
                     SchoolStudentBean mSchoolStudentBean = ConstValues.mSchoolStudentInfoBean.get(j);
                     mSchoolStudentBean.setCurrentStepNo(0);
                     mSchoolStudentBean.setPostDqbz(0);
@@ -204,26 +298,31 @@ public class HomeTwoXueShengActivity extends BaseActivity {
                     mSchoolStudentBean.setCurrentTime(new ArrayList<>());
                     mSchoolStudentBean.setPostZys(0);
                     mSchoolStudentBean.setPostPjsd(0);
-                    List<SchoolCourseBeanSmallActionInfoJson> json = JSON.parseArray(actionInfo,SchoolCourseBeanSmallActionInfoJson.class);
-                    if(json!=null && i<=json.size()-1 && json.get(i)!=null){
-                        List<SchoolCourseBeanSmallActionInfoJson.StepsBean> mSteps = json.get(i).getSteps();
-                        mSchoolStudentBean.setSteps(mSteps);
-                        List<Byte> allQiuNo = new ArrayList<>();
-                        for(int a = 0;a<mSteps.size();a++){
-                            List<List<Byte>> mSets = mSteps.get(a).getSets();
-                            if(mSets!=null){
-                                mSteps.get(a).setStepNoOkNum(0);
-                                for(int b = 0;b<mSets.size();b++){
-                                    if(!allQiuNo.contains(mSets.get(b).get(1))){
-                                        allQiuNo.add(mSets.get(b).get(1));
+                    try {
+                        List<SchoolCourseBeanSmallActionInfoJson> json = JSON.parseArray(actionInfo,SchoolCourseBeanSmallActionInfoJson.class);
+                        if(json!=null && i<=json.size()-1 && json.get(i)!=null){
+                            List<SchoolCourseBeanSmallActionInfoJson.StepsBean> mSteps = json.get(i).getSteps();
+                            mSchoolStudentBean.setSteps(mSteps);
+                            List<Byte> allQiuNo = new ArrayList<>();
+                            for(int a = 0;a<mSteps.size();a++){
+                                List<List<Byte>> mSets = mSteps.get(a).getSets();
+                                if(mSets!=null){
+                                    mSteps.get(a).setStepNoOkNum(0);
+                                    for(int b = 0;b<mSets.size();b++){
+                                        if(!allQiuNo.contains(mSets.get(b).get(1))){
+                                            allQiuNo.add(mSets.get(b).get(1));
+                                        }
                                     }
                                 }
                             }
+                            mSchoolStudentBean.setAllQiuNo(allQiuNo);
+                        } else {
+                            mSchoolStudentBean.setSteps(null);
                         }
-                        mSchoolStudentBean.setAllQiuNo(allQiuNo);
-                    } else {
-                        mSchoolStudentBean.setSteps(null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
                     mSchoolStudentBeans.add(ConstValues.mSchoolStudentInfoBean.get(j));
                 }
             }

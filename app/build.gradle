@@ -6,11 +6,19 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
+//        修改版本信息
+//          中小学
         applicationId "com.jxxx.tiyu_app"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 25
-        versionName "1.2.4"
+        versionCode 28
+        versionName "1.2.7"
+        //幼教
+//        applicationId "com.jxxx.tiyuyj_app"
+//        minSdkVersion 26
+//        targetSdkVersion 30
+//        versionCode 10
+//        versionName "1.0.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,7 +36,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 //    applicationVariants.all { variant ->
-//        variant.outputs.all {
+//        variant.outputs.all {//glj801128
 //            def fileName = "智慧体育-V${defaultConfig.versionName}.apk"
 //            outputFileName = fileName
 //        }
