@@ -8,17 +8,17 @@ android {
     defaultConfig {
 //        修改版本信息
 //          中小学
-        applicationId "com.jxxx.tiyu_app"
-        minSdkVersion 26
-        targetSdkVersion 30
-        versionCode 28
-        versionName "1.2.7"
-        //幼教
-//        applicationId "com.jxxx.tiyuyj_app"
+//        applicationId "com.jxxx.tiyu_app"
 //        minSdkVersion 26
 //        targetSdkVersion 30
-//        versionCode 10
-//        versionName "1.0.9"
+//        versionCode 29
+//        versionName "1.2.8"
+        //幼教
+        applicationId "com.jxxx.tiyuyj_app"
+        minSdkVersion 26
+        targetSdkVersion 30
+        versionCode 11
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

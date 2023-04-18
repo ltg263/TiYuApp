@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.api.RetrofitUtil;
@@ -21,6 +22,7 @@ import com.jxxx.tiyu_app.bean.SceduleCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolClassBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
+import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
@@ -34,8 +36,11 @@ import com.jxxx.tiyu_app.view.adapter.KeChengXiangQingAdapter;
 import com.jxxx.tiyu_app.view.adapter.KeChengXiangQingAdapterSmall;
 import com.jxxx.tiyu_app.view.adapter.ShangKeBanJiAdapter;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -76,7 +81,6 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     KeChengXiangQingAdapter mKeChengXiangQingAdapter;
     KeChengXiangQingAdapterSmall mKeChengXiangQingAdapterSmall;
     boolean isSmallCourse;
-    boolean isSuiJiMoShi = true;
     String mClassId,mClassName;
     private WifiMessageReceiver mWifiMessageReceiver;
     List<String> list = new ArrayList<>();
@@ -90,6 +94,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     @Override
     public void initView() {
         ConstValuesHttps.IS_BANJI_DUILIE = false;
+        ConstValuesHttps.IS_SUIJIB_MOSHI = false;
         ConstValues.mSchoolCourseInfoBean = null;
         ConstValues.mSchoolCourseInfoBeanSmall = null;
         ConstValues.mSchoolClassInfoBean = null;
@@ -115,6 +120,9 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 ConstValues.mSchoolClassInfoBean = mItem;
                 mShangKeBanJiAdapter.setId(mItem.getId());
                 mShangKeBanJiAdapter.notifyDataSetChanged();
+                if(ConstValuesHttps.IS_BANJI_DUILIE){
+                    return;
+                }
                 queueNum = mItem.getQueueNum();
                 tv_grade.setText(mItem.getClassName()+"班级队列数"+mItem.getQueueNum()+"，队列最大人数"+mItem.getQueuePersonNum());
                 mKeChengXiangQingAdapter.notifyDataSetChanged();
@@ -227,6 +235,9 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 });
     }
     private void getSchoolStudentList(String classId) {
+        if(ConstValuesHttps.IS_SUIJIB_MOSHI){
+            return;
+        }
         RetrofitUtil.getInstance().apiService()
                 .getSchoolStudentList(classId,null,null)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -280,8 +291,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
 
                     @Override
                     public void onNext(Result<List<SchoolClassBean>> result) {
-                        if(isResultOk(result) && result.getData()!=null){
-                            result.getData();
+                        if(isResultOk(result) && result.getData()!=null && result.getData().size()>0){
                             mTvBanji.setText("共"+result.getTotal()+"个班");
                             if(isSmallCourse){
                                 tv_type.setText("队列");
@@ -289,19 +299,9 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                                 rv_list.setVisibility(View.GONE);
                                 rv_list_small.setVisibility(View.VISIBLE);
                                 tv_xunhuancishu.setVisibility(View.VISIBLE);
-                                getSchoolSmallCourseDetail();
+                                getSchoolSmallCourseDetail(result.getData());
                             }else{
-                                getSchoolCourseDetail();
-                            }
-                            mShangKeBanJiAdapter.setNewData(result.getData());
-                            if(result.getData().size()>0) {
-                                SchoolClassBean mSchoolClassBean = result.getData().get(0);
-                                ConstValues.mSchoolClassInfoBean = mSchoolClassBean;
-                                mShangKeBanJiAdapter.setId(mSchoolClassBean.getId());
-                                getSchoolStudentList(mSchoolClassBean.getId());
-                                queueNum = mSchoolClassBean.getQueueNum();
-                                tv_grade.setText(mSchoolClassBean.getClassName()+"班级队列数"+mSchoolClassBean.getQueueNum()
-                                        +"，队列最大人数"+mSchoolClassBean.getQueuePersonNum());
+                                getSchoolCourseDetail(result.getData());
                             }
                         }
                     }
@@ -337,7 +337,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                             mShangKeBanJiAdapter.getData().clear();
                             mShangKeBanJiAdapter.addData(mSchoolClassBean);
                             mShangKeBanJiAdapter.setId(mSchoolClassBean.getId());
-                            getSchoolStudentList(mSchoolClassBean.getId());
+//                            getSchoolStudentList(mSchoolClassBean.getId());
                             queueNum = mSchoolClassBean.getQueueNum();
                             tv_grade.setText(mSchoolClassBean.getClassName()+"班级队列数"+mSchoolClassBean.getQueueNum()
                                     +"，队列最大人数"+mSchoolClassBean.getQueuePersonNum());
@@ -403,7 +403,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 });
     }
 
-    private void getSchoolCourseDetail() {
+    private void getSchoolCourseDetail(List<SchoolClassBean> mSchoolClassBeans) {
         RetrofitUtil.getInstance().apiService()
                 .getSchoolCourseDetail(mIntent.getStringExtra("id"))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -427,6 +427,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                                 tv_shu.setText("本节课使用"+result.getData().getCourseSectionVoList().get(0).getBallNum()+"个光电球，"
                                         +result.getData().getCourseSectionVoList().get(0).getPlateNum()+"块光电地板");
                             }
+                            setSchoolClassInfoBean(mSchoolClassBeans);
                         }
                     }
 
@@ -442,7 +443,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 });
     }
 
-    private void getSchoolSmallCourseDetail() {
+    private void getSchoolSmallCourseDetail(List<SchoolClassBean> mSchoolClassBeans) {
         RetrofitUtil.getInstance().apiService()
                 .getSchoolSmallCourseDetail(mIntent.getStringExtra("id"))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -481,11 +482,22 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                                 tv_shu.setText("本节课使用"+ConstValues.mSchoolCourseInfoBeanSmall.getBallNum()+"个光电球，"
                                         +ConstValues.mSchoolCourseInfoBeanSmall.getPlateNum()+"块光电地板");
                             }
-                            if(isSuiJiMoShi){
-                                ConstValuesHttps.IS_BANJI_DUILIE = true;
-                                mTvQieHuan.setText("课程队列");
-                                getKeChengDuiLieData(1,1);
+                            if(result.getData().getRandomFlag()==1){
+                                ConstValuesHttps.IS_SUIJIB_MOSHI = true;
+                                if(result.getData().getStepGroups()!=null && result.getData().getStepGroups().size()>0
+                                        && result.getData().getStepGroups().get(0).getCourseStepList() !=null
+                                        && result.getData().getStepGroups().get(0).getCourseStepList().size()>0){
+                                    SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean mCourseStepList =
+                                            result.getData().getStepGroups().get(0).getCourseStepList().get(0);
+                                    int loopNum = mCourseStepList.getLoopNum();
+//                                    tv_xunhuancishu.setVisibility(View.GONE);
+                                    ConstValues.mSchoolCourseInfoBeanSmall.setLoopNum(1);
+                                    ConstValuesHttps.IS_BANJI_DUILIE = true;
+                                    mTvQieHuan.setText("课程队列");
+                                    setSuiJiData(mCourseStepList);
+                                }
                             }
+                            setSchoolClassInfoBean(mSchoolClassBeans);
                         }
                     }
 
@@ -499,6 +511,90 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                         hideLoading();
                     }
                 });
+    }
+
+    private void setSchoolClassInfoBean(List<SchoolClassBean> mSchoolClassBeans) {
+        SchoolClassBean mSchoolClassBean = mSchoolClassBeans.get(0);
+        ConstValues.mSchoolClassInfoBean = mSchoolClassBean;
+        mShangKeBanJiAdapter.setId(mSchoolClassBean.getId());
+        queueNum = mSchoolClassBean.getQueueNum();
+        tv_grade.setText(mSchoolClassBean.getClassName()+"班级队列数"+mSchoolClassBean.getQueueNum()
+                +"，队列最大人数"+mSchoolClassBean.getQueuePersonNum());
+        getSchoolStudentList(mSchoolClassBean.getId());
+        if(ConstValuesHttps.IS_SUIJIB_MOSHI){
+            getKeChengDuiLieData(1,1);
+        }
+        mShangKeBanJiAdapter.setNewData(mSchoolClassBeans);
+    }
+
+    /**
+     * 获取集合中随机个数不重复的项，组合新的集合
+     */
+    public static List<Byte> getRandomListByNum(List<Byte> list,int num){
+        List<Byte> sourceList = new ArrayList(list);
+        List<Byte> targetList = new ArrayList();
+        if(num >= sourceList.size()){
+            return sourceList;
+        }
+        // 创建随机数
+        Random random = new Random();
+        // 根据数量遍历
+        for(int i=0; i<num; i++){
+            // 获取源集合的长度的随机数
+            Integer index = random.nextInt(sourceList.size());
+            // 获取随机数下标对应的值
+            targetList.add(sourceList.get(index));
+            // 删除数据
+            sourceList.remove(sourceList.get(index));
+        }
+        return targetList;
+    }
+    /**
+     * 生成随机数据
+     */
+    private void setSuiJiData(SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean mCourseStepList) {
+        int mBallNum = ConstValues.mSchoolCourseInfoBeanSmall.getBallNum();
+        List<SchoolCourseBeanSmallActionInfoJson> json = new ArrayList<>();
+        SchoolCourseBeanSmallActionInfoJson mSchoolCourseBeanSmallActionInfoJson = new SchoolCourseBeanSmallActionInfoJson();
+        mSchoolCourseBeanSmallActionInfoJson.setGroupNo(0);
+        List<Byte> sortNumSet = new ArrayList<>();
+        for(int i = 1 ;i <= mBallNum;i++){
+            sortNumSet.add((byte) (i));
+        }
+        mSchoolCourseBeanSmallActionInfoJson.setSortNumSet(sortNumSet);
+        List<SchoolCourseBeanSmallActionInfoJson.StepsBean> steps = new ArrayList<>();
+        for(int i = 0;i<mCourseStepList.getLoopNum();i++){
+            SchoolCourseBeanSmallActionInfoJson.StepsBean mStepsBean = new SchoolCourseBeanSmallActionInfoJson.StepsBean();
+            List<Byte> sortNumSet_new = getRandomListByNum(sortNumSet,mCourseStepList.getRandomNum());
+            String mRandomColor = mCourseStepList.getRandomColor();
+            byte flickering = mCourseStepList.getFlickering();
+            byte lightTime = mCourseStepList.getLightTime();
+            byte triggerMode = mCourseStepList.getTriggerMode();
+            byte lightMode = mCourseStepList.getLightMode();
+            String[] str = mRandomColor.split(",");
+            List<List<Byte>> sets = new ArrayList<>();
+            for(int j = 0;j< mCourseStepList.getRandomNum();j++){
+                List<Byte> set = new ArrayList<>();
+                set.add((byte) -96);//按压方式
+                set.add(sortNumSet_new.get(j));//球号
+                int index = (int) (Math.random() * str.length);
+                set.add(Byte.parseByte(str[index]));//颜色
+                set.add(flickering);//闪烁
+                set.add(lightTime);//持续时长
+                set.add(triggerMode);//触发方式
+                set.add(lightMode);//触发后的执行动作
+                sets.add(set);
+            }
+            mStepsBean.setSets(sets);
+            mStepsBean.setStepNo(i+1);
+            steps.add(mStepsBean);
+        }
+        mSchoolCourseBeanSmallActionInfoJson.setSteps(steps);
+        json.add(mSchoolCourseBeanSmallActionInfoJson);
+        String actionInfo = JSON.toJSONString(json);
+        Log.w("setSuiJiData","actionInfo:"+actionInfo);
+        ConstValues.mSchoolCourseInfoBeanSmall.setSortNumSet(String.valueOf(mSchoolCourseBeanSmallActionInfoJson.getSortNumSet()));
+        ConstValues.mSchoolCourseInfoBeanSmall.setActionInfo(actionInfo);
     }
 
     @OnClick({R.id.iv_back, R.id.tv_qiehuan,R.id.tv_xunhuancishu,R.id.btn_kaishishangke})
@@ -522,8 +618,8 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                         });
                 break;
             case R.id.tv_qiehuan:
-                if(isSuiJiMoShi){
-                    ToastUtil.showLongStrToast(this,"随机模式不可切换");
+                if(ConstValuesHttps.IS_SUIJIB_MOSHI){
+//                    ToastUtil.showLongStrToast(this,"随机模式不可切换");
                     return;
                 }
                 if(mTvQieHuan.getText().toString().equals("班级队列")){

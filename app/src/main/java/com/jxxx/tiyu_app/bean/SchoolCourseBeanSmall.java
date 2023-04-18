@@ -44,7 +44,7 @@ public class SchoolCourseBeanSmall {
     private String trainPart;
     private String trainType;
     private String teacherId;
-    private String randomFlag;
+    private int randomFlag;
     private int stepNum;
     private String actionInfo;
     private String sortNumSet;
@@ -99,7 +99,7 @@ public class SchoolCourseBeanSmall {
     }
 
     public int getBallNum() {
-        return ballNum;
+        return 4;
     }
 
     public void setBallNum(int ballNum) {
@@ -194,11 +194,11 @@ public class SchoolCourseBeanSmall {
         this.teacherId = teacherId;
     }
 
-    public String getRandomFlag() {
+    public int getRandomFlag() {
         return randomFlag;
     }
 
-    public void setRandomFlag(String randomFlag) {
+    public void setRandomFlag(int randomFlag) {
         this.randomFlag = randomFlag;
     }
 
@@ -281,6 +281,70 @@ public class SchoolCourseBeanSmall {
             private String sortNum;
             private String smallCourseId;
             private String actionMode;
+            private int loopNum;
+            private int randomNum;
+            private byte flickering;
+            private byte lightTime;
+            private byte lightMode;
+            private byte triggerMode;
+            private String randomColor;
+
+            public void setLightMode(byte lightMode) {
+                this.lightMode = lightMode;
+            }
+
+            public byte getLightMode() {
+                return lightMode;
+            }
+
+            public void setTriggerMode(byte triggerMode) {
+                this.triggerMode = triggerMode;
+            }
+
+            public byte getTriggerMode() {
+                return triggerMode;
+            }
+
+            public void setLightTime(byte lightTime) {
+                this.lightTime = lightTime;
+            }
+
+            public byte getLightTime() {
+                return lightTime;
+            }
+
+            public void setFlickering(byte flickering) {
+                this.flickering = flickering;
+            }
+
+            public byte getFlickering() {
+                return flickering;
+            }
+
+            public void setRandomColor(String randomColor) {
+                this.randomColor = randomColor;
+            }
+
+            public String getRandomColor() {
+                return randomColor;
+            }
+
+            public int getRandomNum() {
+                return randomNum;
+            }
+
+            public void setRandomNum(int randomNum) {
+                this.randomNum = randomNum;
+            }
+
+            public int getLoopNum() {
+                return loopNum;
+            }
+
+            public void setLoopNum(int loopNum) {
+                this.loopNum = loopNum;
+            }
+
             private List<DeviceSetListBean> deviceSetList;
 
             public void setBuzhou_pos(String buzhou_pos) {

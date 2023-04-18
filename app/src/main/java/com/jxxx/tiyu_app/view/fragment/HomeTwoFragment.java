@@ -178,7 +178,7 @@ public class HomeTwoFragment extends BaseFragment {
 //                    return;
 //                }
 
-                if(ConstValuesHttps.IS_BANJI_DUILIE){
+                if(ConstValuesHttps.IS_BANJI_DUILIE || ConstValuesHttps.IS_SUIJIB_MOSHI){
                     DialogUtils.showDialogWanChengSuoYou(mContext, "已结束课程！", "确定", new DialogUtils.ErrorDialogInterfaceA() {
                         @Override
                         public void btnConfirm(int index) {

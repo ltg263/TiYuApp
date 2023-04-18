@@ -110,6 +110,11 @@ public class ConstValuesHttps {
     public static boolean IS_BANJI_DUILIE = false;
 
     /**
+     * 是否随机模式
+     */
+    public static boolean IS_SUIJIB_MOSHI = false;
+
+    /**
      * 发送的数据
      * @param message
      * @param data

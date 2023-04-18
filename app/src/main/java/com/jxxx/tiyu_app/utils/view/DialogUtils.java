@@ -459,6 +459,13 @@ public class DialogUtils {
         ImageView iv_select = view.findViewById(R.id.iv_select);
         ImageView iv_select_ddl = view.findViewById(R.id.iv_select_ddl);
         TextView tv_select_ddl = view.findViewById(R.id.tv_select_ddl);
+        View ll_suiji = view.findViewById(R.id.ll_suiji);
+        View ll_suiji1 = view.findViewById(R.id.ll_suiji1);
+        if(ConstValuesHttps.IS_SUIJIB_MOSHI){
+            ll_suiji1.setVisibility(View.GONE);
+            et_zdsc.setVisibility(View.GONE);
+            ll_suiji.setVisibility(View.INVISIBLE);
+        }
         iv_select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
