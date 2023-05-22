@@ -407,15 +407,17 @@ public class DialogUtils {
             List<SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean> mCourseSteps = new ArrayList<>();
             for(int i=0;i<mStepGroups.size();i++){
                 List<SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean> mCourseStepList = mStepGroups.get(i).getCourseStepList();
-                for(int j=0;j<mCourseStepList.size();j++){
-                    SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean mCourseStep = mCourseStepList.get(j);
-                    mCourseStep.setBuzhou_pos("步骤"+(j+1));
-                    if(j==0){
-                        mCourseStep.setDuilie_pos("队列" + (i + 1));
-                    }else{
-                        mCourseStep.setDuilie_pos("");
+                if(mCourseStepList!=null) {
+                    for (int j = 0; j < mCourseStepList.size(); j++) {
+                        SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean mCourseStep = mCourseStepList.get(j);
+                        mCourseStep.setBuzhou_pos("步骤" + (j + 1));
+                        if (j == 0) {
+                            mCourseStep.setDuilie_pos("队列" + (i + 1));
+                        } else {
+                            mCourseStep.setDuilie_pos("");
+                        }
+                        mCourseSteps.add(mCourseStep);
                     }
-                    mCourseSteps.add(mCourseStep);
                 }
             }
             rv_list.setAdapter(new KeChengXiangQingAdapterSmall(mCourseSteps));

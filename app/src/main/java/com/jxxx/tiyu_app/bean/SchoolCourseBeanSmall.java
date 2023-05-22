@@ -99,7 +99,7 @@ public class SchoolCourseBeanSmall {
     }
 
     public int getBallNum() {
-        return 4;
+        return ballNum;
     }
 
     public void setBallNum(int ballNum) {
@@ -287,6 +287,7 @@ public class SchoolCourseBeanSmall {
             private byte lightTime;
             private byte lightMode;
             private byte triggerMode;
+            private byte triggerAfter;
             private String randomColor;
 
             public void setLightMode(byte lightMode) {
@@ -295,6 +296,14 @@ public class SchoolCourseBeanSmall {
 
             public byte getLightMode() {
                 return lightMode;
+            }
+
+            public void setTriggerAfter(byte triggerAfter) {
+                this.triggerAfter = triggerAfter;
+            }
+
+            public byte getTriggerAfter() {
+                return triggerAfter;
             }
 
             public void setTriggerMode(byte triggerMode) {

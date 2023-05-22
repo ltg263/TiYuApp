@@ -21,6 +21,7 @@ import com.jxxx.tiyu_app.bean.SchoolClassBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
+import com.jxxx.tiyu_app.loginfo.LogcatHelper;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
 import com.jxxx.tiyu_app.utils.GlideImgLoader;
@@ -66,7 +67,6 @@ public class HomeTwoXueShengActivity extends BaseActivity {
     public int intiLayout() {
         return R.layout.activity_home_two_xuesheng;
     }
-
     @Override
     public void initView() {
         //课程信息
@@ -274,10 +274,19 @@ public class HomeTwoXueShengActivity extends BaseActivity {
             SchoolCourseBean.CourseSectionVoListBean mCourseSectionVoList = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(current_course_section);
             actionInfo = mCourseSectionVoList.getSmallCourseVo().getActionInfo();
             current_course_section_num = mCourseSectionVoList.getLoopNum();
+             Log.w(LogcatHelper.MESSAGE_LOG ,"---------->>>>>>>>>>>>>>>>课程信息D:名称：" + mCourseSectionVoList.getSmallCourseVo().getCourseName()+
+                    ";ID:"+mCourseSectionVoList.getSmallCourseVo().getId()+";执行的次数:"+current_course_section_num);
         }else{
             actionInfo = ConstValues.mSchoolCourseInfoBeanSmall.getActionInfo();
             current_course_section_num = ConstValues.mSchoolCourseInfoBeanSmall.getLoopNum();
+             Log.w(LogcatHelper.MESSAGE_LOG ,"---------->>>>>>>>>>>>>>>>课程信息D:名称：" + ConstValues.mSchoolCourseInfoBeanSmall.getCourseName()+
+                    ";ID:"+ConstValues.mSchoolCourseInfoBeanSmall.getId()+";执行的次数:"+current_course_section_num);
         }
+         Log.w(LogcatHelper.MESSAGE_LOG ,"---------->>>>>>>>>>>>>>>>随机：" + ConstValuesHttps.IS_SUIJIB_MOSHI+";课程队列:"+ConstValuesHttps.IS_BANJI_DUILIE
+                +";课程队列:"+ConstValuesHttps.IS_BANJI_DUILIE+";单队列循环:"+ConstValuesHttps.IS_AUTO_DAN_DUILIE
+                +";自动执行:"+ConstValuesHttps.IS_AUTO);
+
+         Log.w(LogcatHelper.MESSAGE_LOG ,"---------->>>>>>>>>>>>>>>>步骤信息：" + actionInfo);
         current_course_section_loop_num = 1;
         mDataList.clear();
         mMapKey_id.clear();
@@ -288,14 +297,17 @@ public class HomeTwoXueShengActivity extends BaseActivity {
             for(int j=0;j<ConstValues.mSchoolStudentInfoBean.size();j++){
                 List<String>  mStudentIds = Arrays.asList(mClassGroupLists.get(i).getStudentIds().split(","));
                 String id = ConstValues.mSchoolStudentInfoBean.get(j).getId();
-                if(mStudentIds.contains(id) && !ConstValues.mSchoolStudentInfoBean.get(j).isAskForLeave()){
+                if((mStudentIds.contains(id) && !ConstValues.mSchoolStudentInfoBean.get(j).isAskForLeave())
+                    || id.equals("-1")){
                     SchoolStudentBean mSchoolStudentBean = ConstValues.mSchoolStudentInfoBean.get(j);
                     mSchoolStudentBean.setCurrentStepNo(0);
                     mSchoolStudentBean.setPostDqbz(0);
                     mSchoolStudentBean.setPostWccs(0);
                     mSchoolStudentBean.setPostZjzs(0);
+                    mSchoolStudentBean.setPostZcss(0);
                     mSchoolStudentBean.setPostZfks(0);
-                    mSchoolStudentBean.setCurrentTime(new ArrayList<>());
+                    mSchoolStudentBean.setTimeNode(new ArrayList<>());
+                    mSchoolStudentBean.setTimeoutTimeNode(new ArrayList<>());
                     mSchoolStudentBean.setPostZys(0);
                     mSchoolStudentBean.setPostPjsd(0);
                     try {

@@ -42,12 +42,21 @@ public class SchoolCourseBeanSmallActionInfoJson {
 
     public static class StepsBean {
         /**
-         * sets : [["1","0","0","61","3","4"]]
+         * sets : [["-96","1","0","0","61","3","4"]]
          * stepNo : 0
          */
 
         private int stepNo;
         private int stepNoOkNum;//执行过的数量 sets
+        /**
+         * 0 请求头
+         * 1 address      地址
+         * 2 color        颜色
+         * 3 flickering   闪烁
+         * 4 lightTime    灯亮时间
+         * 5 triggerMode  触发模式
+         * 6 triggerAfter 触发动作
+         */
         private List<List<Byte>> sets;
         private List<List<Byte>> sets_cz = new ArrayList<>();
 

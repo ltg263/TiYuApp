@@ -269,7 +269,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
         mWifiMessageReceiver.setWifiMessageReceiverInter(new WifiMessageReceiver.WifiMessageReceiverInter() {
             @Override
             public void messageReceiverInter() {
-                Log.w("sendData","messageReceiverInter");
+                Log.w("sendData","sendData"+Arrays.toString(sendData));
                 Intent mIntent = new Intent(HomeOneChuangJianSjActivity.this,HomeOneChuangJianSj_YdActivity.class);
                 mIntent.putExtra("sendData",sendData);
                 mIntent.putExtra("sheBeiNum",sheBeiNum);

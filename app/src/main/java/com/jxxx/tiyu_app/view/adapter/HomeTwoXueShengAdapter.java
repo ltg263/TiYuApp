@@ -33,7 +33,8 @@ public class HomeTwoXueShengAdapter extends BaseQuickAdapter<SchoolClassBean.Cla
         List<SchoolStudentBean> mSchoolStudentBeans = new ArrayList<>();
         for(int i = 0; i<ConstValues.mSchoolStudentInfoBean.size();i++){
             ConstValues.mSchoolStudentInfoBean.get(i).setAskForLeave(false);
-            if(mStudentIds.contains(ConstValues.mSchoolStudentInfoBean.get(i).getId())){
+            if(mStudentIds.contains(ConstValues.mSchoolStudentInfoBean.get(i).getId())
+                    || ConstValues.mSchoolStudentInfoBean.get(i).getId().equals("-1")){
                 mSchoolStudentBeans.add(ConstValues.mSchoolStudentInfoBean.get(i));
             }
         }

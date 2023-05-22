@@ -29,6 +29,7 @@ import com.jxxx.tiyu_app.bean.PostStudentResults;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
+import com.jxxx.tiyu_app.loginfo.LogcatHelper;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
 import com.jxxx.tiyu_app.utils.SharedUtils;
@@ -85,6 +86,10 @@ public class HomeTwoFragment extends BaseFragment {
      * 最大的排数
      */
     private int current_class_group_max = 0;
+    /**
+     * 课程最大的队列
+     */
+    private int current_queue_num_max = 0;
 
     public void setCurrent_class_group_lists() {
         if(!ConstValuesHttps.IS_AUTO_DAN_DUILIE){
@@ -130,8 +135,15 @@ public class HomeTwoFragment extends BaseFragment {
                 DialogUtils.showDialogHint(mContext, "确定重置当前小课程吗?", false, new DialogUtils.ErrorDialogInterface() {
                     @Override
                     public void btnConfirm() {
+                         Log.w(LogcatHelper.MESSAGE_LOG ,"*********************重置数据*********************");
                         isWanCheng = false;
                         current_time = 0;
+                        SharedUtils.singleton().put(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,0L);
+                        Log.w(LogcatHelper.MESSAGE_LOG ,"HomeTwoXueShengActivity.current_course_total_duration"
+                                +HomeTwoXueShengActivity.current_course_total_duration);
+                        if(HomeTwoXueShengActivity.current_course_total_duration > 0){
+                            SharedUtils.singleton().put(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,System.currentTimeMillis()/1000L);
+                        }
                         setCurrent_class_group_lists();
                         setCurrent_times();
                         current_class_group = 0;
@@ -144,6 +156,7 @@ public class HomeTwoFragment extends BaseFragment {
                                 smallCourseId = mCourseSectionVoList.getId();
                             } else {
                                 smallCourseId = ConstValues.mSchoolCourseInfoBeanSmall.getId();
+                                current_queue_num_max = ConstValues.mSchoolCourseInfoBeanSmall.getQueueNum();
                             }
                             for (int i = mPostStudentResults.size() - 1; i >= 0; i--) {
                                 if (smallCourseId.equals(mPostStudentResults.get(i).getSmallCourseId())) {
@@ -178,11 +191,12 @@ public class HomeTwoFragment extends BaseFragment {
 //                    return;
 //                }
 
-                if(ConstValuesHttps.IS_BANJI_DUILIE || ConstValuesHttps.IS_SUIJIB_MOSHI){
+                if(ConstValuesHttps.IS_SUIJIB_MOSHI){
                     DialogUtils.showDialogWanChengSuoYou(mContext, "已结束课程！", "确定", new DialogUtils.ErrorDialogInterfaceA() {
                         @Override
                         public void btnConfirm(int index) {
                             showLoading();
+                             Log.w(LogcatHelper.MESSAGE_LOG ,"*********************结束课程(非上传)*********************");
                             ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true, index == 0,
                                     new ClientTcpUtils.SendDataOkInterface() {
                                         @Override
@@ -207,6 +221,7 @@ public class HomeTwoFragment extends BaseFragment {
                         @Override
                         public void btnConfirm(int index) {
                             showLoading();
+                             Log.w(LogcatHelper.MESSAGE_LOG ,"*********************结束课程(已全部完成自动上传)*********************");
                             ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true, index == 0,
                                     new ClientTcpUtils.SendDataOkInterface() {
                                         @Override
@@ -235,10 +250,12 @@ public class HomeTwoFragment extends BaseFragment {
                             title = "该课程已结束\n成绩将自动上传！";
                             setPostStudentResults(1,HomeTwoXueShengActivity.current_course_section);
                         }
+                        String finalTitle = title;
                         DialogUtils.showDialogWanChengSuoYou(mContext, title, "确定", new DialogUtils.ErrorDialogInterfaceA() {
                             @Override
                             public void btnConfirm(int index) {
                                 showLoading();
+                                 Log.w(LogcatHelper.MESSAGE_LOG ,"*********************结束课程("+ finalTitle +")*********************");
                                 ClientTcpUtils.mClientTcpUtils.sendData_B3_add00(true, index == 0,
                                         new ClientTcpUtils.SendDataOkInterface() {
                                             @Override
@@ -263,6 +280,12 @@ public class HomeTwoFragment extends BaseFragment {
 
     @Override
     protected void initData() {
+            String smallCourseId;
+            if (ConstValues.mSchoolCourseInfoBean != null) {
+            } else {
+                current_queue_num_max = ConstValues.mSchoolCourseInfoBeanSmall.getQueueNum();
+            }
+
         setCurrent_class_group_lists();
         current_class_group = 0;
         current_course_section_num_yx = 0;
@@ -492,7 +515,8 @@ public class HomeTwoFragment extends BaseFragment {
             mPostStudentBean.setClassDate(mPostStudentResults.get(0).getClassDate());
             mPostStudentBeans.add(mPostStudentBean);
         }
-        Log.w("postResultsBatchAdd", "提交的数据-全部：" + mPostStudentBeans.toString());
+
+         Log.w(LogcatHelper.MESSAGE_LOG ,"提交的数据:"+mPostStudentBeans.toString());
         RetrofitUtil.getInstance().apiService()
                 .postResultsBatchAdds(mPostStudentBeans)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -516,7 +540,9 @@ public class HomeTwoFragment extends BaseFragment {
                     @Override
                     public void onError(Throwable e) {
                         hideLoading();
-                        DialogUtils.showDialogHint(mContext, "上传失败重新上传", true, new DialogUtils.ErrorDialogInterface() {
+                        Log.w(LogcatHelper.MESSAGE_LOG ,"上传失败重新上传:"+e);
+                        DialogUtils.showDialogHint(mContext, "上传失败重新上传",
+                                true, new DialogUtils.ErrorDialogInterface() {
                             @Override
                             public void btnConfirm() {
                                 postResultsBatchAdd();
@@ -534,6 +560,7 @@ public class HomeTwoFragment extends BaseFragment {
 
     private boolean isStart = false;//是否开始
     private Handler heartHandler = new Handler();
+    private long timeUs_ms = 0;//精确到毫秒
     /**
      * 计时器
      */
@@ -542,6 +569,7 @@ public class HomeTwoFragment extends BaseFragment {
         public void run() {
             if (isStart) {
                 current_time++;
+                timeUs_ms = System.currentTimeMillis();
                 addCurrent_times();
                 heartHandler.postDelayed(hearRunable, 1000);
                 if(isDurationOk_type()==0){
@@ -605,6 +633,7 @@ public class HomeTwoFragment extends BaseFragment {
                                     if(current_class_group > 0){
                                         int wccs = mData.get(0).getPostWccs();
                                         if(mSchoolStudentBean.getPostWccs() < wccs){
+                                            getTimeUs_ms();
                                             mSchoolStudentBean.setPostZys(mSchoolStudentBean.getPostZys()+current_time);
                                             if(mSchoolStudentBean.getPostZjzs()!=0){
                                                 double pjsd = 1D * mSchoolStudentBean.getPostZys()/ mSchoolStudentBean.getPostZjzs() ;
@@ -614,6 +643,7 @@ public class HomeTwoFragment extends BaseFragment {
                                         }
                                     }else{
                                         if(!isBuTong || mSchoolStudentBean.getPostWccs() < wccs_ccg){
+                                            getTimeUs_ms();
                                             mSchoolStudentBean.setPostZys(mSchoolStudentBean.getPostZys()+current_time);
                                             if(mSchoolStudentBean.getPostZjzs()!=0){
                                                 double pjsd = 1D * mSchoolStudentBean.getPostZys()/ mSchoolStudentBean.getPostZjzs() ;
@@ -637,6 +667,15 @@ public class HomeTwoFragment extends BaseFragment {
             return 1;
         }
         return 2;
+    }
+
+    public long getTimeUs_ms() {
+        long currentMs = System.currentTimeMillis() - timeUs_ms;
+        if(currentMs>0){
+            System.out.println("currentMs:"+currentMs);
+            return currentMs;
+        }
+        return 0;
     }
 
     public class MyReceiver extends BroadcastReceiver {
@@ -688,13 +727,14 @@ public class HomeTwoFragment extends BaseFragment {
                 Log.w("getMapKayYunDong_dlxy","sets_all_qiu"+sets_all_qiu);
                 for(int j = 0;j<sets_all_qiu.size();j++){
                     //根据队列中的球号获取实时改变前的球号
-                    Byte key = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(sets_all_qiu.get(j));
+                    byte qiuH = sets_all_qiu.get(j);
+                    Byte key = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(qiuH);
                     Log.w("getMapKayYunDong_dlxy","key"+key);
                     Log.w("getMapKayYunDong_dlxy","qiuhao"+qiuhao);
                     //得到了击中的球号
                     if(key!=null && key==qiuhao){
                         //根据mMapKey_id获取从mMapSchoolStudentBeans中获取某个队列对应的全部学生
-                        getSchoolStudentBean_dlxy(qiuhao,i,mStartBroadcastType);
+                        getSchoolStudentBean_dlxy(qiuH,i,json.get(i).getSteps().get(j).getSets(),mStartBroadcastType);
                         return;
                     }
                 }
@@ -704,19 +744,35 @@ public class HomeTwoFragment extends BaseFragment {
 
     /**
      * 获取具体学生的信息
-     * @param qiuhao
+     * @param qiuH
      * @param pos
      * @param mStartBroadcastType
      */
-    private void getSchoolStudentBean_dlxy(byte qiuhao, int pos,byte mStartBroadcastType) {
+    private void getSchoolStudentBean_dlxy(byte qiuH, int pos,List<List<Byte>> sets,byte mStartBroadcastType) {
         List<SchoolStudentBean> mSchoolStudentBeans = HomeTwoXueShengActivity.mMapSchoolStudentBeans.get(HomeTwoXueShengActivity.mMapKey_id.get(pos));
         //根据执行的行数获取某个学生信息
         SchoolStudentBean mSchoolStudentBean = mSchoolStudentBeans.get(current_class_group_lists.get(pos));
         mSchoolStudentBean.setPostZfks(mSchoolStudentBean.getPostZfks() + 1);
+        List<Byte> set=null;
+        for(int i=0;i<sets.size();i++){
+            if(sets.get(i).get(1)==qiuH){
+                set = sets.get(i);
+            }
+        }
+        Log.w("set数据2：","set:"+set);
         if(mStartBroadcastType == ConstValuesHttps.MESSAGE_GET_C5){
             mSchoolStudentBean.setPostZjzs(mSchoolStudentBean.getPostZjzs() + 1);
-            mSchoolStudentBean.addCurrentTime(System.currentTimeMillis());
+            if(set!=null && set.size()==7){
+                mSchoolStudentBean.addTimeNode(System.currentTimeMillis(),
+                        ""+set.get(1),""+set.get(2),""+set.get(6),""+set.get(4));
+            }
             System.out.println("BroadcastReceiver：" + mSchoolStudentBean.getStudentName() + "：总击中数:" + mSchoolStudentBean.getPostZjzs());
+        }else{
+            mSchoolStudentBean.setPostZcss(mSchoolStudentBean.getPostZcss() + 1);
+            if(set!=null && set.size()==7) {
+                mSchoolStudentBean.addTimeoutTimeNode(System.currentTimeMillis(),
+                        "" + set.get(1), "" + set.get(2), "" + set.get(6), "" + set.get(4));
+            }
         }
         System.out.println("BroadcastReceiver：" + mSchoolStudentBean.getStudentName() + "：总反馈数:" + mSchoolStudentBean.getPostZfks());
         setNotifyDataSetChanged_Fragment();
@@ -748,6 +804,7 @@ public class HomeTwoFragment extends BaseFragment {
                 mSchoolStudentBean.setPostDqbz(mSchoolStudentBean.getPostDqbz() + 1);
                 setNotifyDataSetChanged_Fragment();
                 if (mSchoolStudentBean.getPostDqbz() >= HomeTwoXueShengActivity.current_course_section_loop_num) {
+                    getTimeUs_ms();
                     mSchoolStudentBean.setPostZys(mSchoolStudentBean.getPostZys()+current_times.get(pos));
                     if(mSchoolStudentBean.getPostZjzs()!=0){
                         double pjsd = 1D * mSchoolStudentBean.getPostZys()/ mSchoolStudentBean.getPostZjzs();
@@ -815,8 +872,10 @@ public class HomeTwoFragment extends BaseFragment {
                 for(int i=0;i<HomeTwoXueShengActivity.mMapKey_id.size();i++){
                     List<SchoolStudentBean> m = HomeTwoXueShengActivity.mMapSchoolStudentBeans.get(HomeTwoXueShengActivity.mMapKey_id.get(i));
                     int num = m.get(m.size()-1).getPostWccs();
-                    if(num < HomeTwoXueShengActivity.current_course_section_num){
-                        System.out.println("BroadcastReceiver11：次队列未完成："+i);
+                    Log.w(LogcatHelper.MESSAGE_LOG ,"current_course_section_num"
+                            +HomeTwoXueShengActivity.current_course_section_num+";current_queue_num_max:"+current_queue_num_max
+                            +HomeTwoXueShengActivity.current_course_section_num+";num:"+num);
+                    if(num != (HomeTwoXueShengActivity.current_course_section_num) && current_queue_num_max > i){
                         isAllOk = false;
                     }
                 }
@@ -824,6 +883,7 @@ public class HomeTwoFragment extends BaseFragment {
                     isStart = false;
                     isWanCheng = true;
                     ((MainActivity) mContext).setFragmentStartOrStop();
+                     Log.w(LogcatHelper.MESSAGE_LOG ,"*********************(已全部完成)*********************");
                     ToastUtil.showShortToast(mContext, "已全部完成");
                     setCurrent_class_group_lists();
                     showDialogKaiShiShangKeXiaYiJie(false);
@@ -887,14 +947,27 @@ public class HomeTwoFragment extends BaseFragment {
                 //[16,12]
                 for (int q = 0; q < mSchoolStudentBean.getAllQiuNo().size(); q++) {
                     //遍历某个学生的球并从Map中获取对应的球号
-                    Byte key = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(mSchoolStudentBean.getAllQiuNo().get(q));
+                    byte qiuH = mSchoolStudentBean.getAllQiuNo().get(q);
+                    Byte key = ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.get(qiuH);
                     //如果设备回调的球号包含这个学生控制的球内开始执行逻辑[10,16] [1]
                     if (key != null && qiuhao == key) {
                         mSchoolStudentBean.setPostZfks(mSchoolStudentBean.getPostZfks() + 1);
+                        List<Byte> set=null;
+                        for(int i=0;i<mSteps.get(q).getSets().size();i++){
+                            if(mSteps.get(q).getSets().get(i).get(1)==qiuH){
+                                set = mSteps.get(q).getSets().get(i);
+                            }
+                        }
+                        Log.w("set数据1：","set:"+set);
                         if(mStartBroadcastType == ConstValuesHttps.MESSAGE_GET_C5){
                             mSchoolStudentBean.setPostZjzs(mSchoolStudentBean.getPostZjzs() + 1);
-                            mSchoolStudentBean.addCurrentTime(System.currentTimeMillis());
+                            mSchoolStudentBean.addTimeNode(System.currentTimeMillis(),
+                                    ""+set.get(1),""+set.get(2),""+set.get(6),""+set.get(4));
                             System.out.println("BroadcastReceiver：" + mSchoolStudentBean.getStudentName() + "：总击中数:" + mSchoolStudentBean.getPostZjzs());
+                        }else{
+                            mSchoolStudentBean.setPostZcss(mSchoolStudentBean.getPostZcss() + 1);
+                            mSchoolStudentBean.addTimeoutTimeNode(System.currentTimeMillis(),
+                                    ""+set.get(1),""+set.get(2),""+set.get(6),""+set.get(4));
                         }
                         System.out.println("BroadcastReceiver：" + mSchoolStudentBean.getStudentName() + "：总反馈数:" + mSchoolStudentBean.getPostZfks());
                         setNotifyDataSetChanged_Fragment();
@@ -939,6 +1012,7 @@ public class HomeTwoFragment extends BaseFragment {
                 mSchoolStudentBean.setPostDqbz(mSchoolStudentBean.getPostDqbz() + 1);
                 setNotifyDataSetChanged_Fragment();
                 if (mSchoolStudentBean.getPostDqbz() >= HomeTwoXueShengActivity.current_course_section_loop_num) {
+                    getTimeUs_ms();
                     mSchoolStudentBean.setPostZys(mSchoolStudentBean.getPostZys()+current_time);
                     if(mSchoolStudentBean.getPostZjzs()!=0){
                         double pjsd = 1D * mSchoolStudentBean.getPostZys()/ mSchoolStudentBean.getPostZjzs();
@@ -1012,6 +1086,7 @@ public class HomeTwoFragment extends BaseFragment {
                 }else{
                     if (HomeTwoXueShengActivity.current_course_section_num == current_course_section_num_yx) {
                         ToastUtil.showShortToast(mContext, "已全部完成");
+                         Log.w(LogcatHelper.MESSAGE_LOG ,"*********************(已全部完成)*********************");
                         showDialogKaiShiShangKeXiaYiJie(false);
                     } else {
                         ((MainActivity) mContext).setFragmentStart();
@@ -1078,9 +1153,9 @@ public class HomeTwoFragment extends BaseFragment {
                                             HomeTwoXueShengActivity.current_course_total_duration =
                                                     ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList()
                                                             .get(HomeTwoXueShengActivity.current_course_section).getTotalDuration()*60;
-                                            SharedUtils.singleton().put(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,0);
+                                            SharedUtils.singleton().put(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,0L);
                                             if(HomeTwoXueShengActivity.current_course_total_duration > 0){
-                                                SharedUtils.singleton().put(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,System.currentTimeMillis());
+                                                SharedUtils.singleton().put(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,System.currentTimeMillis()/1000L);
                                             }
                                             SharedUtils.singleton().put("postSchoolClassRecord_time",StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss"));
                                             HomeTwoXueShengActivity.initYuDongData();
@@ -1152,6 +1227,7 @@ public class HomeTwoFragment extends BaseFragment {
                             mPostStudentResult.setCourseId(courseId);
                             mPostStudentResult.setSmallCourseId(smallCourseId);
                             mPostStudentResult.setStudentId(mSchoolStudentBean.getId());
+                            mPostStudentResult.setStudentName(mSchoolStudentBean.getStudentName());
                             mPostStudentResult.setClassId(mSchoolStudentBean.getClassId());
 //                          mPostStudentResult.setClassSceduleCardId(ConstValues.classSceduleCardId);
                             mPostStudentResult.setEndTime(StringUtil.getTimeToYMD(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss"));
@@ -1166,7 +1242,9 @@ public class HomeTwoFragment extends BaseFragment {
                             }
                             mPostStudentResult.setTimes(mSchoolStudentBean.getPostWccs() + "");
                             mPostStudentResult.setFinishTimes(mSchoolStudentBean.getPostZjzs() + "");
-                            mPostStudentResult.setTimeNode(mSchoolStudentBean.getCurrentTime());
+                            mPostStudentResult.setTimeoutTimes(mSchoolStudentBean.getPostZcss() + "");
+                            mPostStudentResult.setTimeNodeList(mSchoolStudentBean.getTimeNode());
+                            mPostStudentResult.setTimeoutTimeNode(mSchoolStudentBean.getTimeoutTimeNode());
                             mPostStudentResults.add(mPostStudentResult);
                         }
                     }
@@ -1207,9 +1285,9 @@ public class HomeTwoFragment extends BaseFragment {
                                 HomeTwoXueShengActivity.current_course_total_duration =
                                         ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList()
                                                 .get(HomeTwoXueShengActivity.current_course_section).getTotalDuration()*60;
-                                SharedUtils.singleton().put(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,0);
+                                SharedUtils.singleton().put(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,0L);
                                 if(HomeTwoXueShengActivity.current_course_total_duration > 0){
-                                    SharedUtils.singleton().put(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,System.currentTimeMillis());
+                                    SharedUtils.singleton().put(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,System.currentTimeMillis()/1000L);
                                 }
                                 SharedUtils.singleton().put("postSchoolClassRecord_time",StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd HH:mm:ss"));
                                 HomeTwoXueShengActivity.initYuDongData();
@@ -1221,5 +1299,34 @@ public class HomeTwoFragment extends BaseFragment {
     }
 }
 
+//[PostStudentBean{beginTime='2023-05-19 14:15:30', classDate='2023-05-19 14:15:30',
+// classId='42', classSceduleCardId='null', courseId='null', createBy='null', createTime='null',
+// endTime='2023-05-19 14:16:46', id='null', schoolId='null', searchValue='null', smallCourseId='796',
+// teacherId='8', updateBy='null', updateTime='null', lightness='453',
+// studentResultsList=[PostStudentResults{classDate='2023-05-19 14:15:30', beginTime='2023-05-19 14:15:30', endTime='2023-05-19 14:16:46',
+// classId='42', classSceduleCardId='null', teacherId='8', courseId='null', smallCourseId='796', studentId='144', timeUse='19', times='1',
+// finishTimes='4', timeoutTimes='0', speed='4.75', lassGroupId='null', timeNode=[TimeNodeBean{time=1684476961190, sortNum='1', color='1',
+// triggerMode='3', lightTime='1'}, TimeNodeBean{time=1684476962165, sortNum='2', color='3', triggerMode='3', lightTime='1'},
+// TimeNodeBean{time=1684476966431, sortNum='1', color='1', triggerMode='3', lightTime='1'}, TimeNodeBean{time=1684476967494, sortNum='2',
+// color='3', triggerMode='3', lightTime='1'}]}, PostStudentResults{classDate='2023-05-19 14:15:30', beginTime='2023-05-19 14:15:30',
+// endTime='2023-05-19 14:16:46', classId='42', classSceduleCardId='null', teacherId='8', courseId='null', smallCourseId='796', studentId='146',
+// timeUse='34', times='1', finishTimes='4', timeoutTimes='0', speed='8.5', lassGroupId='null',
+// timeNode=[TimeNodeBean{time=1684476999876, sortNum='1', color='1', triggerMode='3', lightTime='1'},
+// TimeNodeBean{time=1684477000738, sortNum='2', color='3', triggerMode='3', lightTime='1'},
+// TimeNodeBean{time=1684477001703, sortNum='1', color='1', triggerMode='3', lightTime='1'},
+// TimeNodeBean{time=1684477002672, sortNum='2', color='3', triggerMode='3', lightTime='1'}]},
+// PostStudentResults{classDate='2023-05-19 14:15:30', beginTime='2023-05-19 14:15:30', endTime='2023-05-19 14:16:46', classId='42',
+// classSceduleCardId='null', teacherId='8', courseId='null', smallCourseId='796', studentId='126', timeUse='17', times='1', finishTimes='4',
+// timeoutTimes='0', speed='4.25', lassGroupId='null', timeNode=[TimeNodeBean{time=1684476959469, sortNum='3', color='2', triggerMode='3', lightTime='1'},
+// TimeNodeBean{time=1684476960225, sortNum='4', color='5', triggerMode='3', lightTime='1'},
+// TimeNodeBean{time=1684476964828, sortNum='4', color='5', triggerMode='3', lightTime='1'},
+// TimeNodeBean{time=1684476965701, sortNum='3', color='2', triggerMode='3', lightTime='1'}]},
+// PostStudentResults{classDate='2023-05-19 14:15:30', beginTime='2023-05-19 14:15:30',
+// endTime='2023-05-19 14:16:46', classId='42', classSceduleCardId='null', teacherId='8',
+// courseId='null', smallCourseId='796', studentId='147', timeUse='37', times='1', finishTimes='4',
+// timeoutTimes='0', speed='9.25', lassGroupId='null', timeNode=[TimeNodeBean{time=1684477003974,
+// sortNum='4', color='5', triggerMode='3', lightTime='1'}, TimeNodeBean{time=1684477004760, sortNum='3',
+// color='2', triggerMode='3', lightTime='1'}, TimeNodeBean{time=1684477005547, sortNum='4', color='5',
+// triggerMode='3', lightTime='1'}, TimeNodeBean{time=1684477006292, sortNum='3', color='2', triggerMode='3', lightTime='1'}]}]}]
 
 

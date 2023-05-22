@@ -464,15 +464,17 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                                 List<SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean> mCourseSteps = new ArrayList<>();
                                 for(int i=0;i<mStepGroups.size();i++){
                                     List<SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean> mCourseStepList = mStepGroups.get(i).getCourseStepList();
-                                    for(int j=0;j<mCourseStepList.size();j++){
-                                        SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean mCourseStep = mCourseStepList.get(j);
-                                        mCourseStep.setBuzhou_pos("步骤"+(j+1));
-                                        if(j==0){
-                                            mCourseStep.setDuilie_pos("队列" + (i + 1));
-                                        }else{
-                                            mCourseStep.setDuilie_pos("");
+                                    if(mCourseStepList!=null){
+                                        for(int j=0;j<mCourseStepList.size();j++){
+                                            SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean mCourseStep = mCourseStepList.get(j);
+                                            mCourseStep.setBuzhou_pos("步骤"+(j+1));
+                                            if(j==0){
+                                                mCourseStep.setDuilie_pos("队列" + (i + 1));
+                                            }else{
+                                                mCourseStep.setDuilie_pos("");
+                                            }
+                                            mCourseSteps.add(mCourseStep);
                                         }
-                                        mCourseSteps.add(mCourseStep);
                                     }
                                 }
                                 mKeChengXiangQingAdapterSmall.setNewData(mCourseSteps);
@@ -490,7 +492,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                                     SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean mCourseStepList =
                                             result.getData().getStepGroups().get(0).getCourseStepList().get(0);
                                     int loopNum = mCourseStepList.getLoopNum();
-//                                    tv_xunhuancishu.setVisibility(View.GONE);
+                                    tv_xunhuancishu.setVisibility(View.GONE);
                                     ConstValues.mSchoolCourseInfoBeanSmall.setLoopNum(1);
                                     ConstValuesHttps.IS_BANJI_DUILIE = true;
                                     mTvQieHuan.setText("课程队列");
@@ -570,9 +572,18 @@ public class HomeTwoShangKeActivity extends BaseActivity {
             byte flickering = mCourseStepList.getFlickering();
             byte lightTime = mCourseStepList.getLightTime();
             byte triggerMode = mCourseStepList.getTriggerMode();
+            byte triggerAfter = mCourseStepList.getTriggerAfter();
             byte lightMode = mCourseStepList.getLightMode();
             String[] str = mRandomColor.split(",");
             List<List<Byte>> sets = new ArrayList<>();
+            /**
+             * 1 address      地址
+             * 2 color        颜色
+             * 3 flickering   闪烁
+             * 4 lightTime    灯亮时间
+             * 5 triggerMode  触发模式
+             * 6 triggerAfter 触发动作
+             */
             for(int j = 0;j< mCourseStepList.getRandomNum();j++){
                 List<Byte> set = new ArrayList<>();
                 set.add((byte) -96);//按压方式
@@ -582,7 +593,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 set.add(flickering);//闪烁
                 set.add(lightTime);//持续时长
                 set.add(triggerMode);//触发方式
-                set.add(lightMode);//触发后的执行动作
+                set.add(triggerAfter);//触发动作
                 sets.add(set);
             }
             mStepsBean.setSets(sets);
@@ -625,8 +636,16 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 if(mTvQieHuan.getText().toString().equals("班级队列")){
                     int duilie;
                     if(!isSmallCourse){
+                        if(ConstValues.mSchoolCourseInfoBean==null){
+                            ToastUtil.showLongStrToast(this,"课程信息获取失败");
+                            return;
+                        }
                         duilie = ConstValues.mSchoolCourseInfoBean.getCourseSectionVoList().get(0).getSmallCourseVo().getQueueNum();
                     }else{
+                        if(ConstValues.mSchoolCourseInfoBeanSmall==null){
+                            ToastUtil.showLongStrToast(this,"课程信息获取失败");
+                            return;
+                        }
                         duilie = ConstValues.mSchoolCourseInfoBeanSmall.getQueueNum();
                     }
                     DialogUtils.showDialogQieHuanDl(this, ""+duilie,
@@ -656,7 +675,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                     ToastUtil.showLongStrToast(this,"小课程信息获取失败");
                     return;
                 }
-                if(ConstValues.mSchoolClassInfoBean==null){
+                if(ConstValues.mSchoolClassInfoBean ==null){
                     ToastUtil.showLongStrToast(this,"班级信息获取失败");
                     return;
                 }
@@ -704,9 +723,10 @@ public class HomeTwoShangKeActivity extends BaseActivity {
         ConstValues.mSchoolStudentInfoBean = new ArrayList<>();
         for(int i=0;i<duilie*renshu;i++){
             SchoolStudentBean mSchoolStudentBean = new SchoolStudentBean();
-            mSchoolStudentBean.setId(String.valueOf(i+1));
+            mSchoolStudentBean.setId("-1");
             mSchoolStudentBean.setStudentName("学生"+(i+1)+"号");
             mSchoolStudentBean.setStudentNo("--");
+            mSchoolStudentBean.setClassId(ConstValues.mSchoolClassInfoBean.getId());
             mSchoolStudentBean.setSchoolId(SharedUtils.singleton().get(ConstValues.SCHOOL_ID,""));
             ConstValues.mSchoolStudentInfoBean.add(mSchoolStudentBean);
         }
@@ -767,7 +787,6 @@ public class HomeTwoShangKeActivity extends BaseActivity {
             mWifiMessageReceiver = null;
         }
     }
-
     private void lianjie() {
         ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
         ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.clear();

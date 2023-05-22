@@ -41,7 +41,7 @@ public class RadioGroupSelectUtils {
                     case R.id.rb_home_select1:
                         mRbHomeSelect1.setSelected(true);
                         if (mCustomPopWindow1 == null)
-                            mCustomPopWindow1 = showDistancePopup(mContext,mMRadioGroup,mRbHomeSelect1,
+                            mCustomPopWindow1 = showDistancePopup(mContext,false,mRbHomeSelect1,
                                     "sys_grade",mDialogInterface);
                         else {
                             mCustomPopWindow1.showAsDropDown(mRbHomeSelect1);
@@ -50,7 +50,7 @@ public class RadioGroupSelectUtils {
                     case R.id.rb_home_select2:
                         mRbHomeSelect2.setSelected(true);
                         if (mCustomPopWindow2 == null)
-                            mCustomPopWindow2 = showDistancePopup(mContext,mMRadioGroup,mRbHomeSelect2,
+                            mCustomPopWindow2 = showDistancePopup(mContext,false,mRbHomeSelect2,
                                     "sys_content_type",mDialogInterface);
                         else {
                             mCustomPopWindow2.showAsDropDown(mRbHomeSelect2);
@@ -60,14 +60,14 @@ public class RadioGroupSelectUtils {
                         mRbHomeSelect3.setSelected(true);
                         if(isDaKeJie){
                             if(mCustomPopWindow3_d == null){
-                                mCustomPopWindow3_d = showDistancePopup(mContext,mMRadioGroup,mRbHomeSelect3,
+                                mCustomPopWindow3_d = showDistancePopup(mContext,false,mRbHomeSelect3,
                                         "sys_category",mDialogInterface);
                             }else{
                                 mCustomPopWindow3_d.showAsDropDown(mRbHomeSelect3);
                             }
                         }else{
                             if(mCustomPopWindow3_x == null){
-                                mCustomPopWindow3_x = showDistancePopup(mContext,mMRadioGroup,mRbHomeSelect3,
+                                mCustomPopWindow3_x = showDistancePopup(mContext,false,mRbHomeSelect3,
                                         "sys_process_type",mDialogInterface);
                             }else{
                                 mCustomPopWindow3_x.showAsDropDown(mRbHomeSelect3);
@@ -78,14 +78,14 @@ public class RadioGroupSelectUtils {
                         mRbHomeSelect4.setSelected(true);
                         if(isDaKeJie){
                             if(mCustomPopWindow4_d == null){
-                                mCustomPopWindow4_d = showDistancePopup(mContext,mMRadioGroup,mRbHomeSelect4,
+                                mCustomPopWindow4_d = showDistancePopup(mContext,false,mRbHomeSelect4,
                                         "sys_theme",mDialogInterface);
                             }else{
                                 mCustomPopWindow4_d.showAsDropDown(mRbHomeSelect4);
                             }
                         }else{
                             if(mCustomPopWindow4_x == null){
-                                mCustomPopWindow4_x = showDistancePopup(mContext,mMRadioGroup,mRbHomeSelect4,
+                                mCustomPopWindow4_x = showDistancePopup(mContext,false,mRbHomeSelect4,
                                         "sys_train_type",mDialogInterface);
                             }else{
                                 mCustomPopWindow4_x.showAsDropDown(mRbHomeSelect4);
@@ -97,7 +97,7 @@ public class RadioGroupSelectUtils {
         });
     }
     String mRbHomeSelectText = "";
-    private CustomPopWindow showDistancePopup(Activity mContext,RadioGroup mMRadioGroup, RadioButton mRbHomeSelect,String sys,DialogInterface mDialogInterface) {
+    private CustomPopWindow showDistancePopup(Activity mContext,boolean isDuoXuan, RadioButton mRbHomeSelect,String sys,DialogInterface mDialogInterface) {
 
         View view = mContext.getLayoutInflater().inflate(R.layout.popup_window_ty, null, false);
         RecyclerView rv_popup_list = view.findViewById(R.id.rv_popup_list);
@@ -200,6 +200,23 @@ public class RadioGroupSelectUtils {
                     public void onDismiss() {
                         mRbHomeSelect.setSelected(false);
                         mRbHomeSelect.setChecked(false);
+                        if(isDuoXuan){
+                            String mDictLabel = "年纪";
+                            String mDictValue = null;
+                            for(int i=0;i<mPopupWindowAdapter_home.getData().size();i++){
+                                if(mPopupWindowAdapter_home.getData().get(i).isSelect()){
+                                    if(mDictLabel.equals("年纪") && mDictValue==null){
+                                        mDictLabel = mPopupWindowAdapter_home.getData().get(i).getDictLabel();
+                                        mDictValue = mPopupWindowAdapter_home.getData().get(i).getDictValue();
+                                    }else{
+                                        mDictLabel = mDictLabel+"/"+mPopupWindowAdapter_home.getData().get(i).getDictLabel();
+                                        mDictValue = mDictValue+","+mPopupWindowAdapter_home.getData().get(i).getDictValue();
+                                    }
+                                }
+                            }
+                            mRbHomeSelect.setText(mDictLabel);
+                            mDialogInterface.btnConfirm(sys,mDictValue);
+                        }
                     }
                 })
                 .setBgDarkAlpha(0.5f)
@@ -211,6 +228,11 @@ public class RadioGroupSelectUtils {
         mPopupWindowAdapter_home.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if(isDuoXuan){
+                    mPopupWindowAdapter_home.getData().get(position).setSelect(!mPopupWindowAdapter_home.getData().get(position).isSelect());
+                    mPopupWindowAdapter_home.notifyDataSetChanged();
+                    return;
+                }
                 distancePopWindow.dissmiss();
                 for(int i=0;i<mPopupWindowAdapter_home.getData().size();i++){
                     mPopupWindowAdapter_home.getData().get(i).setSelect(false);

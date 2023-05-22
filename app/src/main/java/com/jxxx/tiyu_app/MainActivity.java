@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +27,9 @@ import com.jxxx.tiyu_app.bean.DictDataTypeBean;
 import com.jxxx.tiyu_app.bean.SceduleCourseBean;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
 import com.jxxx.tiyu_app.bean.VersionResponse;
+import com.jxxx.tiyu_app.loginfo.LogcatHelper;
 import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
+import com.jxxx.tiyu_app.utils.HttpRequestUtils;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
@@ -37,6 +40,8 @@ import com.jxxx.tiyu_app.view.fragment.HomeOneFragment;
 import com.jxxx.tiyu_app.view.fragment.HomeThreeFragment;
 import com.jxxx.tiyu_app.view.fragment.HomeTwoFragment;
 
+import java.io.File;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +108,65 @@ public class MainActivity extends BaseActivity {
             //权限拒绝 申请权限
             EasyPermissions.requestPermissions(this, "为了您更好使用本应用，请允许应用获取以下权限", PERMISSION_CAMERA, params);
         }
+        postUploadFile();
+    }
+
+    private void postUploadFile() {
+        String pathLogCat = "";
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {// 优先保存到SD卡中
+            pathLogCat = Environment.getExternalStorageDirectory()
+                    .getAbsolutePath() + File.separator + "aLog";
+        } else {// 如果SD卡不存在，就保存到本应用的目录下
+            pathLogCat = getFilesDir().getAbsolutePath()
+                    + File.separator + "aLog";
+        }
+        File file = new File(pathLogCat);
+        if(file.exists() && file.isDirectory()){
+            File[] files = file.listFiles(); // 声明目录下所有的文件 files[];
+
+            if(files!=null && files.length>0){
+                uploadFiles(0,files);
+            }
+        }
+    }
+    private void uploadFiles(int pos, File[] files) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        String size = df.format((double) files[pos].length() / 1024);
+        Log.w("mFile","size:"+size);
+        if(Double.parseDouble(size)<1){
+            if(pos == files.length-1){
+                for (int i = files.length-1; i >= 0; i--) { // 遍历目录下所有的文件
+                    if(!files[i].getName().contains(LogcatHelper.LOGCAT_FILE_NAME)){
+                        files[i].delete();
+                    }
+                }
+                Log.w("mFile","parseDouble删除成功:");
+                return;
+            }
+            uploadFiles(pos + 1,files);
+            return;
+        }
+        HttpRequestUtils.uploadFiles(files[pos].getPath(), getVersionName(this),new HttpRequestUtils.UploadFileInterface() {
+            @Override
+            public void succeed(String path) {
+                Log.w("mFile","上传成功:"+path);
+                if(pos == files.length-1){
+                    for (int i = files.length-1; i >= 0; i--) { // 遍历目录下所有的文件
+                        if(!files[i].getName().contains(LogcatHelper.LOGCAT_FILE_NAME)){
+                            files[i].delete();
+                        }
+                    }
+                    Log.w("mFile","删除成功:");
+                }else{
+                    uploadFiles(pos + 1,files);
+                }
+            }
+
+            @Override
+            public void failure() {
+            }
+        });
     }
 
     @Override
@@ -242,6 +306,7 @@ public class MainActivity extends BaseActivity {
                     if(mHomeTwoFragment!=null){
                         boolean isStart = mHomeTwoFragment.startOrStop(true);
                         if(isStart){
+                            Log.w(LogcatHelper.MESSAGE_LOG ,"*********************开始*********************");
                             ma_iv_index.getDrawable().setLevel(1);
                         }
                     }

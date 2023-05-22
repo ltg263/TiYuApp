@@ -6,22 +6,25 @@ public class PostStudentResults {
     @Override
     public String toString() {
         return "PostStudentResults{" +
-//                "classDate='" + classDate + '\'' +
-//                ", endTime='" + endTime + '\'' +
-//                ", beginTime='" + beginTime + '\'' +
+                "classDate='" + classDate + '\'' +
+                ", beginTime='" + beginTime + '\'' +
+                ", endTime='" + endTime + '\'' +
                 ", classId='" + classId + '\'' +
-//                ", classSceduleCardId='" + classSceduleCardId + '\'' +
+                ", classSceduleCardId='" + classSceduleCardId + '\'' +
                 ", teacherId='" + teacherId + '\'' +
                 ", courseId='" + courseId + '\'' +
                 ", smallCourseId='" + smallCourseId + '\'' +
                 ", studentId='" + studentId + '\'' +
+                ", studentName='" + studentName + '\'' +
                 ", timeUse='" + timeUse + '\'' +
                 ", times='" + times + '\'' +
                 ", finishTimes='" + finishTimes + '\'' +
+                ", timeoutTimes='" + timeoutTimes + '\'' +
                 ", speed='" + speed + '\'' +
                 ", lassGroupId='" + lassGroupId + '\'' +
-                ", timeNode='" + timeNode + '\'' +
-                '}';
+                ", timeNodeList=" + timeNodeList +
+                ", timeoutTimeNode=" + timeoutTimeNode +
+                '}'+"\n";
     }
 
     public PostStudentResults() {
@@ -114,19 +117,111 @@ public class PostStudentResults {
     private String courseId;//	大课程id
     private String smallCourseId;//	小课程id
     private String studentId;//学生id
+    private String studentName;//学生名称
     private String timeUse;//用时
     private String times;//	完成次数
     private String finishTimes;//打击次数
+    private String timeoutTimes;//超时的次数
     private String speed;//	平均用时
     private String lassGroupId;//	队列的ID
-    private List<Long> timeNode;//	按压的时间
+    private List<TimeNodeBean> timeNodeList;//	按钮
+    private List<TimeNodeBean> timeoutTimeNode;//	超时
 
-    public void setTimeNode(List<Long> timeNode) {
-        this.timeNode = timeNode;
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
-    public List<Long> getTimeNode() {
-        return timeNode;
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setTimeoutTimeNode(List<TimeNodeBean> timeoutTimeNode) {
+        this.timeoutTimeNode = timeoutTimeNode;
+    }
+
+    public List<TimeNodeBean> getTimeoutTimeNode() {
+        return timeoutTimeNode;
+    }
+
+    public static class TimeNodeBean {
+//:[{"time":""#触发时间
+//                ,"sortNum":"01"#球号
+//                ,"color":02 #颜色,
+//                "triggerMode":01  #触发方式,
+//                "lightTime":05 #亮灯时长}]
+
+        @Override
+        public String toString() {
+            return "TimeNodeBean{" +
+                    "time=" + time +
+                    ", sortNum='" + sortNum + '\'' +
+                    ", color='" + color + '\'' +
+                    ", triggerMode='" + triggerMode + '\'' +
+                    ", lightTime='" + lightTime + '\'' +
+                    '}';
+        }
+
+        private long time;//触发时间
+        private String sortNum;//球号
+        private String color;// 颜色,
+        private String triggerMode;//触发方式
+        private String lightTime;//亮灯时长
+
+        public TimeNodeBean(long time, String sortNum, String color, String triggerMode, String lightTime) {
+            this.time = time;
+            this.sortNum = sortNum;
+            this.color = color;
+            this.triggerMode = triggerMode;
+            this.lightTime = lightTime;
+        }
+
+        public long getTime() {
+            return time;
+        }
+
+        public void setTime(long time) {
+            this.time = time;
+        }
+
+        public String getSortNum() {
+            return sortNum;
+        }
+
+        public void setSortNum(String sortNum) {
+            this.sortNum = sortNum;
+        }
+
+        public String getColor() {
+            return color;
+        }
+
+        public void setColor(String color) {
+            this.color = color;
+        }
+
+        public String getTriggerMode() {
+            return triggerMode;
+        }
+
+        public void setTriggerMode(String triggerMode) {
+            this.triggerMode = triggerMode;
+        }
+
+        public String getLightTime() {
+            return lightTime;
+        }
+
+        public void setLightTime(String lightTime) {
+            this.lightTime = lightTime;
+        }
+    }
+
+    public void setTimeNodeList(List<TimeNodeBean> timeNodeList) {
+        this.timeNodeList = timeNodeList;
+    }
+
+    public List<TimeNodeBean> getTimeNodeList() {
+        return timeNodeList;
     }
 
     public void setLassGroupId(String lassGroupId) {
@@ -143,6 +238,14 @@ public class PostStudentResults {
 
     public String getFinishTimes() {
         return finishTimes;
+    }
+
+    public void setTimeoutTimes(String timeoutTimes) {
+        this.timeoutTimes = timeoutTimes;
+    }
+
+    public String getTimeoutTimes() {
+        return timeoutTimes;
     }
 
     public String getCourseId() {

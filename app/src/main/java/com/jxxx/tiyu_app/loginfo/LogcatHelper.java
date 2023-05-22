@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LogcatHelper {
+    public static final String MESSAGE_LOG = "AndroidRuntime";
+    public static String LOGCAT_FILE_NAME = "";
     private static LogcatHelper INSTANCE = null;
     private static String PATH_LOGCAT;
     private LogDumper mLogDumper = null;
@@ -28,7 +30,7 @@ public class LogcatHelper {
                     .getAbsolutePath() + File.separator + "aLog";
         } else {// 如果SD卡不存在，就保存到本应用的目录下
             PATH_LOGCAT = context.getFilesDir().getAbsolutePath()
-                    + File.separator + "aaLog";
+                    + File.separator + "aLog";
         }
         File file = new File(PATH_LOGCAT);
         Log.i("codedzh","存储位置："+PATH_LOGCAT);
@@ -47,7 +49,7 @@ public class LogcatHelper {
     public boolean deleteFile(File file) {
         System.out.println("file is==>" + file);
         boolean isSuccess = false;
-        if (file.exists()) { // 判断文件是否存在
+        if (file.exists()) { //判断文件是否存在
             if (file.isFile()) { // 判断是否是文件
                 System.out.println("is file");
                 if(!file.toString().contains(getFileNameCr())){
@@ -57,8 +59,10 @@ public class LogcatHelper {
             } else if (file.isDirectory()) { // 否则如果它是一个目录
                 System.out.println("is dic");
                 File files[] = file.listFiles(); // 声明目录下所有的文件 files[];
-                for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
-                    this.deleteFile(files[i]); // 把每个文件 用这个方法进行迭代
+                if(files!=null){
+                    for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
+                        this.deleteFile(files[i]); // 把每个文件 用这个方法进行迭代
+                    }
                 }
             }
             isSuccess = true;
@@ -95,6 +99,7 @@ public class LogcatHelper {
         String cmds = null;
         private String mPID;
         private FileOutputStream out = null;
+        String a = "decodeDrmImageIfNeeded";
         public LogDumper(String pid, String dir) {
             mPID = pid;
             try {
@@ -111,9 +116,9 @@ public class LogcatHelper {
              *
              * */
 //             cmds = "logcat *:e *:w | grep \"(" + mPID + ")\"";
-             cmds = "logcat  | grep \"(" + mPID + ")\"";//打印所有日志信息
-            // cmds = "logcat -s way";//打印标签过滤信息
-            // cmds = "logcat *:e *:i | grep \"(" + mPID + ")\"";
+//             cmds = "logcat  | grep \"(" + mPID + ")\"";//打印所有日志信息
+            cmds = "logcat -s "+MESSAGE_LOG;//打印标签过滤信息
+//             cmds = "logcat *:e *:v | grep \"(" + mPID + ")\"";
 
         }
         public void stopLogs() {
@@ -167,6 +172,7 @@ public class LogcatHelper {
     public String getFileName() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String date = format.format(new Date(System.currentTimeMillis()));
+        LogcatHelper.LOGCAT_FILE_NAME = date;
         return date;
     }
     public String getFileNameCr() {

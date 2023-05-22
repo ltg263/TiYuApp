@@ -1,5 +1,6 @@
 package com.jxxx.tiyu_app.view.activity;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;

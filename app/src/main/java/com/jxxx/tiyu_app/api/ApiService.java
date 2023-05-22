@@ -227,7 +227,7 @@ public interface ApiService {
      * @return
      */
     @Multipart
-    @POST("api/v1/files")
-    Observable<Result> submitFiles(@Part MultipartBody.Part[] file, @PartMap Map<String, RequestBody> map);
+    @POST("resource/appSysLog/uploadFile")
+    Observable<Result> submitFiles(@Part MultipartBody.Part file, @PartMap Map<String, RequestBody> map);
 
 }

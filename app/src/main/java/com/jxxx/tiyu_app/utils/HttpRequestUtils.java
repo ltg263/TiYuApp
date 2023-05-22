@@ -16,20 +16,23 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 public class HttpRequestUtils {
-    public static void uploadFiles(String filePath,UploadFileInterface fileInterface) {
+    public static void uploadFiles(String filePath,String version, UploadFileInterface fileInterface) {
         if(StringUtil.isBlank(filePath)){
             fileInterface.succeed("-1");
             return;
         }
         File file = new File(filePath);
+        String data = StringUtil.getTimeToYMD(System.currentTimeMillis(),"yyyy-MM-dd");
         Map<String, RequestBody> map = new HashMap<>();
-//        map.put("dirtype", toRequestBody("3"));//头像：3，申诉 ：2 ，收款码：1
+        map.put("clientType", toRequestBody("1"));
+        map.put("userId", toRequestBody(SharedUtils.getUserId()));
+        map.put("version", toRequestBody(version));
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         // MultipartBody.Part  和后端约定好Key，这里的name是用file
-//        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-        MultipartBody.Part[] ba =  {MultipartBody.Part.createFormData("files", file.getName(), requestFile)};
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+//        MultipartBody.Part[] ba =  {MultipartBody.Part.createFormData("files", file.getName(), requestFile)};
         RetrofitUtil.getInstance().apiService()
-                .submitFiles(ba, map)
+                .submitFiles(body, map)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Result>() {
@@ -39,7 +42,7 @@ public class HttpRequestUtils {
 
                     @Override
                     public void onNext(Result result) {
-                        if (result.getCode() == 0 && result.getData()!=null &&StringUtil.isNotBlank(result.getData().toString())) {
+                        if (result.getCode() == 200) {
                             fileInterface.succeed(result.getData().toString());
                         }else{
                             fileInterface.failure();
@@ -58,7 +61,16 @@ public class HttpRequestUtils {
                 });
 
     }
-
+    /**
+     * 创建请求体
+     *
+     * @param value
+     * @return
+     */
+    public static  RequestBody toRequestBody(String value) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), value);
+        return requestBody;
+    }
     public interface UploadFileInterface{
         void succeed(String path);
         void failure();

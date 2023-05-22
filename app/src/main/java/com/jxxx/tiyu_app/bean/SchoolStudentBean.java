@@ -84,10 +84,12 @@ public class SchoolStudentBean {
     private int postDqbz;//当前步骤循环的次数
     private int postWccs;//完成次数
     private int postZjzs;//总击中数
+    private int postZcss;//总超时数
     private int postZfks;//总反馈数
     private long postZys;//总用时
-    private List<Long> currentTime;////击中的当前时间
     private double postPjsd;//平局速度
+    private List<PostStudentResults.TimeNodeBean> timeNode;//总动击中数据
+    private List<PostStudentResults.TimeNodeBean> timeoutTimeNode;//超时数据
 
     public void setPostDqbz(int postDqbz) {
         this.postDqbz = postDqbz;
@@ -101,21 +103,42 @@ public class SchoolStudentBean {
         this.postZfks = postZfks;
     }
 
+    public void setPostZcss(int postZcss) {
+        this.postZcss = postZcss;
+    }
+
+    public int getPostZcss() {
+        return postZcss;
+    }
+
     public int getPostZfks() {
         return postZfks;
     }
 
-    public void setCurrentTime(List<Long> currentTime) {
-        this.currentTime = currentTime;
+    public void setTimeoutTimeNode(List<PostStudentResults.TimeNodeBean> timeoutTimeNode) {
+        this.timeoutTimeNode = timeoutTimeNode;
     }
 
-    public void addCurrentTime(Long time) {
-        currentTime.add(time);
+    public List<PostStudentResults.TimeNodeBean> getTimeoutTimeNode() {
+        return timeoutTimeNode;
+    }
+    public void addTimeoutTimeNode(long time, String sortNum, String color, String triggerMode, String lightTime) {
+        timeoutTimeNode.add(new PostStudentResults.TimeNodeBean(time,sortNum,color,triggerMode,lightTime));
     }
 
-    public List<Long> getCurrentTime() {
-        return currentTime;
+
+    public void setTimeNode(List<PostStudentResults.TimeNodeBean> timeNode) {
+        this.timeNode = timeNode;
     }
+
+    public void addTimeNode(long time, String sortNum, String color, String triggerMode, String lightTime) {
+        timeNode.add(new PostStudentResults.TimeNodeBean(time,sortNum,color,triggerMode,lightTime));
+    }
+
+    public List<PostStudentResults.TimeNodeBean> getTimeNode() {
+        return timeNode;
+    }
+
 
     public void setSteps(List<SchoolCourseBeanSmallActionInfoJson.StepsBean> steps) {
         this.steps = steps;

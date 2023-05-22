@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.jxxx.tiyu_app.loginfo.LogcatHelper;
 import com.jxxx.tiyu_app.utils.WifiMessageReceiver;
 
 import java.io.IOException;
@@ -166,31 +167,50 @@ public class ClientTcpUtils {
                         return;
                     }
                     System.out.println("接收到的总数据(10):" + Arrays.toString(v));
-                    System.out.println("接收到的总数据(16):" + BinaryToHexString(v));
-                    if(mErrorDialogInterfac!=null){
-                        mErrorDialogInterfac.btnConfirm("接收数据",v);
+                    Log.w(LogcatHelper.MESSAGE_LOG ,"接收到的总数据:" + BinaryToHexString(v));
+                    int a = 0;
+                    for(int i = 0;i<v.length;i++){
+                        if(v[i] == -1){
+                            a = i;
+                            break;
+                        }
                     }
-                    if(v[0]==ConstValuesHttps.MESSAGE_START){
-                        if(v[1] == ConstValuesHttps.MESSAGE_GET_C0){
-                            byte[] data_c0 = Arrays.copyOfRange(v, 2, v.length-1);
-                            WifiMessageReceiver.startBroadcast(ConstValuesHttps.MESSAGE_GET_C0,data_c0);
-                        }
-                        if(v[1] == ConstValuesHttps.MESSAGE_GET_C5){
-                            byte[] data_c5 = Arrays.copyOfRange(v, 2, v.length-1);
-                            WifiMessageReceiver.startBroadcast(ConstValuesHttps.MESSAGE_GET_C5,data_c5);
-                        }
-                        if(v[1] == ConstValuesHttps.MESSAGE_GET_C6){
-                            byte[] data_c6 = Arrays.copyOfRange(v, 2, v.length-1);
-                            WifiMessageReceiver.startBroadcast(ConstValuesHttps.MESSAGE_GET_C6,data_c6);
-                        }
-                    }else{
-                        System.out.println("接收到的总数据:错误数据");
+                    if(a!=v.length-1){
+                        byte[] v1 = Arrays.copyOf(v,a+1);
+                        byte[] v2 = Arrays.copyOfRange(v,a+1,v.length);
+                        startBroadcast(v1);
+                        startBroadcast(v2);
+                        return;
                     }
+                    startBroadcast(v);
                     break;
             }
             /* 调试输出 */
         }
     };
+
+    private void startBroadcast(byte[] v) {
+        if(mErrorDialogInterfac!=null){
+            mErrorDialogInterfac.btnConfirm("接收数据",v);
+        }
+
+        if(v[0]==ConstValuesHttps.MESSAGE_START){
+            if(v[1] == ConstValuesHttps.MESSAGE_GET_C0){
+                byte[] data_c0 = Arrays.copyOfRange(v, 2, v.length-1);
+                WifiMessageReceiver.startBroadcast(ConstValuesHttps.MESSAGE_GET_C0,data_c0);
+            }
+            if(v[1] == ConstValuesHttps.MESSAGE_GET_C5){
+                byte[] data_c5 = Arrays.copyOfRange(v, 2, v.length-1);
+                WifiMessageReceiver.startBroadcast(ConstValuesHttps.MESSAGE_GET_C5,data_c5);
+            }
+            if(v[1] == ConstValuesHttps.MESSAGE_GET_C6){
+                byte[] data_c6 = Arrays.copyOfRange(v, 2, v.length-1);
+                WifiMessageReceiver.startBroadcast(ConstValuesHttps.MESSAGE_GET_C6,data_c6);
+            }
+        }else{
+            System.out.println("接收到的总数据:错误数据");
+        }
+    }
 
     public static String BinaryToHexString(byte[] bytes) {
         if(bytes==null){
@@ -427,8 +447,8 @@ public class ClientTcpUtils {
             public void run() {
                 synchronized(this){
                     byte[] mData = ConstValuesHttps.getByteData(msg,data);
-//                    System.out.println("发送的数据-->>(10)"+Integer.toHexString(mData[6] & 0xFF)+":" + Arrays.toString(mData));
-                    System.out.println("发送的数据-->>(16)"+Integer.toHexString(mData[6] & 0xFF)+":" + BinaryToHexString(mData));
+                     Log.w(LogcatHelper.MESSAGE_LOG ,"发送的数据-->>"+Integer.toHexString(mData[6] & 0xFF)+":" + BinaryToHexString(mData));
+
                     for(int i = 0;i<client.length;i++){
                         if(client[i]!=null){
                             try {
