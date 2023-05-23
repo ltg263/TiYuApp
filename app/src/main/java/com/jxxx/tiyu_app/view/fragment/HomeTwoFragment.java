@@ -27,6 +27,7 @@ import com.jxxx.tiyu_app.base.Result;
 import com.jxxx.tiyu_app.bean.PostStudentBean;
 import com.jxxx.tiyu_app.bean.PostStudentResults;
 import com.jxxx.tiyu_app.bean.SchoolCourseBean;
+import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmall;
 import com.jxxx.tiyu_app.bean.SchoolCourseBeanSmallActionInfoJson;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
 import com.jxxx.tiyu_app.loginfo.LogcatHelper;
@@ -38,6 +39,7 @@ import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.WifiMessageReceiver;
 import com.jxxx.tiyu_app.utils.view.DialogUtils;
+import com.jxxx.tiyu_app.view.activity.HomeTwoShangKeActivity;
 import com.jxxx.tiyu_app.view.activity.HomeTwoXueShengActivity;
 import com.jxxx.tiyu_app.view.adapter.HomeTwoTwoListAdapter;
 
@@ -136,6 +138,11 @@ public class HomeTwoFragment extends BaseFragment {
                     @Override
                     public void btnConfirm() {
                          Log.w(LogcatHelper.MESSAGE_LOG ,"*********************重置数据*********************");
+                         if(ConstValuesHttps.IS_SUIJIB_MOSHI){
+                             SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean mCourseStepList =
+                                     ConstValues.mSchoolCourseInfoBeanSmall.getStepGroups().get(0).getCourseStepList().get(0);
+                             HomeTwoShangKeActivity.setSuiJiData(mCourseStepList);
+                         }
                         isWanCheng = false;
                         current_time = 0;
                         SharedUtils.singleton().put(HomeTwoXueShengActivity.STRATA_JISHI_SHANGKE,0L);
@@ -762,16 +769,26 @@ public class HomeTwoFragment extends BaseFragment {
         Log.w("set数据2：","set:"+set);
         if(mStartBroadcastType == ConstValuesHttps.MESSAGE_GET_C5){
             mSchoolStudentBean.setPostZjzs(mSchoolStudentBean.getPostZjzs() + 1);
-            if(set!=null && set.size()==7){
-                mSchoolStudentBean.addTimeNode(System.currentTimeMillis(),
-                        ""+set.get(1),""+set.get(2),""+set.get(6),""+set.get(4));
+            if(set!=null && set.size()==7 && !ConstValuesHttps.IS_SUIJIB_MOSHI){
+                try {
+                    List<Byte> set_new = new ArrayList<>(set);
+                    mSchoolStudentBean.addTimeNode(System.currentTimeMillis(),
+                            "" + set_new.get(1), "" + set_new.get(2), "" + set_new.get(6), "" + set_new.get(4));
+                }catch (Exception e){
+                    Log.w(LogcatHelper.MESSAGE_LOG ,"Exception："+e);
+                }
             }
             System.out.println("BroadcastReceiver：" + mSchoolStudentBean.getStudentName() + "：总击中数:" + mSchoolStudentBean.getPostZjzs());
         }else{
             mSchoolStudentBean.setPostZcss(mSchoolStudentBean.getPostZcss() + 1);
-            if(set!=null && set.size()==7) {
-                mSchoolStudentBean.addTimeoutTimeNode(System.currentTimeMillis(),
-                        "" + set.get(1), "" + set.get(2), "" + set.get(6), "" + set.get(4));
+            if(set!=null && set.size()==7 && !ConstValuesHttps.IS_SUIJIB_MOSHI) {
+                try {
+                    List<Byte> set_new = new ArrayList<>(set);
+                    mSchoolStudentBean.addTimeoutTimeNode(System.currentTimeMillis(),
+                            "" + set_new.get(1), "" + set_new.get(2), "" + set_new.get(6), "" + set_new.get(4));
+                }catch (Exception e){
+                    Log.w(LogcatHelper.MESSAGE_LOG ,"Exception："+e);
+                }
             }
         }
         System.out.println("BroadcastReceiver：" + mSchoolStudentBean.getStudentName() + "：总反馈数:" + mSchoolStudentBean.getPostZfks());
@@ -961,13 +978,27 @@ public class HomeTwoFragment extends BaseFragment {
                         Log.w("set数据1：","set:"+set);
                         if(mStartBroadcastType == ConstValuesHttps.MESSAGE_GET_C5){
                             mSchoolStudentBean.setPostZjzs(mSchoolStudentBean.getPostZjzs() + 1);
-                            mSchoolStudentBean.addTimeNode(System.currentTimeMillis(),
-                                    ""+set.get(1),""+set.get(2),""+set.get(6),""+set.get(4));
+                            if(set!=null && set.size()==7 && !ConstValuesHttps.IS_SUIJIB_MOSHI) {
+                                try {
+                                    List<Byte> set_new = new ArrayList<>(set);
+                                    mSchoolStudentBean.addTimeNode(System.currentTimeMillis(),
+                                            "" + set_new.get(1), "" + set_new.get(2), "" + set_new.get(6), "" + set_new.get(4));
+                                }catch (Exception e){
+                                    Log.w(LogcatHelper.MESSAGE_LOG ,"Exception："+e);
+                                }
+                            }
                             System.out.println("BroadcastReceiver：" + mSchoolStudentBean.getStudentName() + "：总击中数:" + mSchoolStudentBean.getPostZjzs());
                         }else{
                             mSchoolStudentBean.setPostZcss(mSchoolStudentBean.getPostZcss() + 1);
-                            mSchoolStudentBean.addTimeoutTimeNode(System.currentTimeMillis(),
-                                    ""+set.get(1),""+set.get(2),""+set.get(6),""+set.get(4));
+                            if(set!=null && set.size()==7 && !ConstValuesHttps.IS_SUIJIB_MOSHI) {
+                                try {
+                                    List<Byte> set_new = new ArrayList<>(set);
+                                    mSchoolStudentBean.addTimeoutTimeNode(System.currentTimeMillis(),
+                                            "" + set_new.get(1), "" + set_new.get(2), "" + set_new.get(6), "" + set_new.get(4));
+                                }catch (Exception e){
+                                    Log.w(LogcatHelper.MESSAGE_LOG ,"Exception："+e);
+                                }
+                            }
                         }
                         System.out.println("BroadcastReceiver：" + mSchoolStudentBean.getStudentName() + "：总反馈数:" + mSchoolStudentBean.getPostZfks());
                         setNotifyDataSetChanged_Fragment();

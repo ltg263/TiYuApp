@@ -554,7 +554,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
     /**
      * 生成随机数据
      */
-    private void setSuiJiData(SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean mCourseStepList) {
+    public static void setSuiJiData(SchoolCourseBeanSmall.StepGroupsBean.CourseStepListBean mCourseStepList) {
         int mBallNum = ConstValues.mSchoolCourseInfoBeanSmall.getBallNum();
         List<SchoolCourseBeanSmallActionInfoJson> json = new ArrayList<>();
         SchoolCourseBeanSmallActionInfoJson mSchoolCourseBeanSmallActionInfoJson = new SchoolCourseBeanSmallActionInfoJson();
@@ -569,7 +569,7 @@ public class HomeTwoShangKeActivity extends BaseActivity {
             SchoolCourseBeanSmallActionInfoJson.StepsBean mStepsBean = new SchoolCourseBeanSmallActionInfoJson.StepsBean();
             List<Byte> sortNumSet_new = getRandomListByNum(sortNumSet,mCourseStepList.getRandomNum());
             String mRandomColor = mCourseStepList.getRandomColor();
-            byte flickering = mCourseStepList.getFlickering();
+            byte flickering = mCourseStepList.getFlickering();//闪烁频率
             byte lightTime = mCourseStepList.getLightTime();
             byte triggerMode = mCourseStepList.getTriggerMode();
             byte triggerAfter = mCourseStepList.getTriggerAfter();
@@ -583,6 +583,8 @@ public class HomeTwoShangKeActivity extends BaseActivity {
              * 4 lightTime    灯亮时间
              * 5 triggerMode  触发模式
              * 6 triggerAfter 触发动作
+             *
+             * FE 0A 91 90 41 00 A0 05 02 0A 01 03 FF
              */
             for(int j = 0;j< mCourseStepList.getRandomNum();j++){
                 List<Byte> set = new ArrayList<>();
@@ -590,7 +592,11 @@ public class HomeTwoShangKeActivity extends BaseActivity {
                 set.add(sortNumSet_new.get(j));//球号
                 int index = (int) (Math.random() * str.length);
                 set.add(Byte.parseByte(str[index]));//颜色
-                set.add(flickering);//闪烁
+                if(lightMode==3){
+                    set.add(flickering);//闪烁
+                }else{
+                    set.add((byte) 0);
+                }
                 set.add(lightTime);//持续时长
                 set.add(triggerMode);//触发方式
                 set.add(triggerAfter);//触发动作
@@ -607,7 +613,8 @@ public class HomeTwoShangKeActivity extends BaseActivity {
         ConstValues.mSchoolCourseInfoBeanSmall.setSortNumSet(String.valueOf(mSchoolCourseBeanSmallActionInfoJson.getSortNumSet()));
         ConstValues.mSchoolCourseInfoBeanSmall.setActionInfo(actionInfo);
     }
-
+//[[\"-96\",\"1\",\"1\",\"3\",\"3\",\"1\",\"0\"],[\"-96\",\"2\",\"1\",\"3\",\"3\",\"1\",\"0\"]]}
+//[[\"-96\",\"1\",\"3\",\"0\",\"10\",\"1\",\"3\"],[\"-96\",\"2\",\"3\",\"0\",\"10\",\"1\",\"3\"]]}]
     @OnClick({R.id.iv_back, R.id.tv_qiehuan,R.id.tv_xunhuancishu,R.id.btn_kaishishangke})
     public void onClick(View view) {
         switch (view.getId()) {
