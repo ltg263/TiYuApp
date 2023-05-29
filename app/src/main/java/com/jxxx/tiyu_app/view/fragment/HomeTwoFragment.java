@@ -1342,34 +1342,4 @@ public class HomeTwoFragment extends BaseFragment {
     }
 }
 
-//[PostStudentBean{beginTime='2023-05-19 14:15:30', classDate='2023-05-19 14:15:30',
-// classId='42', classSceduleCardId='null', courseId='null', createBy='null', createTime='null',
-// endTime='2023-05-19 14:16:46', id='null', schoolId='null', searchValue='null', smallCourseId='796',
-// teacherId='8', updateBy='null', updateTime='null', lightness='453',
-// studentResultsList=[PostStudentResults{classDate='2023-05-19 14:15:30', beginTime='2023-05-19 14:15:30', endTime='2023-05-19 14:16:46',
-// classId='42', classSceduleCardId='null', teacherId='8', courseId='null', smallCourseId='796', studentId='144', timeUse='19', times='1',
-// finishTimes='4', timeoutTimes='0', speed='4.75', lassGroupId='null', timeNode=[TimeNodeBean{time=1684476961190, sortNum='1', color='1',
-// triggerMode='3', lightTime='1'}, TimeNodeBean{time=1684476962165, sortNum='2', color='3', triggerMode='3', lightTime='1'},
-// TimeNodeBean{time=1684476966431, sortNum='1', color='1', triggerMode='3', lightTime='1'}, TimeNodeBean{time=1684476967494, sortNum='2',
-// color='3', triggerMode='3', lightTime='1'}]}, PostStudentResults{classDate='2023-05-19 14:15:30', beginTime='2023-05-19 14:15:30',
-// endTime='2023-05-19 14:16:46', classId='42', classSceduleCardId='null', teacherId='8', courseId='null', smallCourseId='796', studentId='146',
-// timeUse='34', times='1', finishTimes='4', timeoutTimes='0', speed='8.5', lassGroupId='null',
-// timeNode=[TimeNodeBean{time=1684476999876, sortNum='1', color='1', triggerMode='3', lightTime='1'},
-// TimeNodeBean{time=1684477000738, sortNum='2', color='3', triggerMode='3', lightTime='1'},
-// TimeNodeBean{time=1684477001703, sortNum='1', color='1', triggerMode='3', lightTime='1'},
-// TimeNodeBean{time=1684477002672, sortNum='2', color='3', triggerMode='3', lightTime='1'}]},
-// PostStudentResults{classDate='2023-05-19 14:15:30', beginTime='2023-05-19 14:15:30', endTime='2023-05-19 14:16:46', classId='42',
-// classSceduleCardId='null', teacherId='8', courseId='null', smallCourseId='796', studentId='126', timeUse='17', times='1', finishTimes='4',
-// timeoutTimes='0', speed='4.25', lassGroupId='null', timeNode=[TimeNodeBean{time=1684476959469, sortNum='3', color='2', triggerMode='3', lightTime='1'},
-// TimeNodeBean{time=1684476960225, sortNum='4', color='5', triggerMode='3', lightTime='1'},
-// TimeNodeBean{time=1684476964828, sortNum='4', color='5', triggerMode='3', lightTime='1'},
-// TimeNodeBean{time=1684476965701, sortNum='3', color='2', triggerMode='3', lightTime='1'}]},
-// PostStudentResults{classDate='2023-05-19 14:15:30', beginTime='2023-05-19 14:15:30',
-// endTime='2023-05-19 14:16:46', classId='42', classSceduleCardId='null', teacherId='8',
-// courseId='null', smallCourseId='796', studentId='147', timeUse='37', times='1', finishTimes='4',
-// timeoutTimes='0', speed='9.25', lassGroupId='null', timeNode=[TimeNodeBean{time=1684477003974,
-// sortNum='4', color='5', triggerMode='3', lightTime='1'}, TimeNodeBean{time=1684477004760, sortNum='3',
-// color='2', triggerMode='3', lightTime='1'}, TimeNodeBean{time=1684477005547, sortNum='4', color='5',
-// triggerMode='3', lightTime='1'}, TimeNodeBean{time=1684477006292, sortNum='3', color='2', triggerMode='3', lightTime='1'}]}]}]
-
 

@@ -67,6 +67,7 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
         duilieNum = getIntent().getIntExtra("duilieNum", 0);
         time = getIntent().getIntExtra("time", 0);
         sendInitData = getIntent().getByteArrayExtra("sendData");
+        Log.w(LogcatHelper.MESSAGE_LOG ,"随机执行方式："+sendInitData);
         getSJData();
         mHomeTwoTwoListAdapter = new HomeTwoTwoListAdapter(mSchoolStudentBeans);
         mRvTwoList.setAdapter(mHomeTwoTwoListAdapter);
@@ -272,7 +273,7 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
 //            byte[] mData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
             byte mData = intent.getByteExtra(WifiMessageReceiver.START_BROADCAST_DATA, (byte) 0);
             byte mStartBroadcastType = intent.getByteExtra(WifiMessageReceiver.START_BROADCAST_TYPE, (byte) 0X00);
-            Log.w(LogcatHelper.MESSAGE_LOG ,"随机执行方式："+ClientTcpUtils.BinaryToHexString(mStartBroadcastType)+
+            Log.w(LogcatHelper.MESSAGE_LOG ,"执行反馈："+ClientTcpUtils.BinaryToHexString(mStartBroadcastType)+
                     "球地址：" + ClientTcpUtils.BinaryToHexString(mData)+"球号："+ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP_1.get(mData));
             startBroadcastData.clear();
             startBroadcastData.add(mData);
