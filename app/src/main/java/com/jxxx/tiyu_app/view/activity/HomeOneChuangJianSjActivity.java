@@ -255,6 +255,7 @@ public class HomeOneChuangJianSjActivity extends BaseActivity {
         ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
         ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.clear();
         ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
+        ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP_1.clear();
         /**
          * 广播动态注册
          */

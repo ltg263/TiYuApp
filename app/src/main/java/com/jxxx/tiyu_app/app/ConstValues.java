@@ -21,7 +21,7 @@ public class ConstValues {
      * 1 中小学
      * 2 幼教
      */
-    public static int BANBEN_TYPE = 2;
+    public static int BANBEN_TYPE = 1;
 
     /**
      * 文件夹父路径
@@ -42,6 +42,7 @@ public class ConstValues {
      */
 //    public static final String BASE_URL = "http://192.168.2.146:8080/";
     public static String BASE_URL = "";
+    public static String PATH_LOGCAT = "";
 //    public static  String BASE_URL = "http://mingzhou.nbqichen.com:8888/prod-api/";
 //    public static final String BASE_URL = "http://kindergarten.nbqichen.com:8888/prod-api/";
 

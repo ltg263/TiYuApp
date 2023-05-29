@@ -112,16 +112,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void postUploadFile() {
-        String pathLogCat = "";
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {// 优先保存到SD卡中
-            pathLogCat = Environment.getExternalStorageDirectory()
-                    .getAbsolutePath() + File.separator + "aLog";
-        } else {// 如果SD卡不存在，就保存到本应用的目录下
-            pathLogCat = getFilesDir().getAbsolutePath()
-                    + File.separator + "aLog";
-        }
-        File file = new File(pathLogCat);
+        File file = new File(ConstValues.PATH_LOGCAT);
+        Log.w("postUploadFile","pathLogCat"+ConstValues.PATH_LOGCAT);
         if(file.exists() && file.isDirectory()){
             File[] files = file.listFiles(); // 声明目录下所有的文件 files[];
 
@@ -150,6 +142,7 @@ public class MainActivity extends BaseActivity {
         HttpRequestUtils.uploadFiles(files[pos].getPath(), getVersionName(this),new HttpRequestUtils.UploadFileInterface() {
             @Override
             public void succeed(String path) {
+                Log.w(LogcatHelper.MESSAGE_LOG,"LOG文件已上传："+files[pos].getPath());
                 Log.w("mFile","上传成功:"+path);
                 if(pos == files.length-1){
                     for (int i = files.length-1; i >= 0; i--) { // 遍历目录下所有的文件

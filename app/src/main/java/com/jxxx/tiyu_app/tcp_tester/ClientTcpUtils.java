@@ -235,6 +235,27 @@ public class ClientTcpUtils {
         return result;
 
     }
+
+    public static String BinaryToHexString(byte v) {
+        String hexStr = "0123456789ABCDEF";
+
+        String result = "";
+
+        String hex = "";
+        byte[] bytes = {v};
+        for (byte b : bytes) {
+
+            hex = String.valueOf(hexStr.charAt((b & 0xF0) >> 4));
+
+            hex += String.valueOf(hexStr.charAt(b & 0x0F));
+
+            result += hex + " ";
+
+        }
+
+        return result;
+
+    }
     public void onDestroy() {
         // TODO Auto-generated method stub
         isConnected = false;
@@ -380,6 +401,7 @@ public class ClientTcpUtils {
                 byte new_ads = (byte) (new_ads_pos + pos+1);
                 byte[] data_new = new byte[]{allDate[pos], new_ads,0,0,0,0};
                 ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.put(new_ads,allDate[pos]);
+                ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP_1.put(allDate[pos],new_ads);
                 sendData(ConstValuesHttps.MESSAGE_SEND_B3, data_new);
                 sendDataThreadB3(pos+1,new_ads_pos,allDate,mSendDataOkInterface);
             }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.jxxx.tiyu_app.app.ConstValues;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,30 +19,21 @@ public class LogcatHelper {
     public static final String MESSAGE_LOG = "AndroidRuntime";
     public static String LOGCAT_FILE_NAME = "";
     private static LogcatHelper INSTANCE = null;
-    private static String PATH_LOGCAT;
     private LogDumper mLogDumper = null;
     private int mPId;
     /**
      * 初始化目录
      */
     public void init(Context context) {
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {// 优先保存到SD卡中
-            PATH_LOGCAT = Environment.getExternalStorageDirectory()
-                    .getAbsolutePath() + File.separator + "aLog";
-        } else {// 如果SD卡不存在，就保存到本应用的目录下
-            PATH_LOGCAT = context.getFilesDir().getAbsolutePath()
-                    + File.separator + "aLog";
-        }
-        File file = new File(PATH_LOGCAT);
-        Log.i("codedzh","存储位置："+PATH_LOGCAT);
+        File file = new File(ConstValues.PATH_LOGCAT);
         if(file.exists()){
             deleteFile(file);
         }
         if (!file.exists()) {
-            file.mkdirs();
+            file.mkdir();
         }
-        Log.i("codedzh","文件是否存在："+new File(PATH_LOGCAT).exists());
+        Log.i("codedzh","存储位置："+ConstValues.PATH_LOGCAT);
+        Log.i("codedzh","文件是否存在："+new File(ConstValues.PATH_LOGCAT).exists());
     }
     /**
      * 删除文件夹所有内容
@@ -81,7 +74,7 @@ public class LogcatHelper {
     }
     public void start() {
         if (mLogDumper == null)
-            mLogDumper = new LogDumper(String.valueOf(mPId), PATH_LOGCAT);
+            mLogDumper = new LogDumper(String.valueOf(mPId), ConstValues.PATH_LOGCAT);
         mLogDumper.start();
     }
 
@@ -99,11 +92,12 @@ public class LogcatHelper {
         String cmds = null;
         private String mPID;
         private FileOutputStream out = null;
-        String a = "decodeDrmImageIfNeeded";
         public LogDumper(String pid, String dir) {
             mPID = pid;
             try {
-                out = new FileOutputStream(new File(dir, "log-"+ getFileName() + ".log"));
+                File mFile = new File(dir, "log-"+ getFileName() + ".log");
+                out = new FileOutputStream(mFile);
+                Log.w(LogcatHelper.MESSAGE_LOG,"生成LOG文件："+mFile.getPath());
             } catch (FileNotFoundException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

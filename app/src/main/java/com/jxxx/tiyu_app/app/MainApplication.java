@@ -38,12 +38,15 @@ public class MainApplication extends Application {
         mContext = this;
         //sp初始化
         toastUtil = ToastUtil.getInstance(mContext);
+
         switch (ConstValues.BANBEN_TYPE){
             case 1:
                 ConstValues.BASE_URL = "http://mingzhou.nbqichen.com:8888/prod-api/";
+                ConstValues.PATH_LOGCAT = getExternalFilesDir(null).getAbsolutePath()+"logZhongxiaoxue";
                 break;
             case 2:
                 ConstValues.BASE_URL = "http://kindergarten.nbqichen.com:8888/prod-api/";
+                ConstValues.PATH_LOGCAT = getExternalFilesDir(null).getAbsolutePath()+"logYoujiao";
                 break;
         }
 //        AppException appException = AppException.getInstance();

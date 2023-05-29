@@ -695,16 +695,18 @@ public class HomeTwoFragment extends BaseFragment {
             }
             System.out.println("BroadcastReceiver：current_time：" + current_time);
             byte mStartBroadcastType = intent.getByteExtra(WifiMessageReceiver.START_BROADCAST_TYPE, (byte) 0X00);
-            byte[] mData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
-            System.out.println("BroadcastReceiver："+mStartBroadcastType+"球号：" + Arrays.toString(mData));
+//            byte[] mData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
+            byte mData = intent.getByteExtra(WifiMessageReceiver.START_BROADCAST_DATA, (byte) 0);
+            Log.w(LogcatHelper.MESSAGE_LOG ,"执行方式："+ClientTcpUtils.BinaryToHexString(mStartBroadcastType)+
+                    "球地址：" + ClientTcpUtils.BinaryToHexString(mData)+"球号："+ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP_1.get(mData));
             if(!ConstValuesHttps.IS_AUTO_DAN_DUILIE){
-                for (int i = 0; i < mData.length; i++) {
-                    getMapKayYunDong(mData[i], 0,mStartBroadcastType);
-                }
+                getMapKayYunDong(mData,0,mStartBroadcastType);
+//                for (int i = 0; i < mData.length; i++) {
+//                }
             }else{
-                for (int i = 0; i < mData.length; i++) {
-                    getMapKayYunDong_dlxy(mData[i], mStartBroadcastType);
-                }
+                getMapKayYunDong_dlxy(mData, mStartBroadcastType);
+//                for (int i = 0; i < mData.length; i++) {
+//                }
             }
         }
     }
@@ -741,7 +743,11 @@ public class HomeTwoFragment extends BaseFragment {
                     //得到了击中的球号
                     if(key!=null && key==qiuhao){
                         //根据mMapKey_id获取从mMapSchoolStudentBeans中获取某个队列对应的全部学生
-                        getSchoolStudentBean_dlxy(qiuH,i,json.get(i).getSteps().get(j).getSets(),mStartBroadcastType);
+                        List<List<Byte>> sets = null;
+                        if(json.size()>i && json.get(i).getSteps().size()>j){
+                            sets = json.get(i).getSteps().get(j).getSets();
+                        }
+                        getSchoolStudentBean_dlxy(qiuH,i,sets,mStartBroadcastType);
                         return;
                     }
                 }
@@ -761,9 +767,11 @@ public class HomeTwoFragment extends BaseFragment {
         SchoolStudentBean mSchoolStudentBean = mSchoolStudentBeans.get(current_class_group_lists.get(pos));
         mSchoolStudentBean.setPostZfks(mSchoolStudentBean.getPostZfks() + 1);
         List<Byte> set=null;
-        for(int i=0;i<sets.size();i++){
-            if(sets.get(i).get(1)==qiuH){
-                set = sets.get(i);
+        if(sets!=null){
+            for(int i=0;i<sets.size();i++){
+                if(sets.get(i).get(1)==qiuH){
+                    set = sets.get(i);
+                }
             }
         }
         Log.w("set数据2：","set:"+set);
@@ -889,7 +897,7 @@ public class HomeTwoFragment extends BaseFragment {
                 for(int i=0;i<HomeTwoXueShengActivity.mMapKey_id.size();i++){
                     List<SchoolStudentBean> m = HomeTwoXueShengActivity.mMapSchoolStudentBeans.get(HomeTwoXueShengActivity.mMapKey_id.get(i));
                     int num = m.get(m.size()-1).getPostWccs();
-                    Log.w(LogcatHelper.MESSAGE_LOG ,"current_course_section_num"
+                    Log.w("" ,"current_course_section_num"
                             +HomeTwoXueShengActivity.current_course_section_num+";current_queue_num_max:"+current_queue_num_max
                             +HomeTwoXueShengActivity.current_course_section_num+";num:"+num);
                     if(num != (HomeTwoXueShengActivity.current_course_section_num) && current_queue_num_max > i){
@@ -970,9 +978,13 @@ public class HomeTwoFragment extends BaseFragment {
                     if (key != null && qiuhao == key) {
                         mSchoolStudentBean.setPostZfks(mSchoolStudentBean.getPostZfks() + 1);
                         List<Byte> set=null;
-                        for(int i=0;i<mSteps.get(q).getSets().size();i++){
-                            if(mSteps.get(q).getSets().get(i).get(1)==qiuH){
-                                set = mSteps.get(q).getSets().get(i);
+                        if(mSteps.size()>q){
+                            for(int i=0;i<mSteps.get(q).getSets().size();i++){
+                                if(mSteps.get(q).getSets().size()>=i){
+                                    if(mSteps.get(q).getSets().get(i).get(1)==qiuH){
+                                        set = mSteps.get(q).getSets().get(i);
+                                    }
+                                }
                             }
                         }
                         Log.w("set数据1：","set:"+set);

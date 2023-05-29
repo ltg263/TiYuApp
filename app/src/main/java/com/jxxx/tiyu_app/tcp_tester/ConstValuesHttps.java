@@ -31,8 +31,14 @@ public class ConstValuesHttps {
      * 主机连接所有的球
      */
     public static List<Byte> MESSAGE_ALL_TOTAL_ZJ = new ArrayList<>();
-
+    /**
+     * Byte:1 修改后的修好  2球的真实地址
+     */
     public static Map<Byte,Byte> MESSAGE_ALL_TOTAL_MAP = new HashMap<>();
+    /**
+     * Byte:1 球的真实地址  2修改后的修好
+     */
+    public static Map<Byte,Byte> MESSAGE_ALL_TOTAL_MAP_1 = new HashMap<>();
 
     /**
      * 开头

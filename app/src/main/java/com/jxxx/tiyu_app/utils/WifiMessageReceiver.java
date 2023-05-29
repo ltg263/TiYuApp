@@ -136,6 +136,7 @@ public class WifiMessageReceiver extends BroadcastReceiver {
                 ConstValuesHttps.MESSAGE_ALL_TOTAL.clear();
                 ConstValuesHttps.MESSAGE_ALL_TOTAL_ZJ.clear();
                 ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP.clear();
+                ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP_1.clear();
                 if(isSuiJi){
                     ConstValues.mSchoolCourseInfoBean = null;
                     ConstValues.mSchoolCourseInfoBeanSmall = null;
@@ -208,10 +209,18 @@ public class WifiMessageReceiver extends BroadcastReceiver {
             if(startBroadcastData.length==0){
                 return;
             }
-            Intent mIntent = new Intent("com.jxxx.tiyu_app.view.fragment");
-            mIntent.putExtra(START_BROADCAST_TYPE, mStartBroadcastType);
-            mIntent.putExtra(START_BROADCAST_DATA, startBroadcastData);
-            MainApplication.getContext().sendBroadcast(mIntent);
+            sendBroadcastData(mStartBroadcastType,startBroadcastData,0);
+        }
+    }
+
+    private void sendBroadcastData(byte mStartBroadcastType,byte[] startBroadcastData,int pos) {
+        Intent mIntent = new Intent("com.jxxx.tiyu_app.view.fragment");
+        mIntent.putExtra(START_BROADCAST_TYPE, mStartBroadcastType);
+        mIntent.putExtra(START_BROADCAST_DATA, startBroadcastData[pos]);
+        MainApplication.getContext().sendBroadcast(mIntent);
+        if(startBroadcastData.length-1 > pos){
+            pos++;
+            sendBroadcastData(mStartBroadcastType,startBroadcastData,pos);
         }
     }
 

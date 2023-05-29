@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.base.BaseActivity;
 import com.jxxx.tiyu_app.bean.SchoolStudentBean;
+import com.jxxx.tiyu_app.loginfo.LogcatHelper;
 import com.jxxx.tiyu_app.tcp_tester.ClientTcpUtils;
 import com.jxxx.tiyu_app.tcp_tester.ConstValuesHttps;
 import com.jxxx.tiyu_app.utils.StringUtil;
@@ -267,12 +269,16 @@ public class HomeOneChuangJianSj_YdActivity extends BaseActivity {
                 return;
             }
             System.out.println("BroadcastReceiver：current_time：" + current_time);
-            byte[] mData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
+//            byte[] mData = intent.getByteArrayExtra(WifiMessageReceiver.START_BROADCAST_DATA);
+            byte mData = intent.getByteExtra(WifiMessageReceiver.START_BROADCAST_DATA, (byte) 0);
             byte mStartBroadcastType = intent.getByteExtra(WifiMessageReceiver.START_BROADCAST_TYPE, (byte) 0X00);
+            Log.w(LogcatHelper.MESSAGE_LOG ,"随机执行方式："+ClientTcpUtils.BinaryToHexString(mStartBroadcastType)+
+                    "球地址：" + ClientTcpUtils.BinaryToHexString(mData)+"球号："+ConstValuesHttps.MESSAGE_ALL_TOTAL_MAP_1.get(mData));
             startBroadcastData.clear();
-            for(int i=0;i<mData.length;i++){
-                startBroadcastData.add(mData[i]);
-            }
+            startBroadcastData.add(mData);
+//            for(int i=0;i<mData.length;i++){
+//                startBroadcastData.add(mData[i]);
+//            }
             System.out.println("BroadcastReceiver：球号：" +startBroadcastData);
             for(int i=0;i<mSchoolStudentBeans.size();i++){
                 List<byte[]> mLists = mSchoolStudentBeans.get(i).getLists();
