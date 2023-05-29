@@ -289,6 +289,7 @@ public class HomeTwoFragment extends BaseFragment {
     protected void initData() {
             String smallCourseId;
             if (ConstValues.mSchoolCourseInfoBean != null) {
+
             } else {
                 current_queue_num_max = ConstValues.mSchoolCourseInfoBeanSmall.getQueueNum();
             }
@@ -744,10 +745,13 @@ public class HomeTwoFragment extends BaseFragment {
                     if(key!=null && key==qiuhao){
                         //根据mMapKey_id获取从mMapSchoolStudentBeans中获取某个队列对应的全部学生
                         List<List<Byte>> sets = null;
+                        int stepNo = 0,groupNo = 0;
                         if(json.size()>i && json.get(i).getSteps().size()>j){
                             sets = json.get(i).getSteps().get(j).getSets();
+                            groupNo = json.get(i).getGroupNo();
+                            stepNo = json.get(i).getSteps().get(j).getStepNo();
                         }
-                        getSchoolStudentBean_dlxy(qiuH,i,sets,mStartBroadcastType);
+                        getSchoolStudentBean_dlxy(qiuH,i,sets,mStartBroadcastType,groupNo,stepNo);
                         return;
                     }
                 }
@@ -761,7 +765,7 @@ public class HomeTwoFragment extends BaseFragment {
      * @param pos
      * @param mStartBroadcastType
      */
-    private void getSchoolStudentBean_dlxy(byte qiuH, int pos,List<List<Byte>> sets,byte mStartBroadcastType) {
+    private void getSchoolStudentBean_dlxy(byte qiuH, int pos,List<List<Byte>> sets,byte mStartBroadcastType,int stepNo ,int groupNo) {
         List<SchoolStudentBean> mSchoolStudentBeans = HomeTwoXueShengActivity.mMapSchoolStudentBeans.get(HomeTwoXueShengActivity.mMapKey_id.get(pos));
         //根据执行的行数获取某个学生信息
         SchoolStudentBean mSchoolStudentBean = mSchoolStudentBeans.get(current_class_group_lists.get(pos));
@@ -781,7 +785,8 @@ public class HomeTwoFragment extends BaseFragment {
                 try {
                     List<Byte> set_new = new ArrayList<>(set);
                     mSchoolStudentBean.addTimeNode(System.currentTimeMillis(),
-                            "" + set_new.get(1), "" + set_new.get(2), "" + set_new.get(6), "" + set_new.get(4));
+                            "" + set_new.get(1), "" + set_new.get(2),
+                            "" + set_new.get(6), "" + set_new.get(4),""+groupNo,""+stepNo);
                 }catch (Exception e){
                     Log.w(LogcatHelper.MESSAGE_LOG ,"Exception："+e);
                 }
@@ -793,7 +798,8 @@ public class HomeTwoFragment extends BaseFragment {
                 try {
                     List<Byte> set_new = new ArrayList<>(set);
                     mSchoolStudentBean.addTimeoutTimeNode(System.currentTimeMillis(),
-                            "" + set_new.get(1), "" + set_new.get(2), "" + set_new.get(6), "" + set_new.get(4));
+                            "" + set_new.get(1), "" + set_new.get(2),
+                            "" + set_new.get(6), "" + set_new.get(4),""+groupNo,""+stepNo);
                 }catch (Exception e){
                     Log.w(LogcatHelper.MESSAGE_LOG ,"Exception："+e);
                 }
@@ -978,11 +984,13 @@ public class HomeTwoFragment extends BaseFragment {
                     if (key != null && qiuhao == key) {
                         mSchoolStudentBean.setPostZfks(mSchoolStudentBean.getPostZfks() + 1);
                         List<Byte> set=null;
+                        int stepNo = 0,groupNo = pos;
                         if(mSteps.size()>q){
                             for(int i=0;i<mSteps.get(q).getSets().size();i++){
                                 if(mSteps.get(q).getSets().size()>=i){
                                     if(mSteps.get(q).getSets().get(i).get(1)==qiuH){
                                         set = mSteps.get(q).getSets().get(i);
+                                        stepNo = mSteps.get(q).getStepNo();
                                     }
                                 }
                             }
@@ -994,7 +1002,8 @@ public class HomeTwoFragment extends BaseFragment {
                                 try {
                                     List<Byte> set_new = new ArrayList<>(set);
                                     mSchoolStudentBean.addTimeNode(System.currentTimeMillis(),
-                                            "" + set_new.get(1), "" + set_new.get(2), "" + set_new.get(6), "" + set_new.get(4));
+                                            "" + set_new.get(1), "" + set_new.get(2),
+                                            "" + set_new.get(6), "" + set_new.get(4),""+groupNo,""+stepNo);
                                 }catch (Exception e){
                                     Log.w(LogcatHelper.MESSAGE_LOG ,"Exception："+e);
                                 }
@@ -1006,7 +1015,8 @@ public class HomeTwoFragment extends BaseFragment {
                                 try {
                                     List<Byte> set_new = new ArrayList<>(set);
                                     mSchoolStudentBean.addTimeoutTimeNode(System.currentTimeMillis(),
-                                            "" + set_new.get(1), "" + set_new.get(2), "" + set_new.get(6), "" + set_new.get(4));
+                                            "" + set_new.get(1), "" + set_new.get(2),
+                                            "" + set_new.get(6), "" + set_new.get(4),""+groupNo,""+stepNo);
                                 }catch (Exception e){
                                     Log.w(LogcatHelper.MESSAGE_LOG ,"Exception："+e);
                                 }
@@ -1341,5 +1351,4 @@ public class HomeTwoFragment extends BaseFragment {
                 });
     }
 }
-
 

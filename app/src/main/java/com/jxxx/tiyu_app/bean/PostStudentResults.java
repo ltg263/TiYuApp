@@ -158,6 +158,8 @@ public class PostStudentResults {
                     ", color='" + color + '\'' +
                     ", triggerMode='" + triggerMode + '\'' +
                     ", lightTime='" + lightTime + '\'' +
+                    ", groupNo='" + groupNo + '\'' +
+                    ", stepNo='" + stepNo + '\'' +
                     '}';
         }
 
@@ -166,13 +168,33 @@ public class PostStudentResults {
         private String color;// 颜色,
         private String triggerMode;//触发方式
         private String lightTime;//亮灯时长
+        private String groupNo;//队列
+        private String stepNo;//步骤
 
-        public TimeNodeBean(long time, String sortNum, String color, String triggerMode, String lightTime) {
+        public TimeNodeBean(long time, String sortNum, String color, String triggerMode, String lightTime, String groupNo, String stepNo) {
             this.time = time;
             this.sortNum = sortNum;
             this.color = color;
             this.triggerMode = triggerMode;
             this.lightTime = lightTime;
+            this.groupNo = groupNo;
+            this.stepNo = stepNo;
+        }
+
+        public void setStepNo(String stepNo) {
+            this.stepNo = stepNo;
+        }
+
+        public void setGroupNo(String groupNo) {
+            this.groupNo = groupNo;
+        }
+
+        public String getGroupNo() {
+            return groupNo;
+        }
+
+        public String getStepNo() {
+            return stepNo;
         }
 
         public long getTime() {

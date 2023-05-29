@@ -122,8 +122,8 @@ public class SchoolStudentBean {
     public List<PostStudentResults.TimeNodeBean> getTimeoutTimeNode() {
         return timeoutTimeNode;
     }
-    public void addTimeoutTimeNode(long time, String sortNum, String color, String triggerMode, String lightTime) {
-        timeoutTimeNode.add(new PostStudentResults.TimeNodeBean(time,sortNum,color,triggerMode,lightTime));
+    public void addTimeoutTimeNode(long time, String sortNum, String color, String triggerMode, String lightTime, String groupNo, String stepNo) {
+        timeoutTimeNode.add(new PostStudentResults.TimeNodeBean(time,sortNum,color,triggerMode,lightTime,groupNo,stepNo));
     }
 
 
@@ -131,8 +131,8 @@ public class SchoolStudentBean {
         this.timeNode = timeNode;
     }
 
-    public void addTimeNode(long time, String sortNum, String color, String triggerMode, String lightTime) {
-        timeNode.add(new PostStudentResults.TimeNodeBean(time,sortNum,color,triggerMode,lightTime));
+    public void addTimeNode(long time, String sortNum, String color, String triggerMode, String lightTime, String groupNo, String stepNo) {
+        timeNode.add(new PostStudentResults.TimeNodeBean(time,sortNum,color,triggerMode,lightTime,groupNo,stepNo));
     }
 
     public List<PostStudentResults.TimeNodeBean> getTimeNode() {
