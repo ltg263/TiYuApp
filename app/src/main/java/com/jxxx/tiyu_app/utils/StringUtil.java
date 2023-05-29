@@ -1,21 +1,12 @@
 package com.jxxx.tiyu_app.utils;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-
-
-import com.jxxx.tiyu_app.utils.view.DialogUtils;
-import com.jxxx.tiyu_app.wifi.WifiUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

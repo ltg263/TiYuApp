@@ -283,8 +283,7 @@ public class HomeTwoXueShengActivity extends BaseActivity {
                     ";ID:"+ConstValues.mSchoolCourseInfoBeanSmall.getId()+";执行的次数:"+current_course_section_num);
         }
          Log.w(LogcatHelper.MESSAGE_LOG ,"---------->>>>>>>>>>>>>>>>随机：" + ConstValuesHttps.IS_SUIJIB_MOSHI+";课程队列:"+ConstValuesHttps.IS_BANJI_DUILIE
-                +";课程队列:"+ConstValuesHttps.IS_BANJI_DUILIE+";单队列循环:"+ConstValuesHttps.IS_AUTO_DAN_DUILIE
-                +";自动执行:"+ConstValuesHttps.IS_AUTO);
+                +";单队列循环:"+ConstValuesHttps.IS_AUTO_DAN_DUILIE +";自动执行:"+ConstValuesHttps.IS_AUTO);
 
          Log.w(LogcatHelper.MESSAGE_LOG ,"---------->>>>>>>>>>>>>>>>步骤信息：" + actionInfo);
         current_course_section_loop_num = 1;

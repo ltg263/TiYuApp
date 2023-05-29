@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.net.wifi.WifiInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,21 +17,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-
-import com.jxxx.tiyu_app.MainActivity;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.app.MainApplication;
 import com.jxxx.tiyu_app.utils.SharedUtils;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
-import com.jxxx.tiyu_app.utils.view.DialogUtils;
 import com.jxxx.tiyu_app.utils.view.LoadingDialog;
-import com.jxxx.tiyu_app.view.activity.HomeOneChuangJianSjActivity;
-import com.jxxx.tiyu_app.view.activity.HomeOneChuangJianSj_YdActivity;
-import com.jxxx.tiyu_app.view.activity.HomeTwoShangKeActivity;
-import com.jxxx.tiyu_app.view.activity.HomeTwoXueShengActivity;
 import com.jxxx.tiyu_app.view.activity.LoginActivity;
-import com.jxxx.tiyu_app.wifi.WifiUtil;
 
 import butterknife.ButterKnife;
 
@@ -71,27 +61,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if(!getLocalClassName().contains("view.activity.device.")){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制竖屏
         }
-    }
-
-
-    WifiInfo mWifiInfo;
-    WifiUtil mWifiUtil;
-    protected boolean isWifiMeagerEsp(){
-        mWifiUtil = new WifiUtil(this);
-        mWifiInfo = mWifiUtil.getWifiManager().getConnectionInfo();
-        if(mWifiUtil.getWifiManager().isWifiEnabled() && mWifiInfo.getSSID().contains("ESP8266")){
-            DialogUtils.showDialogHint(this, "请将WIFI连接到其他可用网络",
-                    true, new DialogUtils.ErrorDialogInterface() {
-                @Override
-                public void btnConfirm() {
-                    Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-            });
-            return true;
-        }
-        return false;
     }
     /**
      * 设置布局

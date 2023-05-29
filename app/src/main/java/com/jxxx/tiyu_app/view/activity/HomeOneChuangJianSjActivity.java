@@ -2,8 +2,6 @@ package com.jxxx.tiyu_app.view.activity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.WifiInfo;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +24,7 @@ import com.jxxx.tiyu_app.utils.CustomPopWindow;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
 import com.jxxx.tiyu_app.utils.WifiMessageReceiver;
-import com.jxxx.tiyu_app.utils.view.DialogUtils;
 import com.jxxx.tiyu_app.view.adapter.PopupWindowAdapter;
-import com.jxxx.tiyu_app.wifi.WifiUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;

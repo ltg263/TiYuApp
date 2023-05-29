@@ -1,11 +1,7 @@
 package com.jxxx.tiyu_app.base;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.wifi.WifiInfo;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +9,11 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.jxxx.tiyu_app.MainActivity;
 import com.jxxx.tiyu_app.R;
 import com.jxxx.tiyu_app.app.MainApplication;
-import com.jxxx.tiyu_app.utils.SharedUtils;
 import com.jxxx.tiyu_app.utils.StringUtil;
 import com.jxxx.tiyu_app.utils.ToastUtil;
-import com.jxxx.tiyu_app.utils.view.DialogUtils;
 import com.jxxx.tiyu_app.utils.view.LoadingDialog;
-import com.jxxx.tiyu_app.view.activity.HomeOneChuangJianSjActivity;
-import com.jxxx.tiyu_app.view.activity.HomeOneChuangJianSj_YdActivity;
-import com.jxxx.tiyu_app.view.fragment.HomeTwoFragment;
-import com.jxxx.tiyu_app.wifi.WifiUtil;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;

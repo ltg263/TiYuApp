@@ -125,6 +125,8 @@ public class ClientTcpUtils {
                         msg.what = 1;
                         msg.obj = Arrays.copyOf(data,readBytes);
                         handler.sendMessage(msg);
+                    }else{
+                        Log.d("123456789","data: "+Arrays.toString(data));
                     }
                 }
             } catch (Exception e) {
