@@ -765,7 +765,7 @@ public class HomeTwoFragment extends BaseFragment {
      * @param pos
      * @param mStartBroadcastType
      */
-    private void getSchoolStudentBean_dlxy(byte qiuH, int pos,List<List<Byte>> sets,byte mStartBroadcastType,int stepNo ,int groupNo) {
+    private void getSchoolStudentBean_dlxy(byte qiuH, int pos,List<List<Byte>> sets,byte mStartBroadcastType,int groupNo ,int stepNo) {
         List<SchoolStudentBean> mSchoolStudentBeans = HomeTwoXueShengActivity.mMapSchoolStudentBeans.get(HomeTwoXueShengActivity.mMapKey_id.get(pos));
         //根据执行的行数获取某个学生信息
         SchoolStudentBean mSchoolStudentBean = mSchoolStudentBeans.get(current_class_group_lists.get(pos));
